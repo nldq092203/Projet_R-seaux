@@ -3,6 +3,8 @@ import pygame
 from frontend.frontendConstantes import *
 from backend.Settings import *
 from frontend.settingsWindow import SettingsWindow
+from backend.Grid import Grid
+# from backend.Game import Game
 
 import time
 
@@ -314,8 +316,11 @@ class Gui:
             # editor mode button
             self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
 
-            # Follow best bob button
-            self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
+            # # Follow best bob button
+            # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
+            
+            # Multiplayer mode
+            self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
             
             # quit button
             self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, lambda : setattr(self.game, "running", False))

@@ -1,5 +1,7 @@
 from typing import TypedDict, Optional
 
+
+# <-----Player's actions------>
 class Header(TypedDict):
     player_id: int
     command_code: int
@@ -21,3 +23,4 @@ class AddFoodAction(TypedDict):
 class ClearFoodAction(TypedDict):
     header: Header
 
+#Bob's actions
