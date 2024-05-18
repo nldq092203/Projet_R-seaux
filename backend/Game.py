@@ -9,9 +9,10 @@ from os import path, makedirs
 
 from backend.Grid import *
 from backend.Settings import Settings
+from backend.InputBox import *
 
 from frontend.Map import Map
-from frontend.Gui import Gui
+from frontend.Gui import *
 from frontend.DisplayStatsChart import DisplayStatsChart
 
 
@@ -55,6 +56,9 @@ class Game:
         self.editorModeType = "bob" # "bob" or "food"
         self.editorModeCoords = None
 
+        # Multiplayer mode realated variables
+        self.multiplayerMode = False
+        
         # Grid related variables
         if type(grid) == Grid:
             self.grid = grid
@@ -187,37 +191,38 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             
-            if event.type == pygame.KEYDOWN:
-                # Pausing the game and displaying the pause menu (escape)
-                if event.key == pygame.K_ESCAPE:
-                    if self.editorMode:
-                        self.gui.displayPauseMenu = not self.gui.displayPauseMenu
-                    else:
+            if not self.multiplayerMode:
+                if event.type == pygame.KEYDOWN:
+                    # Pausing the game and displaying the pause menu (escape)
+                    if event.key == pygame.K_ESCAPE:
+                        if self.editorMode:
+                            self.gui.displayPauseMenu = not self.gui.displayPauseMenu
+                        else:
+                            self.paused = not self.paused
+                            self.gui.displayPauseMenu = self.paused
+                    # Rendering the game (r)
+                    if event.key == pygame.K_r:
+                        self.render = not self.render
+                    # Pausing the game (p)
+                    if event.key == pygame.K_p:
                         self.paused = not self.paused
-                        self.gui.displayPauseMenu = self.paused
-                # Rendering the game (r)
-                if event.key == pygame.K_r:
-                    self.render = not self.render
-                # Pausing the game (p)
-                if event.key == pygame.K_p:
-                    self.paused = not self.paused
-                    self.gui.displayPauseMenu = not self.paused
-                # Rendering the height (h)
-                if event.key == pygame.K_h:
-                    self.renderHeight = not self.renderHeight
-                    self.map.mustReRenderTerrain = True
-                # Rendering the textures (t)
-                if event.key == pygame.K_t:
-                    self.renderTextures = not self.renderTextures
-                    self.map.mustReRenderTerrain = True
-                # Displaying stats (s)
-                if event.key == pygame.K_s:
-                    self.displayStats = not self.displayStats
-                
-                # serialize the game (o)
-                if event.key == pygame.K_o:
-                    # self.createSaveFile()
-                    DisplayStatsChart(self.tickCount, self.bobCountHistory, self.bestBobGenerationHistory)
+                        self.gui.displayPauseMenu = not self.paused
+                    # Rendering the height (h)
+                    if event.key == pygame.K_h:
+                        self.renderHeight = not self.renderHeight
+                        self.map.mustReRenderTerrain = True
+                    # Rendering the textures (t)
+                    if event.key == pygame.K_t:
+                        self.renderTextures = not self.renderTextures
+                        self.map.mustReRenderTerrain = True
+                    # Displaying stats (s)
+                    if event.key == pygame.K_s:
+                        self.displayStats = not self.displayStats
+                    
+                    # serialize the game (o)
+                    if event.key == pygame.K_o:
+                        # self.createSaveFile()
+                        DisplayStatsChart(self.tickCount, self.bobCountHistory, self.bestBobGenerationHistory)
 
             # when scrolling, zoom the map
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -230,6 +235,26 @@ class Game:
             if event.type == pygame.MOUSEMOTION:
                 if event.buttons[0] == 1:
                     self.map.moveMap(event.rel)
+            
+            # if multiplayer mode is enabled
+            if self.multiplayerMode:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if self.gui.ipInputBox.isClicked:
+                        self.gui.ipInputBox.active = True
+                        self.gui.nameInputBox.active = False
+                        self.gui.ipInputBox.isClicked = False 
+                    elif self.gui.nameInputBox.isClicked:
+                        self.gui.nameInputBox.active = True
+                        self.gui.ipInputBox.active = False
+                        self.gui.nameInputBox.isClicked = False
+                        
+                if event.type == pygame.KEYDOWN:
+                    if self.gui.ipInputBox.active:
+                        # self.gui.nameInputBox.active = False
+                        self.gui.ipInputBox.handle_event(event, True)
+                    elif self.gui.nameInputBox.active:
+                        # self.gui.ipInputBox.active = False
+                        self.gui.nameInputBox.handle_event(event, True)                
             
             # if editing mode is enabled, check for clicks on the map and edit the grid accordingly
             if self.editorMode:

@@ -1,10 +1,12 @@
 import pygame
+import time
 
 from frontend.frontendConstantes import *
 from backend.Settings import *
 from frontend.settingsWindow import SettingsWindow
 from backend.Grid import Grid
 # from backend.Game import Game
+from backend.InputBox import *
 
 import time
 
@@ -27,7 +29,19 @@ class Gui:
         self.screenHeight = screenHeight
 
         self.guiSurface = pygame.Surface((screenWidth, screenHeight), pygame.SRCALPHA)
-
+        
+        # Initialize variables for online menu
+        self.showOnlineMenu = False
+        self.ipAddress = ""
+        self.playerName = ""
+        self.activeInput = None  # Track which input box is active
+        self.inputCooldown = 0.2  # Cooldown time for input
+        self.lastInputClick = 0
+        
+        # Input box for online menu
+        self.ipInputBox = InputBox()
+        self.nameInputBox = InputBox()
+        
     def resize(self, screenWidth, screenHeight):
         self.guiSurface = pygame.Surface((screenWidth, screenHeight), pygame.SRCALPHA)
 
@@ -40,6 +54,8 @@ class Gui:
         if self.game.paused:
             if self.displayPauseMenu:
                 self.renderPauseMenu()
+            elif self.showOnlineMenu:
+                self.renderOnlineMenu()
             else:
                 self.renderTooltips()
 
@@ -320,7 +336,13 @@ class Gui:
             # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
             
             # Multiplayer mode
-            self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
+            self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
+                        lambda: [setattr(self.game, "multiplayerMode", True),
+                            setattr(self.game, "onlineMode", True),
+                                 setattr(self, "showOnlineMenu", True), 
+                                 setattr(self, "displayPauseMenu", False)])
+
+            # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
             
             # quit button
             self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, lambda : setattr(self.game, "running", False))
@@ -354,3 +376,59 @@ class Gui:
             # check if the button is clicked
             if click[0] == 1:
                 action() # call the function passed as a parameter
+    
+    def renderOnlineMenu(self):
+        # Draw the online menu
+        onlineMenuWidth = 400
+        onlineMenuHeight = 350
+        onlineMenuOffset = self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2
+
+        onlineMenu = pygame.Surface((onlineMenuWidth, onlineMenuHeight), pygame.SRCALPHA)
+        pygame.draw.rect(onlineMenu, (0, 0, 0, 200), (0, 0, onlineMenuWidth, onlineMenuHeight), border_radius=10)
+
+        font = pygame.font.SysFont('Arial', 30)
+
+        # Draw the title
+        text = font.render("Online Menu", True, (255, 255, 255))
+        onlineMenu.blit(text, (onlineMenuWidth / 2 - text.get_width() / 2, 10))
+
+        # Draw the input boxes
+        inputWidth = 300
+        inputHeight = 40
+        inputX = onlineMenuWidth / 2 - inputWidth / 2
+        inputY = 100
+
+        #Update ipAddress and playerName
+        self.ipAddress = self.ipInputBox.text
+        self.ipInputBox.inputBox(inputX, inputY, onlineMenuOffset, inputWidth, inputHeight, "IP Address", self.ipAddress, onlineMenu, active=self.activeInput == "ip")
+        self.playerName = self.nameInputBox.text
+        self.nameInputBox.inputBox(inputX, inputY + inputHeight + 20, onlineMenuOffset, inputWidth, inputHeight, "Player Name", self.playerName, onlineMenu, active=self.activeInput == "name")
+        
+        # Draw the buttons
+        buttonWidth = 200
+        buttonHeight = 50
+        buttonX = onlineMenuWidth / 2 - buttonWidth / 2
+        buttonY = inputY + 2 * (inputHeight + 20)
+
+        # Join button
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), pygame.time.delay(100)])
+
+        # Back button
+        self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
+                    lambda : [self.goBackToPauseMenu(),
+                              print("Back button clicked"), 
+                              pygame.time.delay(100)])
+
+
+        self.guiSurface.blit(onlineMenu, (self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2))
+
+
+    def joinGame(self):
+        ip = self.ipAddress
+        name = self.playerName
+        # Implement the functionality to join a multiplayer game using the IP and player name.
+        print(f"Joining game at {ip} with player name {name}")
+
+    def goBackToPauseMenu(self):
+        self.showOnlineMenu = False
+        self.displayPauseMenu = True
