@@ -17,6 +17,16 @@ class Message(TypedDict):
     header: Header
     data: any
 
+class BobMsg(TypedDict):
+    position : list[int, int]
+    velocity : int
+    mass: float
+
+class FoodMsg(TypedDict):
+    position : list[int, int]
+    energy: int
+
+
 class SystemInterface:
     instance = None
 
@@ -176,3 +186,9 @@ class SystemInterface:
         self.set_is_online(False)
         self.player_id = 0
         self.connection = None
+
+    def get_ip(self):
+        return self.ip
+    
+    def set_ip(self, ip: str):
+        self.ip = ip
