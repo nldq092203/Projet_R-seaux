@@ -32,8 +32,6 @@ class Gui:
         
         # Initialize variables for online menu
         self.showOnlineMenu = False
-        self.ipAddress = ""
-        self.playerName = ""
         self.activeInput = None  # Track which input box is active
         self.inputCooldown = 0.2  # Cooldown time for input
         self.lastInputClick = 0
@@ -424,11 +422,19 @@ class Gui:
 
 
     def joinGame(self):
-        ip = self.ipAddress
-        name = self.playerName
+        from network_system.system_layer.SystemInterface import SystemInterface
+        ip = self.ipInputBox.text
         # Implement the functionality to join a multiplayer game using the IP and player name.
-        print(f"Joining game at {ip} with player name {name}")
+        print(f"Joining game at {ip}")
+
+        si = SystemInterface().get_instance()
+        si.set_ip(ip)
+        si.run_subprocess()
+
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False
         self.displayPauseMenu = True
+
+
+        

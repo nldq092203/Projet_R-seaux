@@ -5,17 +5,11 @@ import socket
 import re
 import struct
 import subprocess
-from typing import TypedDict, Optional
+from typing import Optional
+from Messages import Header, Message
 
-class Header(TypedDict):
-    player_id: int
-    command: int
-    object_size: int
-    id_object: int
+from network_system.networkCommandTypes import NetworkCommandTypes
 
-class Message(TypedDict):
-    header: Header
-    data: any
 
 class SystemInterface:
     instance = None
@@ -40,11 +34,19 @@ class SystemInterface:
         if os.path.exists(socket_address):
             os.remove(socket_address)
 
+        # Create a Unix domain socket
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+
+        # Bind the socket
         self.sock.bind(socket_address)
+
+        # Listen for incoming connections
         self.sock.listen(1)
 
+        # Wait for a connection
         print(f"Waiting for a connection on {socket_address}")
+
+        # Run subprocess here to wait connection before lauch it
 
         if self.ip:
             c_file = [client_path,self.ip]
@@ -95,7 +97,7 @@ class SystemInterface:
                                           id_object)
 
         return self.connection.sendall(sending_message)
-    
+
     def read_message(self,block: bool = False) -> Optional[Message]:
         if self.connection is None:
             return None
@@ -116,6 +118,7 @@ class SystemInterface:
 
         self.connection.setblocking(1)
 
+
         header = self.unpack_header(binary_received_header)
 
         if header["object_size"]:
@@ -133,11 +136,12 @@ class SystemInterface:
         print(self.message_read)
         return self.message_read
 
+
     def unpack_data(self, binary_received_data, data_len):
         format = f"={data_len}s"
+        #print(format, binary_received_data)
         data = struct.unpack(format, binary_received_data)
         return data
-    
     def unpack_header(self, binary_received_header) -> Header:
         header = struct.unpack("=H H L L", binary_received_header)
         temp_dict = {
@@ -146,11 +150,22 @@ class SystemInterface:
             "object_size": header[2],
             "id_object": header[3]
         }
+
         return temp_dict
-    
+
     def close_socket(self):
         self.connection.close()
         self.sock.close()
+
+    def get_coordinates(self):
+        numbers = []
+        pattern = r'\d+'
+        for word in self.message_read['data'].split():
+            matches = re.findall(pattern, word)
+            # if word.isdigit():
+            if matches:
+                numbers.append(int(float(word)))
+        return numbers
 
     @staticmethod
     def get_instance():
@@ -158,12 +173,15 @@ class SystemInterface:
             SystemInterface.instance = SystemInterface()
         return SystemInterface.instance
 
+    #..............................................................................#
+
     def get_is_online(self):
         return self.is_online
 
     def set_is_online(self, status: bool):
         self.is_online = status
 
+    #..............................................................................#
     def run_subprocess(self) :
         self.init_listen()
 
@@ -172,7 +190,47 @@ class SystemInterface:
     #methode pour stoper le process
 
     def stop_subprocess(self):
+        from game.game_controller import GameController
         self.pid.terminate()
         self.set_is_online(False)
         self.player_id = 0
+        GameController.get_instance().set_all_player_id(0)
         self.connection = None
+#..............................................................................#
+    def send_disconnect(self):
+        pass
+
+    def recieve_disconnect(self, datas):
+        pass
+
+
+    def recieve_connect(self, datas):
+        pass
+
+
+
+    def send_game_save(self):
+        from game.game_controller import GameController
+        import pickle
+        read_write_py_c = SystemInterface.get_instance()
+        serialize_data = pickle.dumps(GameController.get_instance().__dict__)
+        read_write_py_c.send_message(command=NetworkCommandTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
+
+    def recieve_game_save(self):
+        from game.game_controller import GameController
+        import pickle
+
+        message = self.read_message(block=True)
+
+        if message["header"]["command"] != NetworkCommandTypes.GAME_SAVE:
+            return
+
+        GameController.get_instance().__dict__ = pickle.loads(message["data"][0])
+        GameController.get_instance().save_load()
+
+
+    def get_ip(self):
+        return self.ip
+
+    def set_ip(self,ip: str):
+        self.ip = ip
