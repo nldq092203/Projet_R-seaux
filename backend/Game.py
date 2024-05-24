@@ -57,7 +57,13 @@ class Game:
         self.editorModeCoords = None
 
         # Multiplayer mode related to variables
+        self.multiplayerMenu = False
         self.multiplayerMode = False
+        self.onlineMode = False
+        self.onlineModeType = "bob" # "bob" or "food"
+        self.onlineModeCoords = None
+
+        
         
         # Grid related variables
         if type(grid) == Grid:
@@ -191,7 +197,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             
-            if not self.multiplayerMode:
+            if not self.multiplayerMenu:
                 if event.type == pygame.KEYDOWN:
                     # Pausing the game and displaying the pause menu (escape)
                     if event.key == pygame.K_ESCAPE:
@@ -236,8 +242,8 @@ class Game:
                 if event.buttons[0] == 1:
                     self.map.moveMap(event.rel)
             
-            # if multiplayer mode is enabled
-            if self.multiplayerMode:
+            # if multiplayer menu is enabled
+            if self.multiplayerMenu:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if self.gui.ipInputBox.isClicked:
                         self.gui.ipInputBox.active = True
@@ -255,6 +261,56 @@ class Game:
                     elif self.gui.nameInputBox.active:
                         # self.gui.ipInputBox.active = False
                         self.gui.nameInputBox.handle_event(event, True)                
+            
+            
+            # if online mode is enabled
+            if self.onlineMode:
+
+                if self.gui.displayPauseMenu:
+                    if self.map.highlightedTile is not None:
+                        self.map.highlightedTile = None
+                        self.map.mustReRenderTerrain = True
+                    continue
+
+                if event.type == pygame.MOUSEMOTION: # event.type == pygame.MOUSEBUTTONDOWN:
+                    self.onlineModeCoords = self.map.getCoordsFromPosition(*event.pos)
+
+                    if self.onlineModeCoords is None:
+                        continue
+
+                    if event.buttons[0] == 1:
+                        if self.onlineModeType == "bob":
+                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                        elif self.onlineModeType == "food":
+                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                    
+                    if event.buttons[2] == 1:
+                        if self.onlineModeType == "bob":
+                            self.grid.removeAllBobsAt(*self.onlineModeCoords)
+                        elif self.onlineModeType == "food":
+                            self.grid.removeFoodAt(*self.onlineModeCoords)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    if self.onlineModeCoords is None:
+                        continue
+
+                    if event.button == 1:
+                        if self.onlineModeType == "bob":
+                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                        elif self.editorModeType == "food":
+                            self.grid.addEdible(Food(self.editorModeCoords[0], self.editorModeCoords[1]))
+
+                        print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
+                    if event.button == 3:
+
+                        if self.onlineModeType == "bob":
+                            self.grid.removeAllBobsAt(*self.onlineModeCoords)
+                        elif self.onlineModeType == "food":
+                            self.grid.removeFoodAt(*self.onlineModeCoords)
+
+                        print(f'Removing {self.onlineModeType} at {self.onlineModeCoords}')
+
             
             # if editing mode is enabled, check for clicks on the map and edit the grid accordingly
             if self.editorMode:
