@@ -284,13 +284,13 @@ class SystemAgent:
     #     pass
 
 
-# def main():
-#     system_agent = SystemAgent.get_instance()
-#     system_agent.init_listen()
-#     system_agent.send_food([1, 2], 10)
+def main():
+    system_agent = SystemAgent.get_instance()
+    system_agent.init_listen()
+    system_agent.send_food([1, 2], 10)
 
-#     system_agent.send_bob([1, 2], 10, 10)
-#     system_agent.send_food([1, 2], 10)
-#     # system_agent.read_message()
+    system_agent.send_bob([1, 2], 10, 10)
+    system_agent.send_food([1, 2], 10)
+    # system_agent.read_message()
 
-# main()
+main()

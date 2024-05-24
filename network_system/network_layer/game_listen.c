@@ -385,7 +385,7 @@ int connection_existant_game(game_ip ip_address, bool is_new_player){
         print_game_packet(connection);
         if (connection->type == GPP_CONNECT_START){
             if (is_new_player) {
-                new_payer_id();
+                new_player_id();
                 init_game_packet(connection, GPP_CONNECT_NEW, 0);
             } else{
                 init_game_packet(connection, GPP_CONNECT_REQ, 0);
@@ -474,7 +474,7 @@ int init_listen(const char *ip_address){
             return 1;
         }
     }else{
-        new_payer_id();
+        new_player_id();
     }
 
     struct sockaddr_in listen_socket_addr = {0};

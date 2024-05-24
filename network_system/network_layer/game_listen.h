@@ -14,9 +14,9 @@
 #include <errno.h>
 #include <string.h>
 
-#include "game_packet_protocol.h"
+#include "game_packet.h"
 #include "client_list.h"
-#include "../system_layer/game_object_protocol.h"
+#include "../system_layer/game_object.h"
 
 /**
  * Timeout for the connection in seconds

@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #include "message_type.h"
-#include "../system_layer/game_object_protocol.h"
+#include "../system_layer/game_object.h"
 
 #ifdef DEBUG
 #include <stdio.h>

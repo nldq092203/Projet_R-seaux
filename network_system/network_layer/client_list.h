@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "game_packet_protocol.h"
+#include "game_packet.h"
 
 typedef enum {FALSE = 0, TRUE = 1} bool;
 

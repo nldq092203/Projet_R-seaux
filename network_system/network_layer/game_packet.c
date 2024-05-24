@@ -1,4 +1,4 @@
-#include "game_packet_protocol.h"
+#include "game_packet.h"
 
 #include <stdlib.h>
 #include <string.h>

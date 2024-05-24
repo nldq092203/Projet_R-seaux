@@ -1,10 +1,10 @@
-#include "game_object_protocol.h"
+#include "game_object.h"
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <errno.h>
 
-#include "../network_layer/game_packet_protocol.h"
+#include "../network_layer/game_packet.h"
 
 static char *buffer;
 static unsigned int buffer_size = 0;
