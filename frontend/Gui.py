@@ -427,8 +427,8 @@ class Gui:
         ip = self.ipInputBox.text
         # Implement the functionality to join a multiplayer game using the IP and player name.
         print(f"Joining game at {ip}")
-        from network_system.system_layer.read_write import SystemInterface
-        si = SystemInterface().get_instance()
+        from network_system.system_layer.SystemAgent import SystemAgent
+        si = SystemAgent().get_instance()
         si.ip = ip
         si.is_online = True
         si.run_subprocess()
