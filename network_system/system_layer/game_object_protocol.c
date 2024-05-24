@@ -12,13 +12,11 @@ static unsigned int buffer_size = 0;
 static const uint32_t header_size = 12;
 
 void print_object_packet(const Object_packet *packet){
-#ifdef DEBUG
     printf("======== Object %i ========\n", packet->id_object);
     printf("command: %i\n", packet->command);
     printf("Player_id: %i\n", packet->id_player);
     printf("Data Size: %i\n", packet->object_size);
     printf("====== End Packet %i ======\n", packet->id_object);
-#endif
 }
 
 Object_packet* new_object_packet(){

@@ -5,33 +5,12 @@ import socket
 import re
 import struct
 import subprocess
-from typing import TypedDict, Optional
-
+from typing import Optional
+from network_system.messageTypes import Header, Message, BobMsg, FoodMsg
 
 from backend.network_commands_types import NetworkCommandsTypes
 
-
-class Header(TypedDict):
-    player_id: int
-    command: int
-    object_size: int
-    id_object: int
-
-class Message(TypedDict):
-    header: Header
-    data: any
-
-
-class BobMsg(TypedDict):
-    position: list[int, int]
-    mass: int
-    velocity: int
-
-class FoodMsg(TypedDict):
-    position: list[int, int]
-    energy: int
-
-class SystemInterface:
+class SystemAgent:
     instance = None
 
     def __init__(self):
@@ -90,7 +69,6 @@ class SystemInterface:
             return
 
         self.player_id = message["header"]["player_id"]
-
         print(f"Found C connection, player id : {self.player_id}")
         grid = Grid(0,0,0)
         grid.set_all_player_id(self.player_id)
@@ -194,9 +172,9 @@ class SystemInterface:
 
     @staticmethod
     def get_instance():
-        if SystemInterface.instance is None:
-            SystemInterface.instance = SystemInterface()
-        return SystemInterface.instance
+        if SystemAgent.instance is None:
+            SystemAgent.instance = SystemAgent()
+        return SystemAgent.instance
 
     #..............................................................................#
 
@@ -309,9 +287,12 @@ class SystemInterface:
 
 
 def main():
-    system_agent = SystemInterface.get_instance()
+    system_agent = SystemAgent.get_instance()
     system_agent.init_listen()
-    system_agent.send_message(id_player=1, command=2, id_object=3, data="Bonjour C je suis Python")
+    system_agent.send_food([1, 2], 10)
+
+    system_agent.send_bob([1, 2], 10, 10)
+    system_agent.send_food([1, 2], 10)
     # system_agent.read_message()
 
 main()
