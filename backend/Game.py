@@ -58,15 +58,12 @@ class Game:
 
         # Multiplayer mode related to variables
         self.multiplayerMenu = False
-<<<<<<< Updated upstream
         self.multiplayerMode = False
-=======
         self.onlineMode = False
         self.onlineModeType = "bob" # "bob" or "food"
         self.onlineModeCoords = None
 
         
->>>>>>> Stashed changes
         
         # Grid related variables
         if type(grid) == Grid:
@@ -245,11 +242,7 @@ class Game:
                 if event.buttons[0] == 1:
                     self.map.moveMap(event.rel)
             
-<<<<<<< Updated upstream
-            # if multiplayer mode is enabled
-=======
             # if multiplayer menu is enabled
->>>>>>> Stashed changes
             if self.multiplayerMenu:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if self.gui.ipInputBox.isClicked:
