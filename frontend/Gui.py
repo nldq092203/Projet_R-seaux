@@ -362,11 +362,7 @@ class Gui:
             # Multiplayer mode
             self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
                         lambda: [setattr(self.game, "multiplayerMenu", True),
-<<<<<<< Updated upstream
-                            setattr(self.game, "onlineMode", True),
-=======
                             setattr(self.game, "onlineMode", False),
->>>>>>> Stashed changes
                                  setattr(self, "showOnlineMenu", True), 
                                  setattr(self, "displayPauseMenu", False), pygame.time.delay(200)])
 
@@ -439,7 +435,7 @@ class Gui:
         buttonY = inputY + 2 * (inputHeight + 20)
 
         # Join button
-        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(100)])
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(200)])
 
         # self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
 
@@ -448,7 +444,7 @@ class Gui:
         self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
                     lambda : [self.goBackToPauseMenu(),
                               print("Back button clicked"), 
-                              pygame.time.delay(100)])
+                              pygame.time.delay(200)])
 
 
         self.guiSurface.blit(onlineMenu, (self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2))
