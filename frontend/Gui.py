@@ -337,7 +337,7 @@ class Gui:
             
             # Multiplayer mode
             self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
-                        lambda: [setattr(self.game, "multiplayerMode", True),
+                        lambda: [setattr(self.game, "multiplayerMenu", True),
                             setattr(self.game, "onlineMode", True),
                                  setattr(self, "showOnlineMenu", True), 
                                  setattr(self, "displayPauseMenu", False)])

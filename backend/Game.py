@@ -57,6 +57,7 @@ class Game:
         self.editorModeCoords = None
 
         # Multiplayer mode related to variables
+        self.multiplayerMenu = False
         self.multiplayerMode = False
         
         # Grid related variables
@@ -191,7 +192,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             
-            if not self.multiplayerMode:
+            if not self.multiplayerMenu:
                 if event.type == pygame.KEYDOWN:
                     # Pausing the game and displaying the pause menu (escape)
                     if event.key == pygame.K_ESCAPE:
@@ -237,7 +238,7 @@ class Game:
                     self.map.moveMap(event.rel)
             
             # if multiplayer mode is enabled
-            if self.multiplayerMode:
+            if self.multiplayerMenu:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if self.gui.ipInputBox.isClicked:
                         self.gui.ipInputBox.active = True
