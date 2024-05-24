@@ -29,7 +29,7 @@ typedef uint32_t game_ip;
 void print_game_packet(const game_packet *packet);
 
 game_packet* new_game_packet();
-int new_payer_id();
+int new_player_id();
 int throw_new_packet(uint8_t type, int socket);
 void init_game_packet(game_packet *packet, uint8_t type, uint32_t size_payload);
 int send_game_packet(const game_packet *send_packet, int socket);

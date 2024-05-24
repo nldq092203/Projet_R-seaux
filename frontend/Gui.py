@@ -7,6 +7,7 @@ from frontend.settingsWindow import SettingsWindow
 from backend.Grid import Grid
 # from backend.Game import Game
 from backend.InputBox import *
+from network_system.system_layer.SystemAgent import SystemAgent
 
 import time
 
@@ -417,21 +418,19 @@ class Gui:
         self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
                     lambda : [self.goBackToPauseMenu(),
                               print("Back button clicked"), 
-                              pygame.time.delay(100)])
+                              pygame.time.delay(500)])
 
 
         self.guiSurface.blit(onlineMenu, (self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2))
-
 
     def joinGame(self):
         ip = self.ipInputBox.text
         # Implement the functionality to join a multiplayer game using the IP and player name.
         print(f"Joining game at {ip}")
-        from network_system.system_layer.read_write import SystemInterface
-        si = SystemInterface().get_instance()
-        si.ip = ip
-        si.is_online = True
-        si.run_subprocess()
+        sa = SystemAgent().get_instance()
+        sa.ip = ip
+        sa.is_online = True
+        sa.run_subprocess()
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False

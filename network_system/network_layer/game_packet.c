@@ -15,16 +15,14 @@ static int actual_event = 0;
 static int player_id = 0;
 
 void print_game_packet(const game_packet *packet){
-#ifdef DEBUG
     printf("======== Packet %i ========\n", packet->id_event);
     printf("packet type: %i\n", packet->type);
     printf("Player_id: %i\n", packet->player_id);
     printf("Data Size: %i\n", packet->data_size);
     printf("====== End Packet %i ======\n", packet->id_event);
-#endif
 }
 
-int new_payer_id(){
+int new_player_id(){
     srand(time(NULL));
     do {
         player_id = rand() % 65535;
@@ -138,7 +136,6 @@ int is_valid(game_packet *packet){
             || GPP_BAD_IDENT == packet->type)
             && packet->reserved == 255
     );
-
 }
 
 int receive_game_packet(game_packet *recv_packet, int socket){

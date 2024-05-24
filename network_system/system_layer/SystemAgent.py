@@ -50,8 +50,10 @@ class SystemAgent:
         # Run subprocess here to wait connection before lauch it
 
         if self.ip:
+            print("ip typed")
             c_file = [client_path,self.ip]
         else:
+            print("no ip typed")
             c_file = [client_path]
 
         self.pid = subprocess.Popen(c_file)
@@ -215,7 +217,7 @@ class SystemAgent:
     def send_game_save(self):
         from backend.Grid import Grid
         import pickle
-        read_write_py_c = SystemInterface.get_instance()
+        read_write_py_c = SystemAgent.get_instance()
         serialize_data = pickle.dumps(Grid.__dict__)
         read_write_py_c.send_message(command=NetworkCommandsTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
 
@@ -238,7 +240,6 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-
     def send_bob(self, position: list[int, int], mass: int, velocity: int):
 
         msg: BobMsg = {
@@ -248,11 +249,6 @@ class SystemAgent:
         }
 
         self.send_message(command=NetworkCommandsTypes.SPAWN_BOB, id_object=12, data=json.dumps(msg))
-    def recieve_build(self, datas):
-        pass
-
-    def get_player_id(self) -> int:
-        return self.player_id
 
     def send_food(self, position: list[int, int], energy: int):
         msg: FoodMsg = {
@@ -261,6 +257,8 @@ class SystemAgent:
         }
         self.send_message(command=NetworkCommandsTypes.SPAWN_FOOD, id_object=10, data=json.dumps(msg))
 
+    def get_player_id(self) -> int:
+        return self.player_id
     #
     #
     # def send_walker_direction_update(self, new_direction, walker_id):
@@ -286,13 +284,13 @@ class SystemAgent:
     #     pass
 
 
-def main():
-    system_agent = SystemAgent.get_instance()
-    system_agent.init_listen()
-    system_agent.send_food([1, 2], 10)
+# def main():
+#     system_agent = SystemAgent.get_instance()
+#     system_agent.init_listen()
+#     system_agent.send_food([1, 2], 10)
 
-    system_agent.send_bob([1, 2], 10, 10)
-    system_agent.send_food([1, 2], 10)
-    # system_agent.read_message()
+#     system_agent.send_bob([1, 2], 10, 10)
+#     system_agent.send_food([1, 2], 10)
+#     # system_agent.read_message()
 
-main()
+# main()
