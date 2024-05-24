@@ -4,6 +4,7 @@ import time
 from frontend.frontendConstantes import *
 from backend.Settings import *
 from frontend.settingsWindow import SettingsWindow
+from backend.network_commands_types import *
 from backend.Grid import Grid
 # from backend.Game import Game
 from backend.InputBox import *
@@ -35,6 +36,7 @@ class Gui:
         self.activeInput = None  # Track which input box is active
         self.inputCooldown = 0.2  # Cooldown time for input
         self.lastInputClick = 0
+        self.saved_game = False
         
         # Input box for online menu
         self.ipInputBox = InputBox()
@@ -409,13 +411,13 @@ class Gui:
         buttonY = inputY + 2 * (inputHeight + 20)
 
         # Join button
-        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), pygame.time.delay(100)])
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), pygame.time.delay(100), self.connect_to_c_client()])
 
         # Back button
         self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
                     lambda : [self.goBackToPauseMenu(),
                               print("Back button clicked"), 
-                              pygame.time.delay(100)])
+                              pygame.time.delay(200)])
 
 
         self.guiSurface.blit(onlineMenu, (self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2))
@@ -431,6 +433,25 @@ class Gui:
         si.set_ip(ip)
         si.run_subprocess()
 
+<<<<<<< Updated upstream
+=======
+    def connect_to_c_client(self):
+        from network_system.system_layer.read_write import SystemInterface
+
+        username = self.playerName
+        ip = self.ipAddress
+        
+        si = SystemInterface.get_instance()
+        si.set_ip(ip)
+        si.run_subprocess()
+        si.send_message(NetworkCommandsTypes.ASK_SAVE,0,None,encode=False)
+        si.recieve_game_save()
+        self.saved_game = True
+        self.set_inactive()
+
+    def is_load_save(self) -> bool:
+        return self.saved_game
+>>>>>>> Stashed changes
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False
