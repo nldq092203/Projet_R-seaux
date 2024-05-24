@@ -62,6 +62,9 @@ class Gui:
         if self.game.editorMode:
             self.renderEditorButtons()
         
+        if self.game.onlineMode:
+            self.renderOnlineButtons()
+        
         if displayStats:
             self.stats()
 
@@ -104,6 +107,27 @@ class Gui:
 
         # add food button
         self.smallButton(buttonX, buttonY - (buttonHeight + 10), buttonWidth, buttonHeight, "Add / remove food", self.guiSurface, lambda : setattr(self.game, "editorModeType", "food"), self.game.editorModeType == "food")
+
+        # Clear bobs button
+        self.smallButton(buttonX - (buttonWidth + 10), buttonY, buttonWidth, buttonHeight, "Clear bobs", self.guiSurface, lambda : self.game.grid.removeAllBobs(), len(self.game.grid.getAllBobs()) == 0)
+
+        # Clear food button
+        self.smallButton(buttonX - (buttonWidth + 10), buttonY - (buttonHeight + 10), buttonWidth, buttonHeight, "Clear food", self.guiSurface, lambda : self.game.grid.removeAllEdibles(), len(self.game.grid.getAllEdibleObjects()) == 0)
+
+    def renderOnlineButtons(self):
+        # draw three buttons in the bottom right corner
+        # First one is "add bob" and second is "add food"
+
+        buttonWidth = 110
+        buttonHeight = 30
+        buttonX = self.guiSurface.get_width() - buttonWidth - 20
+        buttonY = self.guiSurface.get_height() - buttonHeight - 20
+
+        # Bob brush button
+        self.smallButton(buttonX, buttonY, buttonWidth, buttonHeight, "Add / remove bob", self.guiSurface, lambda : setattr(self.game, "onlineModeType", "bob"), self.game.onlineModeType == "bob")
+
+        # add food button
+        self.smallButton(buttonX, buttonY - (buttonHeight + 10), buttonWidth, buttonHeight, "Add / remove food", self.guiSurface, lambda : setattr(self.game, "onlineModeType", "food"), self.game.onlineModeType == "food")
 
         # Clear bobs button
         self.smallButton(buttonX - (buttonWidth + 10), buttonY, buttonWidth, buttonHeight, "Clear bobs", self.guiSurface, lambda : self.game.grid.removeAllBobs(), len(self.game.grid.getAllBobs()) == 0)
@@ -338,9 +362,13 @@ class Gui:
             # Multiplayer mode
             self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
                         lambda: [setattr(self.game, "multiplayerMenu", True),
+<<<<<<< Updated upstream
                             setattr(self.game, "onlineMode", True),
+=======
+                            setattr(self.game, "onlineMode", False),
+>>>>>>> Stashed changes
                                  setattr(self, "showOnlineMenu", True), 
-                                 setattr(self, "displayPauseMenu", False)])
+                                 setattr(self, "displayPauseMenu", False), pygame.time.delay(200)])
 
             # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
             
@@ -411,7 +439,10 @@ class Gui:
         buttonY = inputY + 2 * (inputHeight + 20)
 
         # Join button
-        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), pygame.time.delay(100)])
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(100)])
+
+        # self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
+
 
         # Back button
         self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
@@ -431,7 +462,8 @@ class Gui:
         si = SystemAgent().get_instance()
         si.ip = ip
         si.is_online = True
-        si.run_subprocess()
+
+        # si.run_subprocess()
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False
