@@ -432,6 +432,7 @@ class Gui:
         si.ip = ip
         si.is_online = True
         si.run_subprocess()
+        print(si.ip)
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False

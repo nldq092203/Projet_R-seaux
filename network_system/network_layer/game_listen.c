@@ -420,25 +420,6 @@ int connection_existant_game(game_ip ip_address, bool is_new_player){
             return -1;
         }
     }
-    /**
-     *  aled
-     *
-    int ma_grosse_taille = 4703127;
-    char *mes_grosses_donnee = malloc(sizeof(char) * ma_grosse_taille);
-    FILE* mon_gros_fichier = fopen("mon_gros_fichier-send.txt","w");
-    FILE* urandom = fopen("/dev/urandom","r");
-    fread(mes_grosses_donnee,ma_grosse_taille,1,urandom);
-    fwrite(mes_grosses_donnee, ma_grosse_taille, 1, mon_gros_fichier);
-    fflush(mon_gros_fichier);
-    fclose(mon_gros_fichier);
-    game_packet *mon_gros_packet = new_game_packet();
-    init_game_packet(mon_gros_packet, GPP_ALTER_GAME, ma_grosse_taille);
-    // PENSEZ A METTRE SES GROSSE DONNEE DANS SON PACKET CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-    mon_gros_packet->payload = mes_grosses_donnee;
-    send_game_packet(mon_gros_packet,new_client->socket_client);
-    free(mes_grosses_donnee);
-    */
-
     return 0;
 }
 

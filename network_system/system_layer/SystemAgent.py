@@ -5,9 +5,12 @@ import socket
 import re
 import struct
 import subprocess
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+
 from typing import Optional
 from network_system.messageTypes import Header, Message, BobMsg, FoodMsg
-
 from backend.network_commands_types import NetworkCommandsTypes
 
 class SystemAgent:
@@ -26,7 +29,9 @@ class SystemAgent:
     def init_listen(self):
         from backend.Grid import Grid
 
-        client_path = "../client_c"
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        client_path = os.path.join(script_dir, '../client_c')
+
         if not os.path.exists(client_path):
             print("Error C client not found, please run `make` before play online")
             return
