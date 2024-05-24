@@ -435,7 +435,7 @@ class Gui:
         buttonY = inputY + 2 * (inputHeight + 20)
 
         # Join button
-        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(200)])
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(200)])
 
         # self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
 
