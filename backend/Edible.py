@@ -6,6 +6,12 @@ class Edible:
         self.x = x
         self.y = y
         self.value = value
+        
+    def set_player_id(self,player_id: int):
+        self.player_id = player_id
+
+    def get_player_id(self) -> int:
+        return self.player_id
 
 class Food(Edible):
     def __init__(self, x, y, energy=Settings.spawnedFoodEnergy):

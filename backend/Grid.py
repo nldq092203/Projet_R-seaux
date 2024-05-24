@@ -7,6 +7,7 @@ from random import randint, choice
 from math import sqrt
 
 class Grid:
+    instance = None
     def __init__(self, size, bobCount, foodCount, sausageCount = 0):
         self.size = size
         self.gridDict = {} # {(x,y):Cell}
@@ -728,3 +729,17 @@ class Grid:
                 bestBob = bob
         return bestBob
     
+    def set_all_player_id(self, player_id: int):
+        if not self.gridDict:
+            return
+        for key, cell in self.gridDict.items():
+            for bob in cell:
+                bob.set_player_id(player_id)
+            for edible in cell.edibleObject:
+                edible.set_player_id(player_id)
+
+    @staticmethod
+    def get_instance():
+        if Grid.instance is None:
+            Grid.instance = Grid()
+        return Grid.instance

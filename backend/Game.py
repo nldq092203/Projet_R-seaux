@@ -56,7 +56,7 @@ class Game:
         self.editorModeType = "bob" # "bob" or "food"
         self.editorModeCoords = None
 
-        # Multiplayer mode realated variables
+        # Multiplayer mode related to variables
         self.multiplayerMode = False
         
         # Grid related variables

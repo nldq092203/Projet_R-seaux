@@ -6,7 +6,7 @@ from backend.Settings import Settings
 
 class Bob:
 
-    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None):
+    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None, player_id: int = 0):
         
         # Physical properties
         self.totalVelocity = totalVelocity if not totalVelocity is None else Settings.spawnVelocity
@@ -40,6 +40,9 @@ class Bob:
         self.generation = 0
 
         self.age = 0
+
+        # Player id
+        self.player_id = player_id
     
     def __str__(self):
         return "B"
@@ -193,3 +196,9 @@ class Bob:
 
         # Return the new bob
         return bornBob
+    
+    def set_player_id(self,player_id: int):
+        self.player_id = player_id
+
+    def get_player_id(self) -> int:
+        return self.player_id

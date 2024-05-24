@@ -236,17 +236,17 @@ int type_object_check(Object_packet *packet) {
         case GOP_ASK_SAVE:
             printf("try send ask\n");
             return send_ask_save(packet);
-        case GOP_BUILD:
+        case GOP_SPAWN_FOOD:
             return send_all_client(packet);
-        case GOP_DELETE:
+        case GOP_DELETE_FOOD:
              return send_all_client(packet);
-        case GOP_RISK:
+        // case GOP_RISK:
+        //     return send_all_client(packet);
+        case GOP_UPDATE_BOB:
             return send_all_client(packet);
-        case GOP_UPDATE_W:
+        case GOP_SPAWN_BOB:
             return send_all_client(packet);
-        case GOP_SPAWN_W:
-            return send_all_client(packet);
-        case GOP_DELETE_W:
+        case GOP_DELETE_BOB:
             return send_all_client(packet);
         case DELEGATE:
             //TODO: delegate object
@@ -320,7 +320,6 @@ int game_listen(int socket_listen, int socket_system) {
                 printf("Python Disconnect\n");
                 return -1;
             }
-
             print_object_packet(python_packet);
             if (type_object_check(python_packet) != 0){
                 printf("Error check type\n");

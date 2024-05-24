@@ -12,11 +12,13 @@ static unsigned int buffer_size = 0;
 static const uint32_t header_size = 12;
 
 void print_object_packet(const Object_packet *packet){
+#ifdef DEBUG
     printf("======== Object %i ========\n", packet->id_object);
     printf("command: %i\n", packet->command);
     printf("Player_id: %i\n", packet->id_player);
     printf("Data Size: %i\n", packet->object_size);
     printf("====== End Packet %i ======\n", packet->id_object);
+#endif
 }
 
 Object_packet* new_object_packet(){
@@ -24,8 +26,10 @@ Object_packet* new_object_packet(){
     if (new_packet == NULL) {
         return NULL;
     }
+    //new_packet->reserved = 4294967295;
     return new_packet;
 }
+
 
 void init_object_packet(Object_packet *packet, const uint16_t command, const uint32_t size_data){
     packet->object_size = size_data;
@@ -33,14 +37,10 @@ void init_object_packet(Object_packet *packet, const uint16_t command, const uin
     packet->id_player = get_player_id();
 }
 
-int throw_new_object(const uint16_t command, const int system_socket){
-    Object_packet *packet = new_object_packet();
-    if (packet == NULL) {
-        return -1;
-    }
-    init_object_packet(packet, command, 0);
-    print_object_packet(packet);
-
+int throw_new_object(const uint16_t command, int system_socket){
+    Object_packet *message = new_object_packet();
+    init_object_packet(message, command, 0);
+    print_object_packet(message);
     if (send(system_socket,message,header_size,0) <= 0){
         return -1;
     }
