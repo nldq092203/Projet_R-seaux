@@ -348,13 +348,18 @@ class Gui:
             pauseMenuOffset = self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2
 
             # resume button
-            self.button(buttonX, buttonY, pauseMenuOffset, buttonWidth, buttonHeight, "Resume", pauseMenu, lambda: setattr(self.game, "paused", False))
+            self.button(buttonX, buttonY, pauseMenuOffset, buttonWidth, buttonHeight, "Resume", pauseMenu, 
+                        lambda: setattr(self.game, "paused", False))
             
             # options button
-            self.button(buttonX, buttonY + buttonHeight + 10, pauseMenuOffset, buttonWidth, buttonHeight, "Options", pauseMenu, lambda : SettingsWindow(self.game.createSaveFile, self.game.loadSaveFile))
+            self.button(buttonX, buttonY + buttonHeight + 10, pauseMenuOffset, buttonWidth, buttonHeight, "Options", pauseMenu, 
+                        lambda : SettingsWindow(self.game.createSaveFile, self.game.loadSaveFile))
     
             # editor mode button
-            self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
+            self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, 
+                        lambda : [setattr(self.game, "editorMode", not self.game.editorMode), 
+                                  setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), 
+                                  setattr(self.game, "renderHeight", False)],)
 
             # # Follow best bob button
             # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
@@ -362,14 +367,16 @@ class Gui:
             # Multiplayer mode
             self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
                         lambda: [setattr(self.game, "multiplayerMenu", True),
-                            setattr(self.game, "onlineMode", False),
+                                 setattr(self.game, "onlineMode", False),
                                  setattr(self, "showOnlineMenu", True), 
-                                 setattr(self, "displayPauseMenu", False), pygame.time.delay(200)])
+                                 setattr(self, "displayPauseMenu", False), 
+                                 pygame.time.delay(200)])
 
             # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
             
             # quit button
-            self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, lambda : setattr(self.game, "running", False))
+            self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, 
+                        lambda : setattr(self.game, "running", False))
     
 
             self.guiSurface.blit(pauseMenu, (self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2))
@@ -435,7 +442,13 @@ class Gui:
         buttonY = inputY + 2 * (inputHeight + 20)
 
         # Join button
-        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, lambda:[self.joinGame(), setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu), setattr(self.game, "paused", not self.game.paused), setattr(self, "showOnlineMenu", not self.showOnlineMenu), setattr(self.game, "onlineMode", not self.game.onlineMode), pygame.time.delay(200)])
+        self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, 
+                    lambda:[self.joinGame(), 
+                            setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu), 
+                            setattr(self.game, "paused", not self.game.paused), 
+                            setattr(self, "showOnlineMenu", not self.showOnlineMenu), 
+                            setattr(self.game, "onlineMode", not self.game.onlineMode),
+                            pygame.time.delay(500)])
 
         # self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)
 
@@ -444,7 +457,7 @@ class Gui:
         self.button(buttonX, buttonY + buttonHeight + 10, onlineMenuOffset, buttonWidth, buttonHeight, "Back", onlineMenu, 
                     lambda : [self.goBackToPauseMenu(),
                               print("Back button clicked"), 
-                              pygame.time.delay(200)])
+                              pygame.time.delay(500)])
 
 
         self.guiSurface.blit(onlineMenu, (self.guiSurface.get_width() / 2 - onlineMenuWidth / 2, self.guiSurface.get_height() / 2 - onlineMenuHeight / 2))
@@ -453,13 +466,11 @@ class Gui:
     def joinGame(self):
         ip = self.ipInputBox.text
         # Implement the functionality to join a multiplayer game using the IP and player name.
-        print(f"Joining game at {ip}")
         from network_system.system_layer.SystemAgent import SystemAgent
         si = SystemAgent().get_instance()
         si.ip = ip
         si.is_online = True
-
-        # si.run_subprocess()
+        si.run_subprocess()
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False

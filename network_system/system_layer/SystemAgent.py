@@ -6,12 +6,13 @@ import re
 import struct
 import subprocess
 import sys
+import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from typing import Optional
 from network_system.messageTypes import Header, Message, BobMsg, FoodMsg
-from backend.network_commands_types import NetworkCommandsTypes
+from network_system.networkCommandsTypes import NetworkCommandsTypes
 
 class SystemAgent:
     instance = None
@@ -53,12 +54,12 @@ class SystemAgent:
         print(f"Waiting for a connection on {socket_address}")
 
         # Run subprocess here to wait connection before lauch it
-
+        ip = input("Enter IP to join room (leave empty to host): ")
         if self.ip:
-            print("ip typed")
+            print("Join room at IP : ", self.ip)
             c_file = [client_path,self.ip]
         else:
-            print("no ip typed")
+            print("Now you're hosting the game, waiting for connection...")
             c_file = [client_path]
 
         self.pid = subprocess.Popen(c_file)
@@ -82,6 +83,7 @@ class SystemAgent:
         self.set_is_online(True)
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
+        time.sleep(0.1)
         if not self.connection:
             print("Error send C connection")
             return
@@ -217,8 +219,6 @@ class SystemAgent:
     def recieve_connect(self, datas):
         pass
 
-
-
     def send_game_save(self):
         from backend.Grid import Grid
         import pickle
@@ -292,10 +292,8 @@ class SystemAgent:
 def main():
     system_agent = SystemAgent.get_instance()
     system_agent.init_listen()
-    system_agent.send_food([1, 2], 10)
 
-    system_agent.send_bob([1, 2], 10, 10)
-    system_agent.send_food([1, 2], 10)
-    # system_agent.read_message()
+    system_agent.send_bob([1, 2], 3, 4)
+    system_agent.read_message()
 
 main()

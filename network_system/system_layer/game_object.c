@@ -95,6 +95,7 @@ int send_object_packet(Object_packet *send_packet, int system_socket){
 
 int receive_object_packet(Object_packet *recv_packet, int system_socket){
     int recep = (int) recv(system_socket,recv_packet,header_size,0);
+    printf("Received %i bytes\n",recep);
     if (recep == 0){
         return 0;
     }

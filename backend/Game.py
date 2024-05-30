@@ -1,3 +1,4 @@
+import json
 import pygame
 from pygame.locals import *
 from random import randint
@@ -15,6 +16,9 @@ from frontend.Map import Map
 from frontend.Gui import *
 from frontend.DisplayStatsChart import DisplayStatsChart
 
+from network_system.system_layer.SystemAgent import SystemAgent
+from network_system.networkCommandsTypes import NetworkCommandsTypes
+from Bob import Bob
 
 class Game:
 
@@ -192,6 +196,21 @@ class Game:
             - Moving the map (by clicking and dragging)
             - Zooming the map (by scrolling)
         """
+        sys = SystemAgent.get_instance()
+        
+        messageReceived = sys.receive_message()
+        if messageReceived is not None:
+            match(messageReceived["header"]["command"]):
+                case NetworkCommandsTypes.SPAWN_BOB:
+                    data =  messageReceived["data"]
+                    data = json.loads(data)
+                    bob = Bob(data["position"][0], 
+                              data["position"][1], 
+                              mass=data["mass"], 
+                              totalVelocity=data["velocity"])
+                    self.grid.addBob(bob)
+
+
         for event in pygame.event.get():
             # Quitting the game (cross)
             if event.type == pygame.QUIT:
@@ -330,8 +349,8 @@ class Game:
                     if event.buttons[0] == 1:
                         if self.editorModeType == "bob":
                             self.grid.addBob(Bob(self.editorModeCoords[0], self.editorModeCoords[1]))
-                        elif self.editorModeType == "food":
-                            self.grid.addEdible(Food(self.editorModeCoords[0], self.editorModeCoords[1]))
+                        elif self.onlineModeType == "food":
+                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
                     
                     if event.buttons[2] == 1:
                         if self.editorModeType == "bob":

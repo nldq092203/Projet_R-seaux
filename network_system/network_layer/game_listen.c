@@ -320,7 +320,9 @@ int game_listen(int socket_listen, int socket_system) {
                 printf("Python Disconnect\n");
                 return -1;
             }
+            
             print_object_packet(python_packet);
+
             if (type_object_check(python_packet) != 0){
                 printf("Error check type\n");
             }
