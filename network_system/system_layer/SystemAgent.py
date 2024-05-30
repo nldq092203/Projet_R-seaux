@@ -54,7 +54,7 @@ class SystemAgent:
         print(f"Waiting for a connection on {socket_address}")
 
         # Run subprocess here to wait connection before lauch it
-        ip = input("Enter IP to join room (leave empty to host): ")
+        # ip = input("Enter IP to join room (leave empty to host): ")
         if self.ip:
             print("Join room at IP : ", self.ip)
             c_file = [client_path,self.ip]
@@ -289,11 +289,11 @@ class SystemAgent:
     #     pass
 
 
-def main():
-    system_agent = SystemAgent.get_instance()
-    system_agent.init_listen()
+# def main():
+#     system_agent = SystemAgent.get_instance()
+#     system_agent.init_listen()
 
-    system_agent.send_bob([1, 2], 3, 4)
-    system_agent.read_message()
+#     system_agent.send_bob([1, 2], 3, 4)
+#     system_agent.read_message()
 
-main()
+# main()

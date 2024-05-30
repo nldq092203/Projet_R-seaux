@@ -1,4 +1,5 @@
 import json
+import ast
 import pygame
 from pygame.locals import *
 from random import randint
@@ -18,7 +19,7 @@ from frontend.DisplayStatsChart import DisplayStatsChart
 
 from network_system.system_layer.SystemAgent import SystemAgent
 from network_system.networkCommandsTypes import NetworkCommandsTypes
-from Bob import Bob
+from backend.Bob import Bob
 
 class Game:
 
@@ -198,12 +199,16 @@ class Game:
         """
         sys = SystemAgent.get_instance()
         
-        messageReceived = sys.receive_message()
+        messageReceived = sys.read_message()
         if messageReceived is not None:
             match(messageReceived["header"]["command"]):
                 case NetworkCommandsTypes.SPAWN_BOB:
-                    data =  messageReceived["data"]
-                    data = json.loads(data)
+                    data =  messageReceived["data"][0]
+                    data = data.decode()
+                    # data = json.loads(data)
+                    data = ast.literal_eval(data)
+                    print(type(data))
+                    print(data)
                     bob = Bob(data["position"][0], 
                               data["position"][1], 
                               mass=data["mass"], 
