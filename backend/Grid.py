@@ -754,7 +754,8 @@ class Grid:
      
         messageReceived = sys.read_message()
         
-        if not messageReceived:
+        if messageReceived:
+            print(messageReceived)
             data =  messageReceived["data"]
             data = json.loads(data)
             header = messageReceived["header"]

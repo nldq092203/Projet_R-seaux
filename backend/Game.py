@@ -291,6 +291,7 @@ class Game:
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= None,
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                         velocity=Settings.spawnVelocity,
                                          mass=Settings.spawnMass,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)

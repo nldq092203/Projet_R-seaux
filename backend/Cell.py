@@ -218,7 +218,7 @@ class Cell:
         if not(Settings.enableParthenogenesis or Settings.enableSexualReproduction):
             return
         
-        my_bobs_list = list(filter(lambda x: not x.other_bob_player, self.bobs))
+        my_bobs_list = list(filter(lambda x: not x.other_player_bob, self.bobs))
         
         for bob in my_bobs_list:
             # If the Bob has not performed any action yet
