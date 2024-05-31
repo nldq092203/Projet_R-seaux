@@ -270,6 +270,7 @@ class Game:
             
             # if online mode is enabled
             if self.onlineMode:
+                sys = SystemAgent.get_instance()
 
                 if self.gui.displayPauseMenu:
                     if self.map.highlightedTile is not None:
@@ -285,7 +286,15 @@ class Game:
 
                     if event.buttons[0] == 1:
                         if self.onlineModeType == "bob":
-                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            self.grid.addBob(bob)
+                            sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
+                                         last_position= None,
+                                         position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                         mass=Settings.spawnMass,
+                                         energy=Settings.spawnEnergy,
+                                         id=bob.id)
+                            
                         elif self.onlineModeType == "food":
                             self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
                     
