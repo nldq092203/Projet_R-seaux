@@ -145,7 +145,7 @@ class SystemAgent:
             "data": data
         }
 
-        print(self.message_read)
+        print(f"in read_message {self.message_read}")
         return self.message_read
 
 
@@ -252,9 +252,11 @@ class SystemAgent:
             "position": position,
             "mass": mass,
             "velocity": velocity,
-            "energy": float,
+            "energy": energy,
             "id": id
         }
+        
+        print(f"print send bob {msg}")
 
         self.send_message(command, id_object=12, data=json.dumps(msg))
 

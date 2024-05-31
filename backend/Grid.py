@@ -12,6 +12,7 @@ from network_system.networkCommandsTypes import *
 from random import randint, choice
 from math import sqrt
 import json
+import ast
 
 class Grid:
     instance = None
@@ -597,7 +598,8 @@ class Grid:
                              last_position=[b.lastX, b.lastY],
                              position=[b.currentX, b.currentY],
                              mass=b.mass,
-                             energy=b.totalEnergy,
+                             velocity=b.totalVelocity,
+                             energy=b.energy,
                              id=b.id)
 
         # Delete all dead Bob objects in the grid
@@ -756,8 +758,10 @@ class Grid:
         
         if messageReceived:
             print(messageReceived)
-            data =  messageReceived["data"]
-            data = json.loads(data)
+            data =  messageReceived["data"][0]
+            data = data.decode()
+            # data = json.loads(data)
+            data = ast.literal_eval(data)
             header = messageReceived["header"]
             match(header["command"]):
                 
@@ -783,7 +787,7 @@ class Grid:
                     
                 case NetworkCommandsTypes.MOVE_BOB:
                     bob = self.getCellAt(
-                        data["last_position"][0],data["last_posistion"][1]).get_bob_by_id(data["id"], header["player_id"]
+                        data["last_position"][0],data["last_posistion"][1]).get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                         )
                     self.moveBobTo(bob, data["position"][0], data["posistion"][1])
                     

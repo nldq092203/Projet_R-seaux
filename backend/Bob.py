@@ -5,8 +5,10 @@ from frontend.Sprite import *
 from backend.Settings import Settings
 
 class Bob:
+    id_bob_origin = 0
+    
 
-    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None, player_id: int = 0, id_bob: int = uuid.uuid4()):
+    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None, player_id: int = 0, id_bob: int = None):
         
         # Physical properties
         self.totalVelocity = totalVelocity if not totalVelocity is None else Settings.spawnVelocity
@@ -34,7 +36,11 @@ class Bob:
         self.consumptionFactor = 1
         self.target = None
         # Unique id
-        self.id = id_bob
+        if not id_bob:
+            self.id = Bob.id_bob_origin
+            Bob.id_bob_origin += 1
+        else:
+            self.id = id_bob
         # Sprite
         self.sprite = BobSprite(self)
         self.generation = 0

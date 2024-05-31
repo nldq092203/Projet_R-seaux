@@ -289,10 +289,10 @@ class Game:
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
                             self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
-                                         last_position= None,
+                                         last_position= [0, 0],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
-                                         velocity=Settings.spawnVelocity,
                                          mass=Settings.spawnMass,
+                                         velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)
                             
