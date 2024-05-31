@@ -756,7 +756,7 @@ class Grid:
      
         messageReceived = sys.read_message()
         
-        if messageReceived:
+        if messageReceived and not messageReceived["data"][0]:
             print(f"in receive_messages {messageReceived}")
             data =  messageReceived["data"][0]
             data = data.decode()
