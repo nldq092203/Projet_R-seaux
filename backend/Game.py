@@ -18,7 +18,7 @@ from frontend.DisplayStatsChart import DisplayStatsChart
 
 from network_system.system_layer.SystemAgent import SystemAgent
 from network_system.networkCommandsTypes import NetworkCommandsTypes
-from Bob import Bob
+from backend.Bob import Bob
 
 class Game:
 
@@ -196,20 +196,6 @@ class Game:
             - Moving the map (by clicking and dragging)
             - Zooming the map (by scrolling)
         """
-        sys = SystemAgent.get_instance()
-        
-        messageReceived = sys.receive_message()
-        if messageReceived is not None:
-            match(messageReceived["header"]["command"]):
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    data =  messageReceived["data"]
-                    data = json.loads(data)
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"])
-                    self.grid.addBob(bob)
-
 
         for event in pygame.event.get():
             # Quitting the game (cross)
@@ -317,8 +303,8 @@ class Game:
                     if event.button == 1:
                         if self.onlineModeType == "bob":
                             self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
-                        elif self.editorModeType == "food":
-                            self.grid.addEdible(Food(self.editorModeCoords[0], self.editorModeCoords[1]))
+                        elif self.onlineModeType == "food":
+                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
 
                         print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
                     if event.button == 3:
@@ -438,3 +424,23 @@ class Game:
         print("Game loaded from " + pathToSaveFile)
 
         return True
+    
+    def receive_messages(self):
+        sys = SystemAgent.get_instance()
+        
+        messageReceived = sys.read_message()
+        
+        if messageReceived is not None:
+            match(messageReceived["header"]["command"]):
+                
+                case NetworkCommandsTypes.SPAWN_BOB:
+                    data =  messageReceived["data"]
+                    data = json.loads(data)
+                    bob = Bob(data["position"][0], 
+                              data["position"][1], 
+                              mass=data["mass"], 
+                              totalVelocity=data["velocity"])
+                    self.grid.addBob(bob)
+                    
+                # case NetworkCommandsTypes.
+

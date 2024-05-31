@@ -3,8 +3,14 @@ from backend.Cell import Cell
 from backend.Bob import Bob
 from backend.Edible import *
 from backend.Effect import SpittedAt
+
+from network_system.system_layer.SystemAgent import SystemAgent
+from network_system.messageTypes import *
+from network_system.networkCommandsTypes import *
+
 from random import randint, choice
 from math import sqrt
+import json
 
 class Grid:
     instance = None
@@ -729,6 +735,24 @@ class Grid:
                 bestBob = bob
         return bestBob
     
+    def receive_messages(self):
+        sys = SystemAgent.get_instance()
+     
+        messageReceived = sys.read_message()
+        
+        if messageReceived is not None:
+            match(messageReceived["header"]["command"]):
+                
+                case NetworkCommandsTypes.SPAWN_BOB:
+                    data =  messageReceived["data"]
+                    data = json.loads(data)
+                    bob = Bob(data["position"][0], 
+                              data["position"][1], 
+                              mass=data["mass"], 
+                              totalVelocity=data["velocity"])
+                    self.grid.addBob(bob)
+    
+    @staticmethod
     def set_all_player_id(self, player_id: int):
         if not self.gridDict:
             return

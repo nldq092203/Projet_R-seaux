@@ -28,7 +28,7 @@ class SystemAgent:
         self.is_online = False
 
     def init_listen(self):
-        from backend.Grid import Grid
+        # from backend.Grid import Grid
 
         script_dir = os.path.dirname(os.path.realpath(__file__))
         client_path = os.path.join(script_dir, '../client_c')
@@ -54,7 +54,7 @@ class SystemAgent:
         print(f"Waiting for a connection on {socket_address}")
 
         # Run subprocess here to wait connection before lauch it
-        ip = input("Enter IP to join room (leave empty to host): ")
+        # self.ip = input("Enter IP to join room (leave empty to host): ")
         if self.ip:
             print("Join room at IP : ", self.ip)
             c_file = [client_path,self.ip]
@@ -62,6 +62,7 @@ class SystemAgent:
             print("Now you're hosting the game, waiting for connection...")
             c_file = [client_path]
 
+        
         self.pid = subprocess.Popen(c_file)
 
         connection, client_address = self.sock.accept()
@@ -78,12 +79,10 @@ class SystemAgent:
 
         self.player_id = message["header"]["player_id"]
         print(f"Found C connection, player id : {self.player_id}")
-        grid = Grid(0,0,0)
-        grid.set_all_player_id(self.player_id)
-        self.set_is_online(True)
+
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        time.sleep(0.1)
+        time.sleep(0.001)
         if not self.connection:
             print("Error send C connection")
             return
@@ -113,6 +112,7 @@ class SystemAgent:
     def read_message(self,block: bool = False) -> Optional[Message]:
         if self.connection is None:
             return None
+        
 
         header_size = 12
         if not block:
@@ -130,7 +130,7 @@ class SystemAgent:
 
         self.connection.setblocking(1)
 
-
+        print("khoale")
         header = self.unpack_header(binary_received_header)
 
         if header["object_size"]:
@@ -202,11 +202,11 @@ class SystemAgent:
     #methode pour stoper le process
 
     def stop_subprocess(self):
-        from backend.Grid import Grid
+        # from backend.Grid import Grid
         self.pid.terminate()
         self.set_is_online(False)
         self.player_id = 0
-        Grid.set_all_player_id(0)
+        # Grid.set_all_player_id(0)
         self.connection = None
 #..............................................................................#
     def send_disconnect(self):
@@ -289,11 +289,14 @@ class SystemAgent:
     #     pass
 
 
-def main():
-    system_agent = SystemAgent.get_instance()
-    system_agent.init_listen()
+# def main():
+#     system_agent = SystemAgent.get_instance()
+#     system_agent.init_listen()
+#     # time.sleep(1)
+#     # system_agent.send_bob([1, 2], 3, 4)
+#     system_agent.send_bob([5, 5], 1, 1)
+#     system_agent.send_bob([10, 10], 2, 2)
 
-    system_agent.send_bob([1, 2], 3, 4)
-    system_agent.read_message()
+#     system_agent.read_message()
 
-main()
+# main()
