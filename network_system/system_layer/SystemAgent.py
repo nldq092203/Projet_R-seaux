@@ -245,15 +245,18 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-    def send_bob(self, position: list[int, int], mass: int, velocity: int):
+    def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
 
         msg: BobMsg = {
+            "last_position": last_position,
             "position": position,
             "mass": mass,
-            "velocity": velocity
+            "velocity": velocity,
+            "energy": float,
+            "id": id
         }
 
-        self.send_message(command=NetworkCommandsTypes.SPAWN_BOB, id_object=12, data=json.dumps(msg))
+        self.send_message(command, id_object=12, data=json.dumps(msg))
 
     def send_food(self, position: list[int, int], energy: int):
         msg: FoodMsg = {

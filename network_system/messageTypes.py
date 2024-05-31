@@ -13,9 +13,12 @@ class Message(TypedDict):
 
 
 class BobMsg(TypedDict):
+    last_position: list[int, int]
     position: list[int, int]
     mass: int
     velocity: int
+    energy: float
+    id: int
 
 class FoodMsg(TypedDict):
     position: list[int, int]

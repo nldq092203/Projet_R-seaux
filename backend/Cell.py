@@ -52,11 +52,14 @@ class Cell:
         self.bobs.append(bob)
 
     # Remove a Bob object from the cell of bobs by its ID
-    def removeBob(self, bobID=None):
-        if bobID is None:
-            self.bobs = []
-        self.bobs = list(filter(lambda x: x.id != bobID, self.bobs))
-
+    def removeBob(self, bobID=None, player_id=None):
+        if not player_id:
+            if bobID is None:
+                self.bobs = []
+            self.bobs = list(filter(lambda x: x.id != bobID, self.bobs))
+        else:
+            removeBob = list(filter(lambda x: x.id != bobID or x.player_id != player_id, self.bobs))
+    
     # Add an Edible object to the cell
     def addEdible(self, edibleObject):
         """
@@ -215,7 +218,9 @@ class Cell:
         if not(Settings.enableParthenogenesis or Settings.enableSexualReproduction):
             return
         
-        for bob in self.bobs:
+        my_bobs_list = list(filter(lambda x: not x.other_bob_player, self.bobs))
+        
+        for bob in my_bobs_list:
             # If the Bob has not performed any action yet
             if bob.action == "idle":
                 # Make the Bob reproduce by parthenogenesis if it has enough energy
@@ -246,4 +251,11 @@ class Cell:
             # If a Bob object's energy reaches zero, it is removed from the cell
             if bob.action == "decay":
                 self.removeBob(bob.id)
-
+    
+    
+    #Apply only for online mode         
+    def get_bob_by_id(self, bob_id, player_id = None):
+        for b in self.bobs:
+            if b.id == bob_id and b.player_id == player_id:
+                return b
+        return None
