@@ -28,7 +28,7 @@ class SystemAgent:
         self.is_online = False
 
     def init_listen(self):
-        from backend.Grid import Grid
+        # from backend.Grid import Grid
 
         script_dir = os.path.dirname(os.path.realpath(__file__))
         client_path = os.path.join(script_dir, '../client_c')
@@ -78,12 +78,12 @@ class SystemAgent:
 
         self.player_id = message["header"]["player_id"]
         print(f"Found C connection, player id : {self.player_id}")
-        grid = Grid(0,0,0)
-        grid.set_all_player_id(self.player_id)
+        # grid = Grid(0,0,0)
+        # grid.set_all_player_id(self.player_id)
         self.set_is_online(True)
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        time.sleep(0.1)
+        time.sleep(0.001)
         if not self.connection:
             print("Error send C connection")
             return
@@ -202,11 +202,11 @@ class SystemAgent:
     #methode pour stoper le process
 
     def stop_subprocess(self):
-        from backend.Grid import Grid
+        # from backend.Grid import Grid
         self.pid.terminate()
         self.set_is_online(False)
         self.player_id = 0
-        Grid.set_all_player_id(0)
+        # Grid.set_all_player_id(0)
         self.connection = None
 #..............................................................................#
     def send_disconnect(self):

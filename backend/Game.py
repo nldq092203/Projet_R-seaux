@@ -322,8 +322,8 @@ class Game:
                     if event.button == 1:
                         if self.onlineModeType == "bob":
                             self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
-                        elif self.editorModeType == "food":
-                            self.grid.addEdible(Food(self.editorModeCoords[0], self.editorModeCoords[1]))
+                        elif self.onlineModeType == "food":
+                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
 
                         print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
                     if event.button == 3:

@@ -729,6 +729,7 @@ class Grid:
                 bestBob = bob
         return bestBob
     
+    @staticmethod
     def set_all_player_id(self, player_id: int):
         if not self.gridDict:
             return
