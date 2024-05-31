@@ -757,7 +757,7 @@ class Grid:
         messageReceived = sys.read_message()
         
         if messageReceived:
-            print(messageReceived)
+            print(f"in receive_messages {messageReceived}")
             data =  messageReceived["data"][0]
             data = data.decode()
             # data = json.loads(data)
@@ -777,7 +777,7 @@ class Grid:
                     self.addBob(bob)
                     
                 case NetworkCommandsTypes.DELETE_BOB:
-                    self.removeBob(bobID=data["id"], player_id=header["player_id"])
+                    self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
                     
                 case NetworkCommandsTypes.SPAWN_FOOD:
                     self.addEdible(Food(data["position"][0], data["posistion"][1]))
