@@ -54,7 +54,7 @@ class SystemAgent:
         print(f"Waiting for a connection on {socket_address}")
 
         # Run subprocess here to wait connection before lauch it
-        # ip = input("Enter IP to join room (leave empty to host): ")
+        # self.ip = input("Enter IP to join room (leave empty to host): ")
         if self.ip:
             print("Join room at IP : ", self.ip)
             c_file = [client_path,self.ip]
@@ -62,6 +62,7 @@ class SystemAgent:
             print("Now you're hosting the game, waiting for connection...")
             c_file = [client_path]
 
+        
         self.pid = subprocess.Popen(c_file)
 
         connection, client_address = self.sock.accept()
@@ -78,9 +79,7 @@ class SystemAgent:
 
         self.player_id = message["header"]["player_id"]
         print(f"Found C connection, player id : {self.player_id}")
-        # grid = Grid(0,0,0)
-        # grid.set_all_player_id(self.player_id)
-        self.set_is_online(True)
+
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
         time.sleep(0.001)
@@ -113,6 +112,7 @@ class SystemAgent:
     def read_message(self,block: bool = False) -> Optional[Message]:
         if self.connection is None:
             return None
+        
 
         header_size = 12
         if not block:
@@ -130,7 +130,7 @@ class SystemAgent:
 
         self.connection.setblocking(1)
 
-
+        print("khoale")
         header = self.unpack_header(binary_received_header)
 
         if header["object_size"]:
@@ -145,7 +145,7 @@ class SystemAgent:
             "data": data
         }
 
-        print(self.message_read)
+        print(f"in read_message {self.message_read}")
         return self.message_read
 
 
@@ -245,15 +245,20 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-    def send_bob(self, position: list[int, int], mass: int, velocity: int):
+    def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
 
         msg: BobMsg = {
+            "last_position": last_position,
             "position": position,
             "mass": mass,
-            "velocity": velocity
+            "velocity": velocity,
+            "energy": energy,
+            "id": id
         }
+        
+        print(f"print send bob {msg}")
 
-        self.send_message(command=NetworkCommandsTypes.SPAWN_BOB, id_object=12, data=json.dumps(msg))
+        self.send_message(command, id_object=12, data=json.dumps(msg))
 
     def send_food(self, position: list[int, int], energy: int):
         msg: FoodMsg = {
@@ -292,8 +297,11 @@ class SystemAgent:
 # def main():
 #     system_agent = SystemAgent.get_instance()
 #     system_agent.init_listen()
+#     # time.sleep(1)
+#     # system_agent.send_bob([1, 2], 3, 4)
+#     system_agent.send_bob([5, 5], 1, 1)
+#     system_agent.send_bob([10, 10], 2, 2)
 
-#     system_agent.send_bob([1, 2], 3, 4)
 #     system_agent.read_message()
 
 # main()

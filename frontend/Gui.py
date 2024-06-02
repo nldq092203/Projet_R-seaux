@@ -471,7 +471,7 @@ class Gui:
         si.ip = ip
         si.is_online = True
         si.run_subprocess()
-        Grid.set_all_player_id(si.player_id)
+        self.game.grid.set_all_player_id(si.player_id)
 
     def goBackToPauseMenu(self):
         self.showOnlineMenu = False

@@ -3,8 +3,16 @@ from backend.Cell import Cell
 from backend.Bob import Bob
 from backend.Edible import *
 from backend.Effect import SpittedAt
+
+from network_system.system_layer.SystemAgent import SystemAgent
+from network_system.networkCommandsTypes import NetworkCommandsTypes
+from network_system.messageTypes import *
+from network_system.networkCommandsTypes import *
+
 from random import randint, choice
 from math import sqrt
+import json
+import ast
 
 class Grid:
     instance = None
@@ -539,6 +547,7 @@ class Grid:
   
     # Launches all the events of the grid in a game's tick
     def newTickEvents(self):
+        sys = SystemAgent.get_instance()
         """
         This method updates the state of the grid. 
         It moves all Bob objects in the grid using the moveBobs method,
@@ -547,8 +556,11 @@ class Grid:
         and deletes all dead Bob objects in the grid using the cleanDeadBobs method.
         """
         # Get a list of all bobs in the grid
+        self.receive_messages()
+        
         bobsList = self.getAllBobs()
-   
+        my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
+
         for b in bobsList:
             # Set the bob's action to idle if it is not dying
             if b.action != "decay":
@@ -565,10 +577,11 @@ class Grid:
                 if Settings.enableFeed:
                     cell.feedCellBobs()
 
-        for b in bobsList:
+        for b in my_bobs_list:
             # Update the perception of the bob
             if Settings.enablePerception and b.action == "idle":
                 self.updatePerception(b)
+                
             # Make the bob spit if it is able to
             if Settings.enableSpitting and b.action == "idle":
                 self.spit(b)
@@ -581,6 +594,13 @@ class Grid:
             # Move the bob if it is able to
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
+                sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
+                             last_position=[b.lastX, b.lastY],
+                             position=[b.currentX, b.currentY],
+                             mass=b.mass,
+                             velocity=b.totalVelocity,
+                             energy=b.energy,
+                             id=b.id)
 
         # Delete all dead Bob objects in the grid
         self.cleanDeadBobs()
@@ -729,7 +749,54 @@ class Grid:
                 bestBob = bob
         return bestBob
     
-    @staticmethod
+    
+    
+    def receive_messages(self):
+        sys = SystemAgent.get_instance()
+     
+        messageReceived = sys.read_message()
+        
+        if messageReceived and not messageReceived["data"][0]:
+            print(f"in receive_messages {messageReceived}")
+            data =  messageReceived["data"][0]
+            data = data.decode()
+            # data = json.loads(data)
+            data = ast.literal_eval(data)
+            header = messageReceived["header"]
+            match(header["command"]):
+                
+                case NetworkCommandsTypes.SPAWN_BOB:
+                    bob = Bob(data["position"][0], 
+                              data["position"][1], 
+                              mass=data["mass"], 
+                              totalVelocity=data["velocity"],
+                              energy=data["energy"],
+                              id=data["id"]
+                              )
+                    bob.other_player_bob = True
+                    self.addBob(bob)
+                    
+                case NetworkCommandsTypes.DELETE_BOB:
+                    self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
+                    
+                case NetworkCommandsTypes.SPAWN_FOOD:
+                    self.addEdible(Food(data["position"][0], data["posistion"][1]))
+                    
+                case NetworkCommandsTypes.DELETE_FOOD:
+                    self.removeFoodAt(data["position"][0], data["posistion"][1])
+                    
+                case NetworkCommandsTypes.MOVE_BOB:
+                    bob = self.getCellAt(
+                        data["last_position"][0],data["last_posistion"][1]).get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                        )
+                    self.moveBobTo(bob, data["position"][0], data["posistion"][1])
+                    
+                    
+                
+                
+                    
+    
+    # @staticmethod
     def set_all_player_id(self, player_id: int):
         if not self.gridDict:
             return

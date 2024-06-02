@@ -15,5 +15,9 @@ class NetworkCommandsTypes(IntEnum):
     SPAWN_BOB = 420
     UPDATE_BOB = 421
     DELETE_BOB = 422
+    BORN_BOB = 423
+    MOVE_BOB = 424
+    EAT_FOOD = 425
+    EAT_BOB = 426
 
     DELEGATE = 499

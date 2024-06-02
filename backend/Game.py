@@ -1,5 +1,4 @@
 import json
-import ast
 import pygame
 from pygame.locals import *
 from random import randint
@@ -197,24 +196,6 @@ class Game:
             - Moving the map (by clicking and dragging)
             - Zooming the map (by scrolling)
         """
-        sys = SystemAgent.get_instance()
-        
-        messageReceived = sys.read_message()
-        if messageReceived is not None:
-            match(messageReceived["header"]["command"]):
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    data =  messageReceived["data"][0]
-                    data = data.decode()
-                    # data = json.loads(data)
-                    data = ast.literal_eval(data)
-                    print(type(data))
-                    print(data)
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"])
-                    self.grid.addBob(bob)
-
 
         for event in pygame.event.get():
             # Quitting the game (cross)
@@ -289,6 +270,7 @@ class Game:
             
             # if online mode is enabled
             if self.onlineMode:
+                sys = SystemAgent.get_instance()
 
                 if self.gui.displayPauseMenu:
                     if self.map.highlightedTile is not None:
@@ -304,7 +286,16 @@ class Game:
 
                     if event.buttons[0] == 1:
                         if self.onlineModeType == "bob":
-                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            self.grid.addBob(bob)
+                            sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
+                                         last_position= [0, 0],
+                                         position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                         mass=Settings.spawnMass,
+                                         velocity=Settings.spawnVelocity,
+                                         energy=Settings.spawnEnergy,
+                                         id=bob.id)
+                            
                         elif self.onlineModeType == "food":
                             self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
                     
@@ -443,3 +434,23 @@ class Game:
         print("Game loaded from " + pathToSaveFile)
 
         return True
+    
+    def receive_messages(self):
+        sys = SystemAgent.get_instance()
+        
+        messageReceived = sys.read_message()
+        
+        if messageReceived is not None:
+            match(messageReceived["header"]["command"]):
+                
+                case NetworkCommandsTypes.SPAWN_BOB:
+                    data =  messageReceived["data"]
+                    data = json.loads(data)
+                    bob = Bob(data["position"][0], 
+                              data["position"][1], 
+                              mass=data["mass"], 
+                              totalVelocity=data["velocity"])
+                    self.grid.addBob(bob)
+                    
+                # case NetworkCommandsTypes.
+
