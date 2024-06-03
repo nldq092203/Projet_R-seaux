@@ -314,16 +314,17 @@ class Game:
                     if event.button == 1:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
-                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
+                            self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          mass=Settings.spawnMass,
                                          velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
-                                         id=bob.id)
+                                         id=bob.id,
+                                         )
 
                         elif self.onlineModeType == "food":
                             self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
