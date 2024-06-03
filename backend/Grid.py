@@ -792,7 +792,8 @@ class Grid:
                         self.removeFoodAt(data["position"][0], data["position"][1])
                         
                     case NetworkCommandsTypes.MOVE_BOB:
-                        other_player_bobs = filter(lambda x: x.other_player_bob == True, self.getAllBobs)
+                        bobs = self.getAllBobs()
+                        other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
                         # print(type(data["last_position"][0]))
                         # print(type(int(data["last_position"][0])))
                         # print(f"Last position here: {data['last_position']}")
