@@ -315,7 +315,8 @@ class Game:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
                             self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],

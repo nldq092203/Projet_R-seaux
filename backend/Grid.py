@@ -777,7 +777,8 @@ class Grid:
                                 mass=data["mass"], 
                                 totalVelocity=data["velocity"],
                                 energy=data["energy"],
-                                id_bob=data["id"]
+                                id_bob=int(data["id"]),
+                                player_id=int(header["player_id"])
                                 )
                         bob.other_player_bob = True
                         self.addBob(bob)

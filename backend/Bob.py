@@ -36,11 +36,11 @@ class Bob:
         self.consumptionFactor = 1
         self.target = None
         # Unique id
-        if not id_bob:
-            self.id = Bob.id_bob_origin
-            Bob.id_bob_origin += 1
-        else:
+        if id_bob:
             self.id = id_bob
+        # else:
+        #     self.id = id_bob
+        
         # Sprite
         self.sprite = BobSprite(self)
         self.generation = 0
