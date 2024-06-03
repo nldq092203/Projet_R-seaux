@@ -797,13 +797,17 @@ class Grid:
                         print(f"Last position here: {data['last_position']}")
                         print(int(data["last_position"][0]))
                         print(int(data["last_position"][1]))
-                        cell = self.getCellAt(5, 5)
+                        # cell = self.getCellAt(5, 5)
                         # cell = self.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-                        print(type(cell))
-                        print(f"Cell:{cell}")
+                        bobs_at_position = self.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        for b in bobs_at_position:
+                            if b.player_id == header["player_id"] and bob.id == data["id"]:
+                                bob = b
+                        # print(type(cell))
+                        # print(f"Cell:{cell}")
                         # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                         #     )
-                        # self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        self.moveBobTo(b, int(data["position"][0]), int(data["position"][1]))
                     
     
     # @staticmethod
