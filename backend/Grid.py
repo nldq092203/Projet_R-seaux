@@ -69,7 +69,7 @@ class Grid:
     # Grid data retrieval methods
     
     # Retrieve a cell at the position (x,y) in the grid
-    def getCellAt(self, x, y):
+    def getCellAt(self, x, y)-> Cell:
         return self.gridDict.get((x, y))
     
     # Retrieve a list of all the cells in the grid
@@ -794,13 +794,14 @@ class Grid:
                     case NetworkCommandsTypes.MOVE_BOB:
                         print(type(data["last_position"][0]))
                         print(type(int(data["last_position"][0])))
+                        print(f"Last position here: {data['last_position']}")
                         cell = self.getCellAt(
-                            int(data["last_position"][0]),int(data["last_position"][1]))
+                            x=int(data["last_position"][0]),y=int(data["last_position"][1]))
                         print(type(cell))
                         print(f"Cell:{cell}")
                         bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                             )
-                        self.moveBobTo(bob, data["position"][0], data["position"][1])
+                        self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                     
     
     # @staticmethod
