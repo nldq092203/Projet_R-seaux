@@ -772,8 +772,8 @@ class Grid:
                 match(header["command"]):
                     
                     case NetworkCommandsTypes.SPAWN_BOB:
-                        bob = Bob(data["position"][0], 
-                                data["position"][1], 
+                        bob = Bob(x=data["position"][0], 
+                                y=data["position"][1], 
                                 mass=data["mass"], 
                                 totalVelocity=data["velocity"],
                                 energy=data["energy"],
@@ -792,25 +792,30 @@ class Grid:
                         self.removeFoodAt(data["position"][0], data["position"][1])
                         
                     case NetworkCommandsTypes.MOVE_BOB:
-                        print(type(data["last_position"][0]))
-                        print(type(int(data["last_position"][0])))
-                        print(f"Last position here: {data['last_position']}")
-                        print(int(data["last_position"][0]))
-                        print(int(data["last_position"][1]))
+                        other_player_bobs = filter(lambda x: x.other_player_bob == True, self.getAllBobs)
+                        # print(type(data["last_position"][0]))
+                        # print(type(int(data["last_position"][0])))
+                        # print(f"Last position here: {data['last_position']}")
+                        # print(int(data["last_position"][0]))
+                        # print(int(data["last_position"][1]))
                         # cell = self.getCellAt(5, 5)
                         # cell = self.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-                        bobs_at_position = self.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-                        bob = None
-                        for b in bobs_at_position:
-                            if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
-                                bob = b
-                                break
+                        # bobs_at_position = self.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        # bob = None
+                        # for b in bobs_at_position:
+                        #     if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                        #         bob = b
+                        #         break
                         # print(type(cell))
                         # print(f"Cell:{cell}")
                         # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                         #     )
-                        if bob:
-                            self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        # if bob:
+                        #     self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        for bob in other_player_bobs:
+                            if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
+                                self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                                break
                     
     
     # @staticmethod
