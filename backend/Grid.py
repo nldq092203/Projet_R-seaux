@@ -206,21 +206,24 @@ class Grid:
         y (int): The y coordinate of the position to move Bob to.
         """
         # If the position is the same as the bob's current position, set its action to idle
-        if (b.currentX, b.currentY) == (x, y):
-            b.action = "idle"
-        # Else, set its action to move
-        else:
-            b.action = "move"
-        
-        # Remove the bob from its current position
-        self.removeBob(b.id, b.currentX, b.currentY)
 
-        # Update the bob's position
-        b.lastX, b.lastY = b.currentX, b.currentY
-        b.currentX, b.currentY = x, y
-        
-        # Add the bob to its new position
-        self.addBob(b)
+        print(b)
+        if type(b) == Bob:
+            if (b.currentX, b.currentY) == (x, y):
+                b.action = "idle"
+            # Else, set its action to move
+            else:
+                b.action = "move"
+            
+            # Remove the bob from its current position
+            self.removeBob(b.id, b.currentX, b.currentY)
+
+            # Update the bob's position
+            b.lastX, b.lastY = b.currentX, b.currentY
+            b.currentX, b.currentY = x, y
+            
+            # Add the bob to its new position
+            self.addBob(b)
 
     # Add food at the position (x,y) in the grid
     def addEdible(self, edible):
@@ -756,44 +759,48 @@ class Grid:
      
         messageReceived = sys.read_message()
         
-        if messageReceived and messageReceived["data"][0]:
-            print(f"in receive_messages {messageReceived}")
-            data =  messageReceived["data"][0]
-            data = data.decode()
-            # data = json.loads(data)
-            data = ast.literal_eval(data)
-            header = messageReceived["header"]
-            match(header["command"]):
-                
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"],
-                              energy=data["energy"],
-                              id=data["id"]
-                              )
-                    bob.other_player_bob = True
-                    self.addBob(bob)
+        if messageReceived:
+            if not messageReceived["data"]:
+                pass
+            if messageReceived["data"]:
+                print(f"in receive_messages {messageReceived}")
+                data =  messageReceived["data"][0]
+                data = data.decode()
+                # data = json.loads(data)
+                data = ast.literal_eval(data)
+                header = messageReceived["header"]
+                match(header["command"]):
                     
-                case NetworkCommandsTypes.DELETE_BOB:
-                    self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
-                    
-                case NetworkCommandsTypes.SPAWN_FOOD:
-                    self.addEdible(Food(data["position"][0], data["posistion"][1]))
-                    
-                case NetworkCommandsTypes.DELETE_FOOD:
-                    self.removeFoodAt(data["position"][0], data["posistion"][1])
-                    
-                case NetworkCommandsTypes.MOVE_BOB:
-                    bob = self.getCellAt(
-                        data["last_position"][0],data["last_posistion"][1]).get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
-                        )
-                    self.moveBobTo(bob, data["position"][0], data["posistion"][1])
-                    
-                    
-                
-                
+                    case NetworkCommandsTypes.SPAWN_BOB:
+                        bob = Bob(data["position"][0], 
+                                data["position"][1], 
+                                mass=data["mass"], 
+                                totalVelocity=data["velocity"],
+                                energy=data["energy"],
+                                id_bob=data["id"]
+                                )
+                        bob.other_player_bob = True
+                        self.addBob(bob)
+                        
+                    case NetworkCommandsTypes.DELETE_BOB:
+                        self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
+                        
+                    case NetworkCommandsTypes.SPAWN_FOOD:
+                        self.addEdible(Food(data["position"][0], data["position"][1]))
+                        
+                    case NetworkCommandsTypes.DELETE_FOOD:
+                        self.removeFoodAt(data["position"][0], data["position"][1])
+                        
+                    case NetworkCommandsTypes.MOVE_BOB:
+                        print(type(data["last_position"][0]))
+                        print(type(int(data["last_position"][0])))
+                        cell = self.getCellAt(
+                            int(data["last_position"][0]),int(data["last_position"][1]))
+                        print(type(cell))
+                        print(f"Cell:{cell}")
+                        bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                            )
+                        self.moveBobTo(bob, data["position"][0], data["position"][1])
                     
     
     # @staticmethod
