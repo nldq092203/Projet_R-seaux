@@ -567,6 +567,8 @@ class Grid:
         
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
+        print(f"all bob: {bobsList}")
+        print(f"my bobs: {my_bobs_list}")
 
         for b in bobsList:
             # Set the bob's action to idle if it is not dying
