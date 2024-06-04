@@ -244,10 +244,10 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-    def send_bob(self, command: int, position: list[int, int], mass: int, velocity: int, id: int, energy: float):
+    def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
 
         msg: BobMsg = {
-            # "last_position": last_position,
+            "last_position": last_position,
             "position": position,
             "mass": mass,
             "velocity": velocity,

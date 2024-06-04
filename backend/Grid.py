@@ -81,6 +81,7 @@ class Grid:
     # Retrieve a bob at the position (x,y) in the grid
     def getBobsAt(self, x, y):
         cell = self.gridDict.get((x, y))
+        print(cell)
         if cell:
             return cell.bobs
         else:
@@ -567,8 +568,20 @@ class Grid:
         
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
-        print(f"all bob: {bobsList}")
-        print(f"my bobs: {my_bobs_list}")
+        print(f"************all bob:*******************")
+        for b in bobsList:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+        other_bobs_list = list(filter(lambda x: x.other_player_bob, bobsList))
+        print(f"************other bob:*******************")
+        for b in other_bobs_list:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+        print("*************my bobs:*******************")
+        for b in my_bobs_list:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+                  
 
         for b in bobsList:
             # Set the bob's action to idle if it is not dying
@@ -604,7 +617,7 @@ class Grid:
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
                 sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
-                            #  last_position=[b.lastX, b.lastY],
+                             last_position=[b.lastX, b.lastY],
                              position=[b.currentX, b.currentY],
                              mass=b.mass,
                              velocity=b.totalVelocity,
@@ -809,9 +822,23 @@ class Grid:
                         #         bob.action = "idle"
                         #         self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                         #         break
-                        bob = self.bob_dict[(int(header["player_id"]), int(data["id"]))]
+                        # bob = self.bob_dict[(int(header["player_id"]), int(data["id"]))]
+                        # self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1])   
+                        
+                        # cell = self.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bobs_at_position = self.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bob = None
+                        for b in bobs_at_position:
+                            if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                bob = b
+                        # print(f"Cell:{cell}")
+                        # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                        #     )
                         self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
-    
+                        if bob:
+                            self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+
+
     # @staticmethod
     def set_all_player_id(self, player_id: int):
         if not self.gridDict:
