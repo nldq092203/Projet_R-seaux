@@ -13,7 +13,7 @@ class Message(TypedDict):
 
 
 class BobMsg(TypedDict):
-    last_position: list[int, int]
+    # last_position: list[int, int]
     position: list[int, int]
     mass: int
     velocity: int

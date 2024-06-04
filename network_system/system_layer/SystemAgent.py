@@ -82,7 +82,7 @@ class SystemAgent:
 
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        time.sleep(0.001)
+        # time.sleep(0.001)
         if not self.connection:
             print("Error send C connection")
             return
@@ -244,10 +244,10 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-    def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
+    def send_bob(self, command: int, position: list[int, int], mass: int, velocity: int, id: int, energy: float):
 
         msg: BobMsg = {
-            "last_position": last_position,
+            # "last_position": last_position,
             "position": position,
             "mass": mass,
             "velocity": velocity,

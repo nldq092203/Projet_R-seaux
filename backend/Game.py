@@ -291,7 +291,7 @@ class Game:
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
                             self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
-                                         last_position= [0, 0],
+                                        #  last_position= [0, 0],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          mass=Settings.spawnMass,
                                          velocity=Settings.spawnVelocity,
@@ -319,7 +319,7 @@ class Game:
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
                             self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
-                                         last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                        #  last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          mass=Settings.spawnMass,
                                          velocity=Settings.spawnVelocity,

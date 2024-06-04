@@ -207,7 +207,7 @@ class Grid:
         """
         # If the position is the same as the bob's current position, set its action to idle
 
-        print(b)
+        # print(b)
         if type(b) == Bob:
             if (b.currentX, b.currentY) == (x, y):
                 b.action = "idle"
@@ -598,7 +598,7 @@ class Grid:
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
                 sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
-                             last_position=[b.lastX, b.lastY],
+                            #  last_position=[b.lastX, b.lastY],
                              position=[b.currentX, b.currentY],
                              mass=b.mass,
                              velocity=b.totalVelocity,
@@ -763,7 +763,6 @@ class Grid:
             if not messageReceived["data"]:
                 pass
             if messageReceived["data"]:
-                print(f"in receive_messages {messageReceived}")
                 data =  messageReceived["data"][0]
                 data = data.decode()
                 # data = json.loads(data)
@@ -778,8 +777,9 @@ class Grid:
                                 totalVelocity=data["velocity"],
                                 energy=data["energy"],
                                 id_bob=int(data["id"]),
-                                player_id=int(header["player_id"])
+                                player_id=int(header["player_id"]),
                                 )
+                        bob.action = "idle"
                         bob.other_player_bob = True
                         self.addBob(bob)
                         
@@ -797,6 +797,7 @@ class Grid:
                         other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
                         for bob in other_player_bobs:
                             if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
+                                bob.action = "idle"
                                 self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                                 break
                     
