@@ -35,11 +35,12 @@ class Bob:
         self.mutationFactor = 1
         self.consumptionFactor = 1
         self.target = None
+        self.id = None
         # Unique id
         if id_bob:
             self.id = id_bob
-        else:
-            self.id = uuid.uuid4()
+        # else:
+        #     self.id = uuid.uuid4()
         
         # Sprite
         self.sprite = BobSprite(self)

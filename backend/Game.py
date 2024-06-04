@@ -287,7 +287,8 @@ class Game:
                     if event.buttons[0] == 1:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
                             self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [0, 0],
