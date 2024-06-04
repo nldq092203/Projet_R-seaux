@@ -623,6 +623,8 @@ class Grid:
 
             if b.isDead() and b.action != "eaten":
                 b.action = "decay"
+                
+        print(f"grid dict {self.gridDict}")
 
 
     # Day events
