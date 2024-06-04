@@ -130,7 +130,6 @@ class SystemAgent:
 
         self.connection.setblocking(1)
 
-        print("khoale")
         header = self.unpack_header(binary_received_header)
 
         if header["object_size"]:
@@ -145,7 +144,7 @@ class SystemAgent:
             "data": data
         }
 
-        print(f"in read_message {self.message_read}")
+        # print(f"in read_message {self.message_read}")
         return self.message_read
 
 
@@ -256,7 +255,7 @@ class SystemAgent:
             "id": id
         }
         
-        print(f"print send bob {msg}")
+        # print(f"print send bob {msg}")
 
         self.send_message(command, id_object=12, data=json.dumps(msg))
 
