@@ -38,8 +38,8 @@ class Bob:
         # Unique id
         if id_bob:
             self.id = id_bob
-        # else:
-        #     self.id = id_bob
+        else:
+            self.id = uuid.uuid4()
         
         # Sprite
         self.sprite = BobSprite(self)
