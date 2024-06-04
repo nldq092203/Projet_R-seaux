@@ -19,6 +19,7 @@ class Grid:
     def __init__(self, size, bobCount, foodCount, sausageCount = 0):
         self.size = size
         self.gridDict = {} # {(x,y):Cell}
+        self.bob_dict = {}
         self.bobCount = bobCount
         self.foodCount = foodCount
         if Settings.enableSpitting:
@@ -86,9 +87,12 @@ class Grid:
             return []
 
     # Retrieve a list of all the bobs in the grid
-    def getAllBobs(self):
+    def getAllBobs(self, is_online = False):
         """Return a list of all bobs in the grid"""
-        return [b for cell in self.gridDict.copy().values() for b in cell.bobs]
+        if not is_online:
+            return [b for cell in self.gridDict.copy().values() for b in cell.bobs]
+        # else:
+        #     return[]
 
     # Retrieve the food value at the position (x,y) in the grid
     def getFoodValueAt(self, x, y):
@@ -781,6 +785,7 @@ class Grid:
                                 )
                         bob.action = "idle"
                         bob.other_player_bob = True
+                        self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
                         self.addBob(bob)
                         
                     case NetworkCommandsTypes.DELETE_BOB:
@@ -793,14 +798,15 @@ class Grid:
                         self.removeFoodAt(data["position"][0], data["position"][1])
                         
                     case NetworkCommandsTypes.MOVE_BOB:
-                        bobs = self.getAllBobs()
-                        other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
-                        for bob in other_player_bobs:
-                            if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
-                                bob.action = "idle"
-                                self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
-                                break
-                    
+                        # bobs = self.getAllBobs()
+                        # other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
+                        # for bob in other_player_bobs:
+                        #     if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
+                        #         bob.action = "idle"
+                        #         self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        #         break
+                        bob = self.bob_dict[(int(header["player_id"]), int(data["id"]))]
+                        self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
     
     # @staticmethod
     def set_all_player_id(self, player_id: int):
