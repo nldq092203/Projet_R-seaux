@@ -469,3 +469,8 @@ class Game:
                     
                 # case NetworkCommandsTypes.
 
+    @staticmethod
+    def get_instance():
+        if Game.instance is None:
+            Game.instance = Game()
+        return Game.instance
