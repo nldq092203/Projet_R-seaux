@@ -366,10 +366,10 @@ class Gui:
             
             # Multiplayer mode
             self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
-                        lambda: [setattr(self.game, "multiplayerMenu", True),
-                                 setattr(self.game, "onlineMode", False),
-                                 setattr(self, "showOnlineMenu", True), 
-                                 setattr(self, "displayPauseMenu", False), 
+                        lambda: [setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu),
+                                #  setattr(self.game, "onlineMode", False),
+                                 setattr(self, "showOnlineMenu", not self.showOnlineMenu), 
+                                 setattr(self, "displayPauseMenu", not self.displayPauseMenu), 
                                  pygame.time.delay(200)])
 
             # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
@@ -444,10 +444,11 @@ class Gui:
         # Join button
         self.button(buttonX, buttonY, onlineMenuOffset, buttonWidth, buttonHeight, "Join", onlineMenu, 
                     lambda:[self.joinGame(), 
-                            setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu), 
+                            setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu),
                             setattr(self.game, "paused", not self.game.paused), 
                             setattr(self, "showOnlineMenu", not self.showOnlineMenu), 
                             setattr(self.game, "onlineMode", not self.game.onlineMode),
+                            setattr(self.game, "renderHeight", False),
                             pygame.time.delay(500)])
 
         # self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), setattr(self.game, "renderHeight", False)],)

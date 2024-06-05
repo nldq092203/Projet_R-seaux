@@ -19,6 +19,7 @@ class Grid:
     def __init__(self, size, bobCount, foodCount, sausageCount = 0):
         self.size = size
         self.gridDict = {} # {(x,y):Cell}
+        self.bob_dict = {}
         self.bobCount = bobCount
         self.foodCount = foodCount
         if Settings.enableSpitting:
@@ -69,7 +70,7 @@ class Grid:
     # Grid data retrieval methods
     
     # Retrieve a cell at the position (x,y) in the grid
-    def getCellAt(self, x, y):
+    def getCellAt(self, x, y)-> Cell:
         return self.gridDict.get((x, y))
     
     # Retrieve a list of all the cells in the grid
@@ -80,15 +81,19 @@ class Grid:
     # Retrieve a bob at the position (x,y) in the grid
     def getBobsAt(self, x, y):
         cell = self.gridDict.get((x, y))
+        print(cell)
         if cell:
             return cell.bobs
         else:
             return []
 
     # Retrieve a list of all the bobs in the grid
-    def getAllBobs(self):
+    def getAllBobs(self, is_online = False):
         """Return a list of all bobs in the grid"""
-        return [b for cell in self.gridDict.copy().values() for b in cell.bobs]
+        if not is_online:
+            return [b for cell in self.gridDict.copy().values() for b in cell.bobs]
+        # else:
+        #     return[]
 
     # Retrieve the food value at the position (x,y) in the grid
     def getFoodValueAt(self, x, y):
@@ -206,21 +211,24 @@ class Grid:
         y (int): The y coordinate of the position to move Bob to.
         """
         # If the position is the same as the bob's current position, set its action to idle
-        if (b.currentX, b.currentY) == (x, y):
-            b.action = "idle"
-        # Else, set its action to move
-        else:
-            b.action = "move"
-        
-        # Remove the bob from its current position
-        self.removeBob(b.id, b.currentX, b.currentY)
 
-        # Update the bob's position
-        b.lastX, b.lastY = b.currentX, b.currentY
-        b.currentX, b.currentY = x, y
-        
-        # Add the bob to its new position
-        self.addBob(b)
+        # print(b)
+        if type(b) == Bob:
+            if (b.currentX, b.currentY) == (x, y):
+                b.action = "idle"
+            # Else, set its action to move
+            else:
+                b.action = "move"
+            
+            # Remove the bob from its current position
+            self.removeBob(b.id, b.currentX, b.currentY)
+
+            # Update the bob's position
+            b.lastX, b.lastY = b.currentX, b.currentY
+            b.currentX, b.currentY = x, y
+            
+            # Add the bob to its new position
+            self.addBob(b)
 
     # Add food at the position (x,y) in the grid
     def addEdible(self, edible):
@@ -560,6 +568,20 @@ class Grid:
         
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
+        print(f"************all bob:*******************")
+        for b in bobsList:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+        other_bobs_list = list(filter(lambda x: x.other_player_bob, bobsList))
+        print(f"************other bob:*******************")
+        for b in other_bobs_list:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+        print("*************my bobs:*******************")
+        for b in my_bobs_list:
+            print(f"{b.currentX} + {b.currentY}")
+        print("*****************************************")
+                  
 
         for b in bobsList:
             # Set the bob's action to idle if it is not dying
@@ -616,6 +638,8 @@ class Grid:
 
             if b.isDead() and b.action != "eaten":
                 b.action = "decay"
+                
+        print(f"grid dict {self.gridDict}")
 
 
     # Day events
@@ -756,46 +780,65 @@ class Grid:
      
         messageReceived = sys.read_message()
         
-        if messageReceived and not messageReceived["data"][0]:
-            print(f"in receive_messages {messageReceived}")
-            data =  messageReceived["data"][0]
-            data = data.decode()
-            # data = json.loads(data)
-            data = ast.literal_eval(data)
-            header = messageReceived["header"]
-            match(header["command"]):
-                
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"],
-                              energy=data["energy"],
-                              id=data["id"]
-                              )
-                    bob.other_player_bob = True
-                    self.addBob(bob)
+        if messageReceived:
+            if not messageReceived["data"]:
+                pass
+            if messageReceived["data"]:
+                data =  messageReceived["data"][0]
+                data = data.decode()
+                # data = json.loads(data)
+                data = ast.literal_eval(data)
+                header = messageReceived["header"]
+                match(header["command"]):
                     
-                case NetworkCommandsTypes.DELETE_BOB:
-                    self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
-                    
-                case NetworkCommandsTypes.SPAWN_FOOD:
-                    self.addEdible(Food(data["position"][0], data["posistion"][1]))
-                    
-                case NetworkCommandsTypes.DELETE_FOOD:
-                    self.removeFoodAt(data["position"][0], data["posistion"][1])
-                    
-                case NetworkCommandsTypes.MOVE_BOB:
-                    bob = self.getCellAt(
-                        data["last_position"][0],data["last_posistion"][1]).get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
-                        )
-                    self.moveBobTo(bob, data["position"][0], data["posistion"][1])
-                    
-                    
-                
-                
-                    
-    
+                    case NetworkCommandsTypes.SPAWN_BOB:
+                        bob = Bob(x=data["position"][0], 
+                                y=data["position"][1], 
+                                mass=data["mass"], 
+                                totalVelocity=data["velocity"],
+                                energy=data["energy"],
+                                id_bob=int(data["id"]),
+                                player_id=int(header["player_id"]),
+                                )
+                        bob.action = "idle"
+                        bob.other_player_bob = True
+                        self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
+                        self.addBob(bob)
+                        
+                    case NetworkCommandsTypes.DELETE_BOB:
+                        self.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
+                        
+                    case NetworkCommandsTypes.SPAWN_FOOD:
+                        self.addEdible(Food(data["position"][0], data["position"][1]))
+                        
+                    case NetworkCommandsTypes.DELETE_FOOD:
+                        self.removeFoodAt(data["position"][0], data["position"][1])
+                        
+                    case NetworkCommandsTypes.MOVE_BOB:
+                        # bobs = self.getAllBobs()
+                        # other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
+                        # for bob in other_player_bobs:
+                        #     if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
+                        #         bob.action = "idle"
+                        #         self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        #         break
+                        # bob = self.bob_dict[(int(header["player_id"]), int(data["id"]))]
+                        # self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1])   
+                        
+                        # cell = self.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bobs_at_position = self.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bob = None
+                        for b in bobs_at_position:
+                            if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                bob = b
+                        # print(f"Cell:{cell}")
+                        # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                        #     )
+                        self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        if bob:
+                            self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+
+
     # @staticmethod
     def set_all_player_id(self, player_id: int):
         if not self.gridDict:

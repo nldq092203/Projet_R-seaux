@@ -26,8 +26,8 @@ class Cell:
         return result
 
     # Convert the cell to a string
-    def __str__(self):
-        return f"({self.getX()},{self.getY()})"
+    # def __str__(self):
+    #     return f"({self.getX()},{self.getY()})"
     
 
     # Cell data retrieval methods
@@ -254,7 +254,7 @@ class Cell:
     
     
     #Apply only for online mode         
-    def get_bob_by_id(self, bob_id, player_id = None):
+    def get_bob_by_id(self, bob_id, player_id = None) -> Bob:
         for b in self.bobs:
             if b.id == bob_id and b.player_id == player_id:
                 return b

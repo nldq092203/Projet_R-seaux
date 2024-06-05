@@ -286,8 +286,11 @@ class Game:
 
                     if event.buttons[0] == 1:
                         if self.onlineModeType == "bob":
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            print("Spawn bob")
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
                             self.grid.addBob(bob)
+                            self.grid.bob_dict[(int(sys.player_id), int(bob.id))] = bob
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [0, 0],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
@@ -312,7 +315,19 @@ class Game:
 
                     if event.button == 1:
                         if self.onlineModeType == "bob":
-                            self.grid.addBob(Bob(self.onlineModeCoords[0], self.onlineModeCoords[1]))
+                            print("Spawn bob")
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
+                            self.grid.addBob(bob)
+                            sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
+                                         last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                         position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                         mass=Settings.spawnMass,
+                                         velocity=Settings.spawnVelocity,
+                                         energy=Settings.spawnEnergy,
+                                         id=bob.id,
+                                         )
+
                         elif self.onlineModeType == "food":
                             self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
 
