@@ -790,6 +790,8 @@ class Grid:
                 data = ast.literal_eval(data)
                 header = messageReceived["header"]
                 match(header["command"]):
+                    case NetworkCommandsTypes.ASK_SAVE:
+                        sys.send_game_save()
                     
                     case NetworkCommandsTypes.SPAWN_BOB:
                         bob = Bob(x=data["position"][0], 
@@ -802,7 +804,7 @@ class Grid:
                                 )
                         bob.action = "idle"
                         bob.other_player_bob = True
-                        self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
+                        # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
                         self.addBob(bob)
                         
                     case NetworkCommandsTypes.DELETE_BOB:
@@ -834,7 +836,7 @@ class Grid:
                         # print(f"Cell:{cell}")
                         # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                         #     )
-                        self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        # self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                         if bob:
                             self.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
 
