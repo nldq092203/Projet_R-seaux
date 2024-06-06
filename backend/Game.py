@@ -501,7 +501,7 @@ class Game:
                 data = ast.literal_eval(data)
                 match(header["command"]):
                     case NetworkCommandsTypes.BOB_MESSAGE:
-                        match(data["action_type"]):
+                        match(int(data["action_type"])):
                             case NetworkCommandsTypes.SPAWN_BOB:
                                 bob = Bob(x=data["position"][0], 
                                         y=data["position"][1], 
@@ -555,7 +555,7 @@ class Game:
                                 if bob:
                                     self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                             case NetworkCommandsTypes.FOOD_MESSAGE:
-                                match(data["action_type"]):
+                                match(int(data["action_type"])):
                                     case NetworkCommandsTypes.SPAWN_FOOD:
                                         self.grid.addEdible(Food(data["position"][0], data["position"][1]))
                                         
