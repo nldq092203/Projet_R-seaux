@@ -255,8 +255,8 @@ class Cell:
                     sys.send_to_list_bob_message(
                     list_bob_message=list_bob_message,
                     action_type=NetworkCommandsTypes.DELETE_BOB,
-                    last_position=0,
-                    position=0,
+                    last_position=[bob.currentX, bob.currentY],
+                    position=[bob.currentX, bob.currentY],
                     mass=0,
                     velocity=0,
                     energy=0,
