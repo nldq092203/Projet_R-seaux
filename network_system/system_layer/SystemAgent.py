@@ -268,10 +268,12 @@ class SystemAgent:
 
     def send_food(self, position: list[int, int], energy: int):
         msg: FoodMsg = {
+            "action_type":  NetworkCommandsTypes.SPAWN_FOOD,
             "position": position,
             "energy": energy,
         }
-        self.send_message(command=NetworkCommandsTypes.SPAWN_FOOD, id_object=10, data=json.dumps(msg))
+        print(FoodMsg)
+        self.send_message(command=NetworkCommandsTypes.FOOD_MESSAGE, id_object=10, data=json.dumps(msg))
 
     def send_to_list_bob_message(self, list_bob_message: List, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float, action_type: int) -> List:
         msg: BobMsg = {

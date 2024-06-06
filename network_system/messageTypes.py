@@ -13,7 +13,7 @@ class Message(TypedDict):
 
 
 class BobMsg(TypedDict):
-    action: int
+    action_type: int
     last_position: list[int, int]
     position: list[int, int]
     mass: int
@@ -22,5 +22,6 @@ class BobMsg(TypedDict):
     id: int
 
 class FoodMsg(TypedDict):
+    action_type: int
     position: list[int, int]
     energy: int
