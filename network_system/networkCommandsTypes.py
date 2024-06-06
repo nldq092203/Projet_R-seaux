@@ -8,16 +8,20 @@ class NetworkCommandsTypes(IntEnum):
     GAME_SAVE = 402
     ASK_SAVE = 403
 
-    SPAWN_FOOD = 410
-    DELETE_FOOD = 411
+    FOOD_MESSAGE = 410
+    SPAWN_FOOD = 411
+    DELETE_FOOD = 412
     # RISK_UPDATE = 412
 
-    SPAWN_BOB = 420
-    UPDATE_BOB = 421
-    DELETE_BOB = 422
-    BORN_BOB = 423
-    MOVE_BOB = 424
-    EAT_FOOD = 425
-    EAT_BOB = 426
+
+
+    BOB_MESSAGE = 420
+    SPAWN_BOB = 421
+    UPDATE_BOB = 422
+    DELETE_BOB = 423
+    BORN_BOB = 424
+    MOVE_BOB = 425
+    EAT_FOOD = 426
+    EAT_BOB = 427
 
     DELEGATE = 499

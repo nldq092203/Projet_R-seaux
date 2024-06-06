@@ -10,7 +10,7 @@ import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
-from typing import Optional
+from typing import Optional, List
 from network_system.messageTypes import Header, Message, BobMsg, FoodMsg
 from network_system.networkCommandsTypes import NetworkCommandsTypes
 
@@ -233,12 +233,14 @@ class SystemAgent:
             return
             
         gameSave = pickle.loads(message["data"][0])
+        print(f"type Grid: {type(gameSave['grid'])}")
         game.grid = gameSave["grid"]
         print(f"Grid: {game.grid}")
         bobs = game.grid.getAllBobs()
         for b in bobs:
-            print(f"bob: {b.id} {b.player_id}")
             b.other_player_bob = True
+            b.player_id = int(message["header"]["player_id"])
+            print(f"id player: {b.player_id}")
         game.tickCount = gameSave["tickCount"]
         # Grid.save_load()
 
@@ -249,9 +251,31 @@ class SystemAgent:
     def set_ip(self,ip: str):
         self.ip = ip
 
-    def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
+    # def send_bob(self, command: int, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float):
 
+    #     msg: BobMsg = {
+    #         "last_position": last_position,
+    #         "position": position,
+    #         "mass": mass,
+    #         "velocity": velocity,
+    #         "energy": energy,
+    #         "id": id
+    #     }
+        
+    #     # print(f"print send bob {msg}")
+
+    #     self.send_message(command, id_object=12, data=json.dumps(msg))
+
+    # def send_food(self, position: list[int, int], energy: int):
+    #     msg: FoodMsg = {
+    #         "position": position,
+    #         "energy": energy,
+    #     }
+    #     self.send_message(command=NetworkCommandsTypes.SPAWN_FOOD, id_object=10, data=json.dumps(msg))
+
+    def send_to_list_bob_message(self, list_bob_message: List, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float, action_type: int) -> List:
         msg: BobMsg = {
+            "action_type": action_type,
             "last_position": last_position,
             "position": position,
             "mass": mass,
@@ -259,17 +283,13 @@ class SystemAgent:
             "energy": energy,
             "id": id
         }
+        list_bob_message.append(msg)
+        return list_bob_message
         
+    def send_bob(self, command: NetworkCommandsTypes.BOB_MESSAGE, list_bob_message: List):
         # print(f"print send bob {msg}")
 
-        self.send_message(command, id_object=12, data=json.dumps(msg))
-
-    def send_food(self, position: list[int, int], energy: int):
-        msg: FoodMsg = {
-            "position": position,
-            "energy": energy,
-        }
-        self.send_message(command=NetworkCommandsTypes.SPAWN_FOOD, id_object=10, data=json.dumps(msg))
+        self.send_message(command, id_object=12, data=json.dumps(list_bob_message))
 
     def get_player_id(self) -> int:
         return self.player_id

@@ -222,6 +222,7 @@ class Grid:
             
             # Remove the bob from its current position
             self.removeBob(b.id, b.currentX, b.currentY)
+            print(f"id player in moveBobTo: {b.player_id}")
 
             # Update the bob's position
             b.lastX, b.lastY = b.currentX, b.currentY
