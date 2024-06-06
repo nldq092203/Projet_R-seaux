@@ -492,13 +492,20 @@ class Game:
         if not messages["data"]:
             return
          
-        for messageReceived in messages["data"]:
-            print(f"data: {messages['data']}")
+        print(f"data: {messages['data']}")
+        
+        message_list = messages["data"][0].decode()
+        message_list = ast.literal_eval(message_list)
+        for messageReceived in message_list:
             if messageReceived:
-                # data =  messageReceived["data"][0]
-                data = messageReceived.decode()
+                print(f"Type data: {type(messageReceived)}")
+                print(f"message: {messageReceived}")
+                # data = messageReceived.decode()
                 # data = json.loads(data)
-                data = ast.literal_eval(data)
+                data = messageReceived
+                print(f"Type data: {type(data)}")
+                print(f"data: {data}")
+
                 match(header["command"]):
                     case NetworkCommandsTypes.BOB_MESSAGE:
                         match(int(data["action_type"])):
