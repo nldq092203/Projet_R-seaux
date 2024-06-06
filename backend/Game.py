@@ -527,34 +527,20 @@ class Game:
                                 self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
                                 
                                 
-                            case NetworkCommandsTypes.MOVE_BOB:
-                                # bobs = self.grid.getAllBobs()
-                                # other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
-                                # for bob in other_player_bobs:
-                                #     if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
-                                #         bob.action = "idle"
-                                #         self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
-                                #         break
-                                # bob = self.grid.bob_dict[(int(header["player_id"]), int(data["id"]))]
-                                # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1])   
-                                
+                            case NetworkCommandsTypes.MOVE_BOB:                                
                                 # cell = self.grid.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-                                # bobs_at_position = self.grid.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                                bobs_at_position = self.grid.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
                                 bob = None
-                                # for b in bobs_at_position:
+                                for b in bobs_at_position:
+                                    if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                        bob = b
+                                        bob.action="move"
+                                        break
+                                # bobs = self.grid.getAllBobs()
+                                # for b in bobs:
                                 #     if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
                                 #         bob = b
                                 #         break
-                                bobs = self.grid.getAllBobs()
-                                print(hex(id(self.grid)))
-                                print(f"All bobs: {bobs}")
-                                for b in bobs:
-                                    print(f"bob: {b.id} {b.player_id}")
-                                    print(f"id player: {header['player_id']}")
-                                    print(f"id bob: {data['id']}")
-                                    if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
-                                        bob = b
-                                        break
                                 # print(f"Cell:{cell}")
                                 # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
                                 #     )
