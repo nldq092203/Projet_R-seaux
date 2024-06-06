@@ -488,7 +488,10 @@ class Game:
         
         if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
             sys.send_game_save(game = self)
-            
+        
+        if not messages["data"]:
+            return
+         
         for messageReceived in messages["data"]:
             print(f"data: {messages['data']}")
             if messageReceived:
