@@ -468,16 +468,13 @@ class Game:
         if messageReceived:
             header = messageReceived["header"]
             if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
-                sys.send_game_save()
+                sys.send_game_save(game = self)
             if messageReceived["data"]:
                 data =  messageReceived["data"][0]
                 data = data.decode()
                 # data = json.loads(data)
                 data = ast.literal_eval(data)
                 match(header["command"]):
-                    case NetworkCommandsTypes.ASK_SAVE:
-                        sys.send_game_save(game = self)
-                    
                     case NetworkCommandsTypes.SPAWN_BOB:
                         bob = Bob(x=data["position"][0], 
                                 y=data["position"][1], 
