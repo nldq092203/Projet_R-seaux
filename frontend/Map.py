@@ -277,7 +277,8 @@ class Map:
         self.bobSurface.fill((0,0,0,0))
 
         # Get all bobs in the grid sorted by their display coordinates
-        sortedBobs = sorted(self.Game.grid.getAllBobs(), key=lambda bob: bob.sprite.displayY + bob.sprite.displayX)
+        # sortedBobs = sorted(self.Game.grid.getAllBobs(), key=lambda bob: bob.sprite.displayY + bob.sprite.displayX)
+        sortedBobs = self.Game.grid.getAllBobs()
         sortedEdibleObjects = sorted(self.Game.grid.getAllEdibleObjects(), key=lambda edible: edible.y + edible.x)
 
 
