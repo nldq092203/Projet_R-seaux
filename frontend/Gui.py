@@ -474,9 +474,9 @@ class Gui:
         si.is_online = True
         si.run_subprocess()
 
-        # if si.ip:
-        #     si.send_message(NetworkCommandsTypes.ASK_SAVE, 0, None, encode=False)
-        #     si.receive_game_save()
+        if si.ip:
+            si.send_message(NetworkCommandsTypes.ASK_SAVE, 0, None, encode=False)
+            si.receive_game_save(game = self.game)
 
         self.game.grid.set_all_player_id(si.player_id)
 

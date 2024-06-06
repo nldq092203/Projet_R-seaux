@@ -20,6 +20,8 @@ from network_system.system_layer.SystemAgent import SystemAgent
 from network_system.networkCommandsTypes import NetworkCommandsTypes
 from backend.Bob import Bob
 
+import ast
+
 class Game:
     instance = None;
 
@@ -451,25 +453,6 @@ class Game:
         print("Game loaded from " + pathToSaveFile)
 
         return True
-    
-    def receive_messages(self):
-        sys = SystemAgent.get_instance()
-        
-        messageReceived = sys.read_message()
-        
-        if messageReceived is not None:
-            match(messageReceived["header"]["command"]):
-                
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    data =  messageReceived["data"]
-                    data = json.loads(data)
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"])
-                    self.grid.addBob(bob)
-                    
-                # case NetworkCommandsTypes.
 
     @staticmethod
     def get_instance():
@@ -493,7 +476,7 @@ class Game:
                 data = ast.literal_eval(data)
                 match(header["command"]):
                     case NetworkCommandsTypes.ASK_SAVE:
-                        sys.send_game_save()
+                        sys.send_game_save(game = self)
                     
                     case NetworkCommandsTypes.SPAWN_BOB:
                         bob = Bob(x=data["position"][0], 

@@ -218,16 +218,14 @@ class SystemAgent:
     def recieve_connect(self, datas):
         pass
 
-    def send_game_save(self):
-        from backend.Game import Game
+    def send_game_save(self, game):
         import pickle
 
         sys = SystemAgent.get_instance()
-        serialize_data = pickle.dump({ 'grid': Game.get_instance().grid,'tickCount': Game.get_instance().tickCount })
+        serialize_data = pickle.dump({ 'grid': game.grid,'tickCount': game.tickCount })
         sys.send_message(command=NetworkCommandsTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
 
-    def receive_game_save(self):
-        from backend.Game import Game
+    def receive_game_save(self, game):
         import pickle
 
         message = self.read_message(block=True)
@@ -235,8 +233,8 @@ class SystemAgent:
             return
             
         gameSave = pickle.loads(message["data"][0])
-        Game.get_instance().grid = gameSave["grid"]
-        Game.get_instance().tickCount = gameSave["tickCount"]
+        game.grid = gameSave["grid"]
+        game.tickCount = gameSave["tickCount"]
         # Grid.save_load()
 
 
