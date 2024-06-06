@@ -3,6 +3,7 @@ from backend.Edible import *
 from backend.Bob import *
 from backend.Effect import *
 from random import *
+from network_system.networkCommandsTypes import NetworkCommandsTypes
 
 class Cell:
     def __init__(self, x, y):
@@ -239,7 +240,7 @@ class Cell:
                             self.mate(bob, otherBob)
 
     # Delete all dead bobs in the cell
-    def cleanCellDeadBobs(self):
+    def cleanCellDeadBobs(self, sys, list_bob_message):
         """
         This method decays the Bob objects in the cell. 
         It first gets the list of Bob objects. 
@@ -250,6 +251,17 @@ class Cell:
         for bob in self.bobs:
             # If a Bob object's energy reaches zero, it is removed from the cell
             if bob.action == "decay":
+                if sys:
+                    sys.send_to_list_bob_message(
+                    list_bob_message=list_bob_message,
+                    action_type=NetworkCommandsTypes.DELETE_BOB,
+                    last_position=None,
+                    position=None,
+                    mass=None,
+                    velocity=None,
+                    energy=None,
+                    id=bob.id
+                    )
                 self.removeBob(bob.id)
     
     

@@ -635,7 +635,8 @@ class Grid:
                 #              id=b.id)
 
         # Delete all dead Bob objects in the grid
-        self.cleanDeadBobs()
+        
+        self.cleanDeadBobs(sys, self.list_bob_message)
         
         for b in bobsList:
             # If the Bob is immobile, set its last position to its current position
@@ -733,7 +734,7 @@ class Grid:
             self.addEdible(Sausage(x, y))
 
     # Delete all dead bobs
-    def cleanDeadBobs(self):
+    def cleanDeadBobs(self, sys=None, list_bob_message=None):
         """
         This method decays all Bob objects in the grid. 
         It creates a copy of the grid dictionary and iterates over each cell. 
@@ -744,7 +745,7 @@ class Grid:
         # Iterate over each cell in the grid dictionary
         for cell in self.getAllCells():
             # If the cell contains any Bobs
-            cell.cleanCellDeadBobs()
+            cell.cleanCellDeadBobs(sys, list_bob_message)
     
     # Launches all the events of the grid in a game's day
     def newDayEvents(self):
