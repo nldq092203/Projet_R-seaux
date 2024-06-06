@@ -162,7 +162,7 @@ class Grid:
         self.gridDict[(b.currentX, b.currentY)].addBob(b)
  
     # Remove a bob at the position (x,y) in the grid
-    def removeBob(self, bobID, x, y):
+    def removeBob(self,bobID, x, y, player_id = None):
         """
         This method removes a Bob object from the grid.
         If the cell at that position does not exist, nothing happens.
@@ -180,7 +180,7 @@ class Grid:
             return
         
         # Else, remove it from the grid
-        cell.removeBob(bobID)
+        cell.removeBob(bobID, player_id)
 
         # Remove the cell from the dictionnary if it is now empty
         if cell.isEmpty():
