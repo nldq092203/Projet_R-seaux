@@ -21,6 +21,7 @@ from network_system.networkCommandsTypes import NetworkCommandsTypes
 from backend.Bob import Bob
 
 class Game:
+    instance = None;
 
     def __init__(self, grid, screenWidth=930, screenHeight=640, dayLimit = 0, noInterface=False):
         

@@ -639,7 +639,7 @@ class Grid:
             if b.isDead() and b.action != "eaten":
                 b.action = "decay"
                 
-        print(f"grid dict {self.gridDict}")
+        # print(f"grid dict {self.gridDict}")
 
 
     # Day events
@@ -781,14 +781,14 @@ class Grid:
         messageReceived = sys.read_message()
         
         if messageReceived:
-            if not messageReceived["data"]:
-                pass
+            header = messageReceived["header"]
+            if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+                sys.send_game_save()
             if messageReceived["data"]:
                 data =  messageReceived["data"][0]
                 data = data.decode()
                 # data = json.loads(data)
                 data = ast.literal_eval(data)
-                header = messageReceived["header"]
                 match(header["command"]):
                     case NetworkCommandsTypes.ASK_SAVE:
                         sys.send_game_save()
