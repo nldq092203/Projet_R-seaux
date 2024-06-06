@@ -146,7 +146,7 @@ class Game:
                     self.receive_messages()
                     self.grid.newTickEvents()
                     if sys:
-                        sys.send_bob_and_food(list_bob_message=self.grid.list_message)
+                        sys.send_bob_and_food(list_message=self.grid.list_message)
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                     
