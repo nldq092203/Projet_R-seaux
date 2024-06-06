@@ -657,7 +657,7 @@ class Game:
                                 cell.eat(b=bob, edibleObject=cell.edibleObject, list_bob_message=None, list_food_message=None)
                                 
                         case NetworkCommandsTypes.SPAWN_FOOD:
-                            self.grid.addEdible(Food(int(messageReceived["position"][0]), int(messageReceived["position"][1])))
+                            self.grid.addEdible(Food(int(data["position"][0]), int(data["position"][1])))
                                             
                         case NetworkCommandsTypes.DELETE_FOOD:
                             self.grid.removeFoodAt(data["position"][0], data["position"][1])
