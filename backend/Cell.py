@@ -143,7 +143,7 @@ class Cell:
         """
         # Shuffle the list of Bob objects in the cell
         shuffle(self.bobs)
-        bobs = list(filter(lambda x: x.other_player_bob, self.bobs))
+        bobs = list(filter(lambda x: not x.other_player_bob, self.bobs))
         # Make each bob that has not performed any action yet eat
         for bob in bobs:
         #     if bob.action == "idle":
