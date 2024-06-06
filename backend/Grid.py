@@ -82,7 +82,7 @@ class Grid:
     # Retrieve a bob at the position (x,y) in the grid
     def getBobsAt(self, x, y):
         cell = self.gridDict.get((x, y))
-        print(cell)
+        # print(cell)
         if cell:
             return cell.bobs
         else:
@@ -223,7 +223,7 @@ class Grid:
             
             # Remove the bob from its current position
             self.removeBob(b.id, b.currentX, b.currentY)
-            print(f"id player in moveBobTo: {b.player_id}")
+            # print(f"id player in moveBobTo: {b.player_id}")
 
             # Update the bob's position
             b.lastX, b.lastY = b.currentX, b.currentY
