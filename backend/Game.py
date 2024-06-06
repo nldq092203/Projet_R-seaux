@@ -145,7 +145,7 @@ class Game:
                     self.tickCount += 1
                     self.receive_messages()
                     self.grid.newTickEvents()
-                    if sys:
+                    if sys and self.grid.list_bob_message:
                         sys.send_bob(list_bob_message=self.grid.list_bob_message)
                         self.grid.list_bob_message = []
                     
