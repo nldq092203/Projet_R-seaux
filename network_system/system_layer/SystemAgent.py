@@ -266,14 +266,30 @@ class SystemAgent:
 
     #     self.send_message(command, id_object=12, data=json.dumps(msg))
 
-    def send_food(self, position: list[int, int], energy: int):
-        msg: FoodMsg = {
-            "action_type":  NetworkCommandsTypes.SPAWN_FOOD,
+    # def send_food(self, position: list[int, int], energy: int):
+    #     msg: FoodMsg = {
+    #         "action_type":  NetworkCommandsTypes.SPAWN_FOOD,
+    #         "position": position,
+    #         "energy": energy,
+    #     }
+    #     print(FoodMsg)
+    #     self.send_message(command=NetworkCommandsTypes.FOOD_MESSAGE, id_object=10, data=json.dumps(msg))
+    
+    def send_food(self, list_food_message: List, command = NetworkCommandsTypes.FOOD_MESSAGE):
+        # print(f"print send bob {msg}")
+
+        self.send_message(command, id_object=12, data=json.dumps(list_food_message))
+
+    
+    def send_to_list_food_message(self, list_food_message: List, position: list[int, int], energy: float, action_type: int) -> List:
+        msg: BobMsg = {
+            "action_type": action_type,
             "position": position,
             "energy": energy,
         }
-        print(FoodMsg)
-        self.send_message(command=NetworkCommandsTypes.FOOD_MESSAGE, id_object=10, data=json.dumps(msg))
+        list_food_message.append(msg)
+        return list_food_message
+
 
     def send_to_list_bob_message(self, list_bob_message: List, last_position: list[int, int], position: list[int, int], mass: int, velocity: int, id: int, energy: float, action_type: int) -> List:
         msg: BobMsg = {

@@ -4,6 +4,7 @@ from backend.Bob import *
 from backend.Effect import *
 from random import *
 from network_system.networkCommandsTypes import NetworkCommandsTypes
+from network_system.system_layer.SystemAgent import SystemAgent
 
 class Cell:
     def __init__(self, x, y):
@@ -82,7 +83,7 @@ class Cell:
 
     # Feed all bobs in the cell
         
-    def eat(self, b, edibleObject):
+    def eat(self, b, edibleObject, list_food_message):
         """
         This method makes a Bob eat an edible object.
 
@@ -90,6 +91,7 @@ class Cell:
             b (Bob): The Bob object that eats the edible object.
             edibleObject (Edible): The edible object that is eaten.
         """
+        sys = SystemAgent.get_instance()
         # If the edible object is a food
         if isinstance(edibleObject, Food):
             bobEnergy = b.energy
@@ -98,8 +100,25 @@ class Cell:
             # The Bob object consumes the food energy
             b.energy = min(b.energyMax, bobEnergy + edibleObject.value)
             edibleObject.value -= b.energy - bobEnergy
-            if edibleObject.value <= 1e-5:
-                self.edibleObject = None
+            # if edibleObject.value <= 1e-5:
+            #     self.edibleObject = None
+            self.edibleObject = None
+            sys.send_to_list_food_message(
+                list_food_message=list_food_message,
+                position=[b.currentX, b.currentY],
+                energy=0,
+                action_type=NetworkCommandsTypes.DELETE_FOOD
+                )
+            sys.send_to_list_bob_message(
+                list_bob_message=self.list_bob_message,
+                action_type=NetworkCommandsTypes.EAT_FOOD,
+                last_position=[b.lastX, b.lastY],
+                position=[b.currentX, b.currentY],
+                mass=b.mass,
+                velocity=b.totalVelocity,
+                energy=b.energy,
+                id=b.id
+            )
             # Set the action of the Bob object to "eat"
             b.action = "eat"
 
@@ -112,7 +131,7 @@ class Cell:
             b.action = "eat"
 
     # Make all bobs in the cell eat food or a prey if they are able to
-    def feedCellBobs(self):
+    def feedCellBobs(self, list_food_message, list_bob_message):
         """
         This method feeds the Bob objects in the cell. 
         It first gets the food energy available in the cell and the list of Bob objects. 
@@ -124,38 +143,38 @@ class Cell:
         """
         # Shuffle the list of Bob objects in the cell
         shuffle(self.bobs)
-
+        bobs = list(filter(lambda x: x.other_player_bob, self.bobs))
         # Make each bob that has not performed any action yet eat
-        for bob in self.bobs:
-            if bob.action == "idle":
+        for bob in bobs:
+        #     if bob.action == "idle":
                 
-                # Get the list all other Bobs in the cell
-                otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
+        #         # Get the list all other Bobs in the cell
+        #         otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
 
-                # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
-                if Settings.enableMass:
-                    for otherBob in otherBobs:
-                        massRatio = otherBob.mass / bob.mass
-                        otherBobEnergy = otherBob.energy
+        #         # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
+        #         if Settings.enableMass:
+        #             for otherBob in otherBobs:
+        #                 massRatio = otherBob.mass / bob.mass
+        #                 otherBobEnergy = otherBob.energy
 
-                        # If the mass ratio is less than the threshold
-                        if massRatio < Settings.massRatioThreshold:
-                            # The Bob consumes the energy of the other Bob object
-                            bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
-                            # The other Bob's energy is reduced
-                            self.removeBob(otherBob.id)
-                            # Set the actions of the two Bob objects
-                            bob.action = "eat"
-                            otherBob.action = "eaten"
+        #                 # If the mass ratio is less than the threshold
+        #                 if massRatio < Settings.massRatioThreshold:
+        #                     # The Bob consumes the energy of the other Bob object
+        #                     bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
+        #                     # The other Bob's energy is reduced
+        #                     self.removeBob(otherBob.id)
+        #                     # Set the actions of the two Bob objects
+        #                     bob.action = "eat"
+        #                     otherBob.action = "eaten"
 
-                            # print("cannibalism")
+        #                     # print("cannibalism")
 
-                            # The Bob can only eat once per tick so we break the loop
-                            break  
+        #                     # The Bob can only eat once per tick so we break the loop
+        #                     break  
                 
                 # If the Bob has not eaten yet, make it eat the edible object if there is one in the cell
                 if self.edibleObject is not None:
-                    self.eat(bob, self.edibleObject)
+                    self.eat(bob, self.edibleObject, list_food_message, list_food_message)
 
     # Split a bob into two bobs, (reproduction by parthenogenesis)
     def split(self, b):

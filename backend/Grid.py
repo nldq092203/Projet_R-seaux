@@ -23,6 +23,7 @@ class Grid:
         self.bobCount = bobCount
         self.foodCount = foodCount
         self.list_bob_message = []
+        self.list_food_message = []
         if Settings.enableSpitting:
             self.sausageCount = sausageCount
         self.dayCount = 0
@@ -597,7 +598,7 @@ class Grid:
                 
                 # Feed all bobs in the cell if they are able to
                 if Settings.enableFeed:
-                    cell.feedCellBobs()
+                    cell.feedCellBobs(list_food_message = self.list_food_message, list_bob_message = self.list_bob_message)
 
         for b in my_bobs_list:
             # Update the perception of the bob

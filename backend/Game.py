@@ -148,6 +148,8 @@ class Game:
                     if sys:
                         sys.send_bob(list_bob_message=self.grid.list_bob_message)
                         self.grid.list_bob_message = []
+                        sys.send_food(list_food_message=self.grid.list_food_message)
+                        self.grid.list_food_message = []
                     
 
                     # Compute the best bob, update the stats
@@ -316,8 +318,16 @@ class Game:
                             
                             
                         elif self.onlineModeType == "food":
-                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
-                            sys.send_food(position=[self.onlineModeCoords[0], self.onlineModeCoords[1]], energy=Settings.spawnedFoodEnergy)
+                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            self.grid.addEdible(food)
+                            self.grid.list_food_message = sys.send_to_list_food_message(
+                                list_food_message=self.grid.list_food_message,
+                                action_type=NetworkCommandsTypes.SPAWN_FOOD,
+                                energy=Settings.spawnedFoodEnergy,
+                            )
+                            sys.send_food(self.grid.list_food_message)
+                            self.grid.list_food_message = []
+                            
 
                     
                     if event.buttons[2] == 1:
@@ -350,8 +360,17 @@ class Game:
                             self.grid.list_bob_message = []
 
                         elif self.onlineModeType == "food":
-                            self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))
-                            sys.send_food(position=[self.onlineModeCoords[0], self.onlineModeCoords[1]], energy=Settings.spawnedFoodEnergy)
+                            Food.id_food_origin += 1
+                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1], id_food = Food.id_food_origin)
+                            self.grid.addEdible(food)
+                            self.grid.list_food_message = sys.send_to_list_food_message(
+                                list_food_message=self.grid.list_food_message,
+                                action_type=NetworkCommandsTypes.SPAWN_FOOD,
+                                energy=Settings.spawnedFoodEnergy,
+                                id=food.id
+                            )
+                            sys.send_food(self.grid.list_food_message)
+                            self.grid.list_food_message = []
 
                         print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
                     if event.button == 3:
@@ -552,10 +571,21 @@ class Game:
                             # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                             if bob:
                                 self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                                
+                        case NetworkCommandsTypes.EAT_FOOD:
+                            bobs_at_position = self.grid.getBobsAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                            bob = None
+                            for b in bobs_at_position:
+                                if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                    bob = b
+                                    bob.action="eat"
+                                    break
+                                
+                            if bob:
+                                cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                                cell.eat(b=bob, edibleObject=cell.edibleObject)
         elif header["command"] == NetworkCommandsTypes.FOOD_MESSAGE:
             if messageReceived:
-                print(f"Type data: {type(messageReceived)}")
-                print(f"message: {messageReceived}")                
                 match(int(messageReceived["action_type"])):
                     case NetworkCommandsTypes.SPAWN_FOOD:
                         self.grid.addEdible(Food(int(messageReceived["position"][0]), int(messageReceived["position"][1])))

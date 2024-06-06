@@ -2,10 +2,13 @@ from backend.Settings import Settings
 from backend.Effect import *
 
 class Edible:
-    def __init__(self, x, y, value=0):
+    id_food_origin = 0
+    def __init__(self, x, y, value=0, id_food : int = None):
         self.x = x
         self.y = y
         self.value = value
+        if id_food:
+            self.id = id_food
         
     def set_player_id(self,player_id: int):
         self.player_id = player_id
