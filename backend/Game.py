@@ -322,6 +322,7 @@ class Game:
                             self.grid.addEdible(food)
                             self.grid.list_food_message = sys.send_to_list_food_message(
                                 list_food_message=self.grid.list_food_message,
+                                position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                 action_type=NetworkCommandsTypes.SPAWN_FOOD,
                                 energy=Settings.spawnedFoodEnergy,
                             )
