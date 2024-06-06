@@ -146,8 +146,8 @@ class Game:
                     self.receive_messages()
                     self.grid.newTickEvents()
                     if sys:
-                        sys.send_bob(list_bob_message=self.grid.list_message)
-                        sys.send_food(list_food_message=self.grid.list_message)
+                        sys.send_bob_and_food(list_bob_message=self.grid.list_message)
+                        # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                     
 
@@ -312,7 +312,7 @@ class Game:
                                          velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)
-                            sys.send_bob(self.grid.list_message)
+                            sys.send_bob_and_food(self.grid.list_message)
                             self.grid.list_message = []
                             
                             
@@ -325,7 +325,7 @@ class Game:
                                 action_type=NetworkCommandsTypes.SPAWN_FOOD,
                                 energy=Settings.spawnedFoodEnergy,
                             )
-                            sys.send_food(self.grid.list_message)
+                            sys.send_bob_and_food(self.grid.list_message)
                             self.grid.list_message = []
                             
 
@@ -356,7 +356,7 @@ class Game:
                                          velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)
-                            sys.send_bob(self.grid.list_message)
+                            sys.send_bob_and_food(self.grid.list_message)
                             self.grid.list_message = []
 
                         elif self.onlineModeType == "food":
@@ -368,7 +368,7 @@ class Game:
                                 action_type=NetworkCommandsTypes.SPAWN_FOOD,
                                 energy=Settings.spawnedFoodEnergy,
                             )
-                            sys.send_food(self.grid.list_message)
+                            sys.send_bob_and_food(self.grid.list_message)
                             self.grid.list_message = []
 
                         print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
