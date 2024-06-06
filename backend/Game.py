@@ -524,7 +524,7 @@ class Game:
                                 self.grid.addBob(bob)
                                 
                             case NetworkCommandsTypes.DELETE_BOB:
-                                self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"], x=data["last_position"][0], y=data["last_position"][1]))
+                                self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
                                 
                                 
                             case NetworkCommandsTypes.MOVE_BOB:                                
