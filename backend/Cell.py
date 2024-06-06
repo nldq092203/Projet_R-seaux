@@ -105,10 +105,10 @@ class Cell:
             self.edibleObject = None
             if not b.other_player_bob:
                 sys.send_to_list_food_message(
+                    action_type=NetworkCommandsTypes.DELETE_FOOD,
                     list_food_message=list_food_message,
                     position=[b.currentX, b.currentY],
                     energy=0,
-                    action_type=NetworkCommandsTypes.DELETE_FOOD
                     )
                 sys.send_to_list_bob_message(
                     list_bob_message=list_bob_message,
@@ -118,7 +118,7 @@ class Cell:
                     mass=b.mass,
                     velocity=b.totalVelocity,
                     energy=b.energy,
-                    id=b.id
+                    id=b.id,
                 )
             # Set the action of the Bob object to "eat"
             b.action = "eat"
@@ -147,7 +147,7 @@ class Cell:
         bobs = list(filter(lambda x: not x.other_player_bob, self.bobs))
         # Make each bob that has not performed any action yet eat
         for bob in bobs:
-        #     if bob.action == "idle":
+            if bob.action == "idle":
                 
         #         # Get the list all other Bobs in the cell
         #         otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
