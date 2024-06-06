@@ -583,7 +583,7 @@ class Game:
                                 
                             if bob:
                                 cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
-                                cell.eat(b=bob, edibleObject=cell.edibleObject)
+                                cell.eat(b=bob, edibleObject=cell.edibleObject, list_bob_message=None, list_food_message=None)
         elif header["command"] == NetworkCommandsTypes.FOOD_MESSAGE:
             if messageReceived:
                 match(int(messageReceived["action_type"])):

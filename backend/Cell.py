@@ -83,7 +83,7 @@ class Cell:
 
     # Feed all bobs in the cell
         
-    def eat(self, b, edibleObject, list_food_message):
+    def eat(self, b, edibleObject, list_food_message, list_bob_message):
         """
         This method makes a Bob eat an edible object.
 
@@ -103,22 +103,23 @@ class Cell:
             # if edibleObject.value <= 1e-5:
             #     self.edibleObject = None
             self.edibleObject = None
-            sys.send_to_list_food_message(
-                list_food_message=list_food_message,
-                position=[b.currentX, b.currentY],
-                energy=0,
-                action_type=NetworkCommandsTypes.DELETE_FOOD
+            if not b.other_bob_player:
+                sys.send_to_list_food_message(
+                    list_food_message=list_food_message,
+                    position=[b.currentX, b.currentY],
+                    energy=0,
+                    action_type=NetworkCommandsTypes.DELETE_FOOD
+                    )
+                sys.send_to_list_bob_message(
+                    list_bob_message=list_bob_message,
+                    action_type=NetworkCommandsTypes.EAT_FOOD,
+                    last_position=[b.lastX, b.lastY],
+                    position=[b.currentX, b.currentY],
+                    mass=b.mass,
+                    velocity=b.totalVelocity,
+                    energy=b.energy,
+                    id=b.id
                 )
-            sys.send_to_list_bob_message(
-                list_bob_message=self.list_bob_message,
-                action_type=NetworkCommandsTypes.EAT_FOOD,
-                last_position=[b.lastX, b.lastY],
-                position=[b.currentX, b.currentY],
-                mass=b.mass,
-                velocity=b.totalVelocity,
-                energy=b.energy,
-                id=b.id
-            )
             # Set the action of the Bob object to "eat"
             b.action = "eat"
 
