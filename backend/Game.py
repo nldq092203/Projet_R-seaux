@@ -360,14 +360,13 @@ class Game:
                             self.grid.list_bob_message = []
 
                         elif self.onlineModeType == "food":
-                            Food.id_food_origin += 1
-                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1], id_food = Food.id_food_origin)
+                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
                             self.grid.addEdible(food)
                             self.grid.list_food_message = sys.send_to_list_food_message(
                                 list_food_message=self.grid.list_food_message,
+                                position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                 action_type=NetworkCommandsTypes.SPAWN_FOOD,
                                 energy=Settings.spawnedFoodEnergy,
-                                id=food.id
                             )
                             sys.send_food(self.grid.list_food_message)
                             self.grid.list_food_message = []
