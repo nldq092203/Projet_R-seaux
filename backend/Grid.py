@@ -846,8 +846,8 @@ class Grid:
         for key, cell in self.gridDict.items():
             for bob in cell.bobs:
                 bob.set_player_id(player_id)
-            for edible in cell.edibleObject:
-                edible.set_player_id(player_id)
+            # for edible in cell.edibleObject:
+            #     edible.set_player_id(player_id)
 
     @staticmethod
     def get_instance():
