@@ -124,7 +124,7 @@ class Cell:
             b.action = "eat"
 
         # If the edible object is a sausage
-        elif isinstance(edibleObject, Sausage):
+        elif isinstance(edibleObject, Sausage):                         
             # The Bob object consumes the sausage
             b.ammos = min(b.maxAmmos, b.ammos + edibleObject.value)
             self.edibleObject = None
