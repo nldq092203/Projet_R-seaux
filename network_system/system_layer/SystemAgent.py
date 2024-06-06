@@ -233,14 +233,14 @@ class SystemAgent:
             return
             
         gameSave = pickle.loads(message["data"][0])
-        print(f"type Grid: {type(gameSave['grid'])}")
+        # print(f"type Grid: {type(gameSave['grid'])}")
         game.grid = gameSave["grid"]
         print(f"Grid: {game.grid}")
         bobs = game.grid.getAllBobs()
         for b in bobs:
             b.other_player_bob = True
             b.player_id = int(message["header"]["player_id"])
-            print(f"id player: {b.player_id}")
+            # print(f"id player: {b.player_id}")
         game.tickCount = gameSave["tickCount"]
         # Grid.save_load()
 
