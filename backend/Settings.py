@@ -48,7 +48,7 @@ class Settings:
     
     dayLength = 100 # the number of ticks in a day
 
-    maxTps = 30 # the maximum number of ticks per second
+    maxTps = 10 # the maximum number of ticks per second
 
     maxFps = 60 # the maximum number of frames per second
 
