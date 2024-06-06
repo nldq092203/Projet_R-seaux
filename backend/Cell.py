@@ -255,11 +255,11 @@ class Cell:
                     sys.send_to_list_bob_message(
                     list_bob_message=list_bob_message,
                     action_type=NetworkCommandsTypes.DELETE_BOB,
-                    last_position=None,
-                    position=None,
-                    mass=None,
-                    velocity=None,
-                    energy=None,
+                    last_position=0,
+                    position=0,
+                    mass=0,
+                    velocity=0,
+                    energy=0,
                     id=bob.id
                     )
                 self.removeBob(bob.id)
