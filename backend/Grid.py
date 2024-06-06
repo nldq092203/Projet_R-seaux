@@ -24,6 +24,7 @@ class Grid:
         self.foodCount = foodCount
         self.list_bob_message = []
         self.list_food_message = []
+        self.list_message = []
         if Settings.enableSpitting:
             self.sausageCount = sausageCount
         self.dayCount = 0
@@ -598,7 +599,7 @@ class Grid:
                 
                 # Feed all bobs in the cell if they are able to
                 if Settings.enableFeed:
-                    cell.feedCellBobs(list_food_message = self.list_food_message, list_bob_message = self.list_bob_message)
+                    cell.feedCellBobs(list_food_message = self.list_message, list_bob_message = self.list_message)
 
         for b in my_bobs_list:
             # Update the perception of the bob
@@ -618,7 +619,7 @@ class Grid:
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
                 sys.send_to_list_bob_message(
-                    list_bob_message=self.list_bob_message,
+                    list_bob_message=self.list_message,
                     action_type=NetworkCommandsTypes.MOVE_BOB,
                     last_position=[b.lastX, b.lastY],
                     position=[b.currentX, b.currentY],
@@ -637,7 +638,7 @@ class Grid:
 
         # Delete all dead Bob objects in the grid
         
-        self.cleanDeadBobs(sys, self.list_bob_message)
+        self.cleanDeadBobs(sys, self.list_message)
         
         for b in bobsList:
             # If the Bob is immobile, set its last position to its current position

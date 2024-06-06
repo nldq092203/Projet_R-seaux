@@ -23,5 +23,7 @@ class NetworkCommandsTypes(IntEnum):
     MOVE_BOB = 425
     EAT_FOOD = 426
     EAT_BOB = 427
+    
+    UPDATE_MAP = 430
 
     DELEGATE = 499

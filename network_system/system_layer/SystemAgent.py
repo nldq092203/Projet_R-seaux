@@ -307,9 +307,10 @@ class SystemAgent:
     def send_bob(self, list_bob_message: List, command = NetworkCommandsTypes.BOB_MESSAGE):
         # print(f"print send bob {msg}")
 
-        self.send_message(command, id_object=12, data=json.dumps(list_bob_message))
+        self.send_message(command, id_object=13, data=json.dumps(list_bob_message))
     
-
+    def send_bob_and_food(self, list_message: List):
+        self.send_message(command=NetworkCommandsTypes.UPDATE_MAP, id_object=15, data=json.dumps(list_message))
 
     def get_player_id(self) -> int:
         return self.player_id
