@@ -147,7 +147,7 @@ class Game:
                     self.receive_messages()
                     self.grid.newTickEvents()
                     if sys:
-                        sys.send_bob(self.list_bob_message)
+                        sys.send_bob(list_bob_message=self.list_bob_message)
                         self.list_bob_message = []
                     
 
@@ -478,10 +478,10 @@ class Game:
         sys = SystemAgent.get_instance()
         print(f"my id : {sys.player_id}")
      
-        message = sys.read_message()
+        messages = sys.read_message()
         header = None
-        if message:
-            header = message["header"]
+        if messages:
+            header = messages["header"]
         
         if not header:
             return
@@ -489,8 +489,8 @@ class Game:
         if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
             sys.send_game_save(game = self)
             
-        for messageReceived in message["data"]:
-            print(f"data: {message['data']}")
+        for messageReceived in messages["data"]:
+            print(f"data: {messages['data']}")
             if messageReceived:
                 # data =  messageReceived["data"][0]
                 data = messageReceived.decode()
