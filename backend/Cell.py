@@ -103,7 +103,7 @@ class Cell:
             # if edibleObject.value <= 1e-5:
             #     self.edibleObject = None
             self.edibleObject = None
-            if not b.other_bob_player:
+            if not b.other_player_bob:
                 sys.send_to_list_food_message(
                     list_food_message=list_food_message,
                     position=[b.currentX, b.currentY],
