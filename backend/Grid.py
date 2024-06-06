@@ -568,19 +568,19 @@ class Grid:
         
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
-        print(f"************all bob:*******************")
-        for b in bobsList:
-            print(f"{b.currentX} + {b.currentY}")
-        print("*****************************************")
-        other_bobs_list = list(filter(lambda x: x.other_player_bob, bobsList))
-        print(f"************other bob:*******************")
-        for b in other_bobs_list:
-            print(f"{b.currentX} + {b.currentY}")
-        print("*****************************************")
-        print("*************my bobs:*******************")
-        for b in my_bobs_list:
-            print(f"{b.currentX} + {b.currentY}")
-        print("*****************************************")
+        # print(f"************all bob:*******************")
+        # for b in bobsList:
+        #     print(f"{b.currentX} + {b.currentY}")
+        # print("*****************************************")
+        # other_bobs_list = list(filter(lambda x: x.other_player_bob, bobsList))
+        # print(f"************other bob:*******************")
+        # for b in other_bobs_list:
+        #     print(f"{b.currentX} + {b.currentY}")
+        # print("*****************************************")
+        # print("*************my bobs:*******************")
+        # for b in my_bobs_list:
+        #     print(f"{b.currentX} + {b.currentY}")
+        # print("*****************************************")
                   
 
         for b in bobsList:

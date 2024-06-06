@@ -474,7 +474,7 @@ class Gui:
         si.is_online = True
         si.run_subprocess()
 
-        if not (si.ip == ""):
+        if si.ip:
             si.send_message(NetworkCommandsTypes.ASK_SAVE, 0, None, encode=False)
             si.receive_game_save()
 
