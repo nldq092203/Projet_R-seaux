@@ -292,7 +292,7 @@ class Game:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
                             self.grid.addBob(bob)
                             self.grid.bob_dict[(int(sys.player_id), int(bob.id))] = bob
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,

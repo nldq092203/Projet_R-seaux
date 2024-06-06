@@ -234,8 +234,10 @@ class SystemAgent:
             
         gameSave = pickle.loads(message["data"][0])
         game.grid = gameSave["grid"]
+        print(f"Grid: {game.grid}")
         bobs = game.grid.getAllBobs()
         for b in bobs:
+            print(f"bob: {b.id} {b.player_id}")
             b.other_player_bob = True
         game.tickCount = gameSave["tickCount"]
         # Grid.save_load()
