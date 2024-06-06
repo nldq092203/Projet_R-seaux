@@ -16,7 +16,7 @@ void print_object_packet(const Object_packet *packet){
     printf("command: %i\n", packet->command);
     printf("Player_id: %i\n", packet->id_player);
     printf("Data Size: %i\n", packet->object_size);
-    printf("====== End Packet %i ======\n", packet->id_object);
+    printf("====== End Object %i ======\n", packet->id_object);
 }
 
 Object_packet* new_object_packet(){

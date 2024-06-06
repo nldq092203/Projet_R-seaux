@@ -481,7 +481,7 @@ class Game:
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
-        print(f"my id : {sys.player_id}")
+        # print(f"my id : {sys.player_id}")
      
         messages = sys.read_message()
         header = None
@@ -497,7 +497,7 @@ class Game:
         if not messages["data"]:
             return
          
-        print(f"data: {messages['data']}")
+        # print(f"data: {messages['data']}")
         
         messageReceived = messages["data"][0].decode()
         messageReceived = ast.literal_eval(messageReceived)
@@ -505,12 +505,12 @@ class Game:
         if header["command"] == NetworkCommandsTypes.BOB_MESSAGE:
             for data in messageReceived:
                 if data:
-                    print(f"Type data: {type(data)}")
-                    print(f"message: {data}")
+                    # print(f"Type data: {type(data)}")
+                    # print(f"message: {data}")
                     # data = messageReceived.decode()
                     # data = json.loads(data)
-                    print(f"Type data: {type(data)}")
-                    print(f"data: {data}")
+                    # print(f"Type data: {type(data)}")
+                    # print(f"data: {data}")
 
         
                     match(int(data["action_type"])):
@@ -554,8 +554,8 @@ class Game:
                                 self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
         elif header["command"] == NetworkCommandsTypes.FOOD_MESSAGE:
             if messageReceived:
-                print(f"Type data: {type(messageReceived)}")
-                print(f"message: {messageReceived}")                
+                # print(f"Type data: {type(messageReceived)}")
+                # print(f"message: {messageReceived}")                
                 match(int(messageReceived["action_type"])):
                     case NetworkCommandsTypes.SPAWN_FOOD:
                         self.grid.addEdible(Food(int(messageReceived["position"][0]), int(messageReceived["position"][1])))
