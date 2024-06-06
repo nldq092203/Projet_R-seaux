@@ -222,7 +222,7 @@ class SystemAgent:
         import pickle
 
         sys = SystemAgent.get_instance()
-        serialize_data = pickle.dump({ 'grid': game.grid,'tickCount': game.tickCount })
+        serialize_data = pickle.dumps({ 'grid': game.grid,'tickCount': game.tickCount })
         sys.send_message(command=NetworkCommandsTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
 
     def receive_game_save(self, game):

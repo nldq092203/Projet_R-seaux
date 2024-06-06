@@ -563,9 +563,7 @@ class Grid:
         reproduces all Bob objects that are able to reproduce using parthenogenesis or sexual reproduction,
         and deletes all dead Bob objects in the grid using the cleanDeadBobs method.
         """
-        # Get a list of all bobs in the grid
-        # self.receive_messages()
-        
+        # Get a list of all bobs in the grid        
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
         # print(f"************all bob:*******************")
@@ -846,7 +844,7 @@ class Grid:
         if not self.gridDict:
             return
         for key, cell in self.gridDict.items():
-            for bob in cell:
+            for bob in cell.bobs:
                 bob.set_player_id(player_id)
             for edible in cell.edibleObject:
                 edible.set_player_id(player_id)
