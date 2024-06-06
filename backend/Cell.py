@@ -59,7 +59,7 @@ class Cell:
                 self.bobs = []
             self.bobs = list(filter(lambda x: x.id != bobID, self.bobs))
         else:
-            removeBob = list(filter(lambda x: x.id != bobID or x.player_id != player_id, self.bobs))
+            self.bobs = list(filter(lambda x: x.id != bobID or x.player_id != player_id, self.bobs))
     
     # Add an Edible object to the cell
     def addEdible(self, edibleObject):
