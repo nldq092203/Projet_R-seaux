@@ -70,8 +70,6 @@ class Game:
         self.onlineModeType = "bob" # "bob" or "food"
         self.onlineModeCoords = None
         
-        self.list_bob_message = []
-
         
         
         # Grid related variables
@@ -147,8 +145,8 @@ class Game:
                     self.receive_messages()
                     self.grid.newTickEvents()
                     if sys:
-                        sys.send_bob(list_bob_message=self.list_bob_message)
-                        self.list_bob_message = []
+                        sys.send_bob(list_bob_message=self.grid.list_bob_message)
+                        self.grid.list_bob_message = []
                     
 
                     # Compute the best bob, update the stats
@@ -303,8 +301,8 @@ class Game:
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
                             self.grid.addBob(bob)
-                            self.list_bob_message = sys.send_to_list_bob_message(
-                                         list_bob_message=self.list_bob_message,
+                            self.grid.list_bob_message = sys.send_to_list_bob_message(
+                                         list_bob_message=self.grid.list_bob_message,
                                          action_type=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [0, 0],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
@@ -312,8 +310,8 @@ class Game:
                                          velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)
-                            sys.send_bob(self.list_bob_message)
-                            self.list_bob_message = []
+                            sys.send_bob(self.grid.list_bob_message)
+                            self.grid.list_bob_message = []
                             
                             
                         elif self.onlineModeType == "food":
@@ -336,15 +334,17 @@ class Game:
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
                             self.grid.addBob(bob)
-                            self.list_bob_message = sys.send_to_list_bob_message(action_type=NetworkCommandsTypes.SPAWN_BOB,
+                            self.grid.list_bob_message = sys.send_to_list_bob_message(
+                                         list_bob_message=self.grid.list_bob_message,
+                                         action_type=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [0, 0],
                                          position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
                                          mass=Settings.spawnMass,
                                          velocity=Settings.spawnVelocity,
                                          energy=Settings.spawnEnergy,
                                          id=bob.id)
-                            sys.send_bob(self.list_bob_message)
-                            self.list_bob_message = []
+                            sys.send_bob(self.grid.list_bob_message)
+                            self.grid.list_bob_message = []
 
                         elif self.onlineModeType == "food":
                             self.grid.addEdible(Food(self.onlineModeCoords[0], self.onlineModeCoords[1]))

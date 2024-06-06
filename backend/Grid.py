@@ -22,6 +22,7 @@ class Grid:
         self.bob_dict = {}
         self.bobCount = bobCount
         self.foodCount = foodCount
+        self.list_bob_message = []
         if Settings.enableSpitting:
             self.sausageCount = sausageCount
         self.dayCount = 0
@@ -615,13 +616,23 @@ class Grid:
             # Move the bob if it is able to
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
-                sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
-                             last_position=[b.lastX, b.lastY],
-                             position=[b.currentX, b.currentY],
-                             mass=b.mass,
-                             velocity=b.totalVelocity,
-                             energy=b.energy,
-                             id=b.id)
+                sys.send_to_list_bob_message(
+                    list_bob_message=self.list_bob_message,
+                    action_type=NetworkCommandsTypes.MOVE_BOB,
+                    last_position=[b.lastX, b.lastY],
+                    position=[b.currentX, b.currentY],
+                    mass=b.mass,
+                    velocity=b.totalVelocity,
+                    energy=b.energy,
+                    id=b.id
+                    )
+                # sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
+                #              last_position=[b.lastX, b.lastY],
+                #              position=[b.currentX, b.currentY],
+                #              mass=b.mass,
+                #              velocity=b.totalVelocity,
+                #              energy=b.energy,
+                #              id=b.id)
 
         # Delete all dead Bob objects in the grid
         self.cleanDeadBobs()

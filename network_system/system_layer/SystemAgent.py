@@ -286,7 +286,7 @@ class SystemAgent:
         list_bob_message.append(msg)
         return list_bob_message
         
-    def send_bob(self, command: NetworkCommandsTypes.BOB_MESSAGE, list_bob_message: List):
+    def send_bob(self, list_bob_message: List, command = NetworkCommandsTypes.BOB_MESSAGE):
         # print(f"print send bob {msg}")
 
         self.send_message(command, id_object=12, data=json.dumps(list_bob_message))
