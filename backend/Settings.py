@@ -26,9 +26,9 @@ class Settings:
 
     computeColorSprite = False  # Enables the color mechanism for Bob objects. Faster bobs are redder, etc
 
-    enableEffects = True # Enables the effects mechanism for Bob objects. Bobs can be affected by effects such as being spit at.
+    enableEffects = False # Enables the effects mechanism for Bob objects. Bobs can be affected by effects such as being spit at.
 
-    enableSpitting = True # Enables the spitting mechanism for Bob objects. Bobs can spit ammos to hinder other bobs.
+    enableSpitting = False # Enables the spitting mechanism for Bob objects. Bobs can spit ammos to hinder other bobs.
 
     enableSexualReproduction = True # Enables the sexual reproduction mechanism for Bob objects. Bobs can reproduce with other bobs.
 
@@ -48,7 +48,7 @@ class Settings:
     
     dayLength = 100 # the number of ticks in a day
 
-    maxTps = 2 # the maximum number of ticks per second
+    maxTps = 5 # the maximum number of ticks per second
 
     maxFps = 60 # the maximum number of frames per second
 
