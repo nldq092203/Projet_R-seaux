@@ -83,7 +83,7 @@ class Cell:
 
     # Feed all bobs in the cell
         
-    def eat(self, b, edibleObject, list_food_message, list_bob_message):
+    def eat(b, edibleObject, list_food_message, list_bob_message):
         """
         This method makes a Bob eat an edible object.
 
