@@ -18,7 +18,7 @@ class Settings:
 
     enableVelocity = True  # Enables the velocity mechanism for Bob objects. 
 
-    enableSmoothMovement = True # Enables the smooth movement mechanism for Bob objects. Bobs move smoothly instead of jumping from cell to cell.
+    enableSmoothMovement = False # Enables the smooth movement mechanism for Bob objects. Bobs move smoothly instead of jumping from cell to cell.
 
     donut = False  # Enables the donut grid mode. Instead of having a border, the grid is a donut. Bobs can go through the edges and appear on the opposite side.
 
