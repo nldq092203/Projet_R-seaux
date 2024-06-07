@@ -175,11 +175,6 @@ class Cell:
                                     energy=bob.energy,
                                     id=bob.id, 
                                 )
-                            if (otherBob.other_player_bob):
-                                self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)
-                            else:
-                                self.removeBob(otherBob.id)
-                                
                             sys.send_to_list_bob_message(
                                 list_bob_message,
                                 action_type=NetworkCommandsTypes.BOB_EATEN,
@@ -190,6 +185,11 @@ class Cell:
                                 energy=otherBob.player_id,
                                 id=otherBob.id, 
                                 )
+                            if (otherBob.other_player_bob):
+                                self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)
+                            else:
+                                self.removeBob(otherBob.id)
+                                
 
                             # Set the actions of the two Bob objects
                             
