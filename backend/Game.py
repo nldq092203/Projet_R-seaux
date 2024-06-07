@@ -654,8 +654,8 @@ class Game:
                                     break
                                 
                             if bob:
-                                # cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
-                                Cell.eat(b=bob, edibleObject=Food(x=int(data["position"][0]),y=int(data["position"][1])), list_bob_message=None, list_food_message=None)
+                                cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                                cell.eat(b=bob, edibleObject=Food(x=int(data["position"][0]),y=int(data["position"][1])), list_bob_message=None, list_food_message=None)
                                 
                         case NetworkCommandsTypes.SPAWN_FOOD:
                             self.grid.addEdible(Food(int(data["position"][0]), int(data["position"][1])))
