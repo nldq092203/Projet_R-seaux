@@ -185,8 +185,8 @@ class Cell:
                                 energy=otherBob.player_id,
                                 id=otherBob.id, 
                                 )
-                            self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)                                
                             otherBob.action = "eaten"
+                            otherBob.energy=0                                
 
                             # Set the actions of the two Bob objects
                             
