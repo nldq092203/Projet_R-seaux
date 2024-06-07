@@ -225,7 +225,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     # Pausing the game and displaying the pause menu (escape)
                     if event.key == pygame.K_ESCAPE:
-                        if self.editorMode:
+                        if self.editorMode or self.onlineMode:
                             self.gui.displayPauseMenu = not self.gui.displayPauseMenu
                         else:
                             self.paused = not self.paused
@@ -626,7 +626,11 @@ class Game:
                             self.grid.addBob(bob)
                             
                         case NetworkCommandsTypes.DELETE_BOB:
-                            self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
+                            self.grid.removeBob(bobID=int(data["id"]), player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
+                        
+                        case NetworkCommandsTypes.BOB_EATEN:
+                            self.grid.removeBob(bobID=int(data["id"]), player_id=int(data["energy"]), x=int(data["position"][0]), y=int(data["position"][1]))
+
                             
                             
                         case NetworkCommandsTypes.MOVE_BOB:                                
@@ -650,7 +654,7 @@ class Game:
                             if bob:
                                 self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                                 
-                        case NetworkCommandsTypes.EAT_FOOD:
+                        case NetworkCommandsTypes.EAT_FOOD | NetworkCommandsTypes.EAT_BOB:
                             # bobs_at_position = self.grid.getBobsAt(x=int(data["position"][0]),y=int(data["position"][1]))
                             bob = None
                             bobs = self.grid.getAllBobs()
@@ -658,11 +662,12 @@ class Game:
                                 if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
                                     bob = b
                                     bob.action="eat"
+                                    bob.energy = float(data["energy"])
                                     break
                                 
-                            if bob:
-                                cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
-                                cell.eat(b=bob, edibleObject=Food(), list_bob_message=None, list_food_message=None)
+                            # if bob:
+                            #     cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                            #     cell.eat(b=bob, edibleObject=Food(), list_bob_message=None, list_food_message=None)
                                 
                         case NetworkCommandsTypes.SPAWN_FOOD:
                             self.grid.addEdible(Food(int(data["position"][0]), int(data["position"][1])))

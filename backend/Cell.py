@@ -144,34 +144,61 @@ class Cell:
         """
         # Shuffle the list of Bob objects in the cell
         shuffle(self.bobs)
-        bobs = list(filter(lambda x: not x.other_player_bob, self.bobs))
+        my_bobs = list(filter(lambda x: not x.other_player_bob, self.bobs))
         # Make each bob that has not performed any action yet eat
-        for bob in bobs:
+        for bob in my_bobs:
+            sys = SystemAgent.get_intance()
             if bob.action == "idle":
                 
-        #         # Get the list all other Bobs in the cell
-        #         otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
+                # Get the list all other Bobs in the cell
+                otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
 
-        #         # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
-        #         if Settings.enableMass:
-        #             for otherBob in otherBobs:
-        #                 massRatio = otherBob.mass / bob.mass
-        #                 otherBobEnergy = otherBob.energy
+                # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
+                if Settings.enableMass:
+                    for otherBob in otherBobs:
+                        massRatio = otherBob.mass / bob.mass
+                        otherBobEnergy = otherBob.energy
 
-        #                 # If the mass ratio is less than the threshold
-        #                 if massRatio < Settings.massRatioThreshold:
-        #                     # The Bob consumes the energy of the other Bob object
-        #                     bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
-        #                     # The other Bob's energy is reduced
-        #                     self.removeBob(otherBob.id)
-        #                     # Set the actions of the two Bob objects
-        #                     bob.action = "eat"
-        #                     otherBob.action = "eaten"
+                        # If the mass ratio is less than the threshold
+                        if massRatio < Settings.massRatioThreshold:
+                            # The Bob consumes the energy of the other Bob object
+                            bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
+                            # The other Bob's energy is reduced
+                            sys.send_to_list_bob_message(
+                                    list_bob_message,
+                                    action_type=NetworkCommandsTypes.EAT_BOB,
+                                    last_position=[bob.lastX, bob.lastY],
+                                    position=[bob.currentX, bob.currentY],
+                                    mass=0,
+                                    velocity=0,
+                                    energy=bob.energy,
+                                    id=bob.id, 
+                                )
+                            if (otherBob.other_player_bob):
+                                self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)
+                            else:
+                                self.removeBob(otherBob.id)
+                                
+                            sys.send_to_list_bob_message(
+                                list_bob_message,
+                                action_type=NetworkCommandsTypes.BOB_EATEN,
+                                last_position=[otherBob.lastX, otherBob.lastY],
+                                position=[otherBob.currentX, otherBob.currentY],
+                                mass=0,
+                                velocity=0,
+                                energy=otherBob.player_id,
+                                id=otherBob.id, 
+                                )
 
-        #                     # print("cannibalism")
+                            # Set the actions of the two Bob objects
+                            
+                            bob.action = "eat"
+                            otherBob.action = "eaten"
 
-        #                     # The Bob can only eat once per tick so we break the loop
-        #                     break  
+                            # print("cannibalism")
+
+                            # The Bob can only eat once per tick so we break the loop
+                            break  
                 
                 # If the Bob has not eaten yet, make it eat the edible object if there is one in the cell
                 if self.edibleObject is not None:
