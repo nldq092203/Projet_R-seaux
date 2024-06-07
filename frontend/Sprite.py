@@ -54,7 +54,8 @@ class BobSprite(Sprite):
 
     # Update the bob's sprite's display position
     def updateDisplayPosition(self, alpha, gridSize):
-
+        print("Smooth animation")
+        print(alpha)
         # If smooth movement is disabled, set the display position to the logical current position
         if not Settings.enableSmoothMovement:
             self.displayX, self.displayY = self.bob.currentX, self.bob.currentY
