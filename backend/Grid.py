@@ -666,14 +666,13 @@ class Grid:
 
 
     # Delete all food in the grid
-    def removeAllEdibles(self, list_food_message):
+    def removeAllEdibles(self, list_food_message, onlineMode = False):
         """
         This method removes all Food objects from the grid.
         It iterates over the grid dictionary and removes all Food objects from each cell.
         If a cell is now empty, it is removed from the grid dictionary.
         """
         
-        sys = SystemAgent.get_instance()
         # Store the keys to remove in a list to avoid modifying the dictionary during iteration
         keysToRemove = []
         
@@ -687,13 +686,16 @@ class Grid:
         # Remove all empty cells from the grid dictionary in a seeparate loop
         for key in keysToRemove:
             del self.gridDict[key]
-            
-        sys.send_to_list_food_message(
-            list_food_message,
-            action_type=NetworkCommandsTypes.DELETE_ALL_FOOD,
-            position=[0, 0],
-            energy=0,
-        )
+        
+        if onlineMode:
+            sys = SystemAgent.get_instance()
+
+            sys.send_to_list_food_message(
+                list_food_message,
+                action_type=NetworkCommandsTypes.DELETE_ALL_FOOD,
+                position=[0, 0],
+                energy=0,
+            )
 
     # Delete all bobs in the grid
     def removeAllBobs(self, list_bob_message, onlineMode = False):
@@ -790,7 +792,7 @@ class Grid:
             return
 
         # Remove all food from the grid
-        self.removeAllEdibles()
+        self.removeAllEdibles(list_food_message=self.list_message, onlineMode=True)
 
         # Spawn food
         self.spawnFood()
