@@ -151,6 +151,7 @@ class Game:
                     self.receive_messages()
                     end_time =time.time()
                     print("time to receive: ", end_time - start_time)
+                    time.sleep(0.001)
                     self.grid.newTickEvents()
                     if sys and self.grid.list_message:
                         start_time = time.time()
@@ -159,6 +160,7 @@ class Game:
                         print("time to send: ", end_time - start_time)
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
+                        time.sleep(0.001)
                     
 
                     # Compute the best bob, update the stats
