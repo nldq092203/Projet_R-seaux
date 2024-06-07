@@ -24,7 +24,7 @@ class Settings:
 
     enableAnimation = True # Enables the animation mechanism for Bob objects. Bobs have an animation when they move, eat, etc.
 
-    computeColorSprite = False  # Enables the color mechanism for Bob objects. Faster bobs are redder, etc
+    computeColorSprite = True  # Enables the color mechanism for Bob objects. Faster bobs are redder, etc
 
     enableEffects = False # Enables the effects mechanism for Bob objects. Bobs can be affected by effects such as being spit at.
 
