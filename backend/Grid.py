@@ -84,7 +84,7 @@ class Grid:
     # Retrieve a bob at the position (x,y) in the grid
     def getBobsAt(self, x, y):
         cell = self.gridDict.get((x, y))
-        print(cell)
+        # print(cell)
         if cell:
             return cell.bobs
         else:
