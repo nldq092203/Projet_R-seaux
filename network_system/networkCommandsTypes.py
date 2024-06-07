@@ -14,6 +14,7 @@ class NetworkCommandsTypes(IntEnum):
     # RISK_UPDATE = 412
 
 
+    UPDATE_MAP = 430
 
     BOB_MESSAGE = 420
     SPAWN_BOB = 421
@@ -24,6 +25,5 @@ class NetworkCommandsTypes(IntEnum):
     EAT_FOOD = 426
     EAT_BOB = 427
     
-    UPDATE_MAP = 430
 
     DELEGATE = 499
