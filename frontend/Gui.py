@@ -1,6 +1,6 @@
 import pygame
 import time
-
+import threading
 from frontend.frontendConstantes import *
 from backend.Settings import *
 from frontend.settingsWindow import SettingsWindow
@@ -42,6 +42,8 @@ class Gui:
         # Input box for online menu
         self.ipInputBox = InputBox()
         self.nameInputBox = InputBox()
+
+        self.displaySettings = False
         
     def resize(self, screenWidth, screenHeight):
         self.guiSurface = pygame.Surface((screenWidth, screenHeight), pygame.SRCALPHA)
@@ -324,69 +326,75 @@ class Gui:
 
         self.guiSurface.blit(pauseButton, (20, self.guiSurface.get_height() - pauseButtonHeight - 20))
 
+    def createSettingsWindow(self):
+        self.settings_window = SettingsWindow(self.game.createSaveFile, self.game.loadSaveFile)
+        self.displaySettings = False
+
+    def openSettingsWindow(self):
+        if not self.displaySettings:  
+            self.displaySettings = True  
+            # self.createSettingsWindow()
+
+
+
     def renderPauseMenu(self):
-            
-            # draw the pause menu
-            pauseMenuWidth = 300
-            pauseMenuHeight = 440
-    
-            pauseMenu = pygame.Surface((pauseMenuWidth, pauseMenuHeight), pygame.SRCALPHA)
-            pygame.draw.rect(pauseMenu, (0,0,0,200), (0, 0, pauseMenuWidth, pauseMenuHeight), border_radius=10)
-    
-            font = pygame.font.SysFont('Arial', 30)
-    
-            # draw the title
-            text = font.render("Paused", True, (255,255,255))
-            pauseMenu.blit(text, (pauseMenuWidth / 2 - text.get_width() / 2, 10))
-    
-            # draw the buttons
-            buttonWidth = 200
-            buttonHeight = 50
-            buttonX = pauseMenuWidth / 2 - buttonWidth / 2
-            buttonY = 100
-    
+        # draw the pause menu
+        pauseMenuWidth = 300
+        pauseMenuHeight = 440
 
-            pauseMenuOffset = self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2
+        pauseMenu = pygame.Surface((pauseMenuWidth, pauseMenuHeight), pygame.SRCALPHA)
+        pygame.draw.rect(pauseMenu, (0,0,0,200), (0, 0, pauseMenuWidth, pauseMenuHeight), border_radius=10)
 
-            # resume button
-            self.button(buttonX, buttonY, pauseMenuOffset, buttonWidth, buttonHeight, "Resume", pauseMenu, 
-                        lambda: setattr(self.game, "paused", False))
-            
-            # options button
-            self.button(buttonX, buttonY + buttonHeight + 10, pauseMenuOffset, buttonWidth, buttonHeight, "Options", pauseMenu, 
-                        lambda : SettingsWindow(self.game.createSaveFile, self.game.loadSaveFile))
-    
-            # editor mode button
-            self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, 
-                        lambda : [setattr(self.game, "editorMode", not self.game.editorMode), 
-                                  setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), 
-                                  setattr(self.game, "renderHeight", False)],)
+        font = pygame.font.SysFont('Arial', 30)
 
-            # # Follow best bob button
-            # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
-            
-            # Multiplayer mode
-            self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
-                        lambda: [setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu),
-                                #  setattr(self.game, "onlineMode", False),
-                                 setattr(self, "showOnlineMenu", not self.showOnlineMenu), 
-                                 setattr(self, "displayPauseMenu", not self.displayPauseMenu), 
-                                 pygame.time.delay(200)])
+        # draw the title
+        text = font.render("Paused", True, (255,255,255))
+        pauseMenu.blit(text, (pauseMenuWidth / 2 - text.get_width() / 2, 10))
 
-            # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
-            
-            # quit button
-            self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, 
-                        lambda : setattr(self.game, "running", False))
-    
+        # draw the buttons
+        buttonWidth = 200
+        buttonHeight = 50
+        buttonX = pauseMenuWidth / 2 - buttonWidth / 2
+        buttonY = 100
 
-            self.guiSurface.blit(pauseMenu, (self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2))
+        pauseMenuOffset = self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2
+        # resume button
+        self.button(buttonX, buttonY, pauseMenuOffset, buttonWidth, buttonHeight, "Resume", pauseMenu, 
+                    lambda: setattr(self.game, "paused", False))
+        
+        # options button
+        self.button(buttonX, buttonY + buttonHeight + 10, pauseMenuOffset, buttonWidth, buttonHeight, "Options", pauseMenu, 
+                    lambda : self.openSettingsWindow())
+
+        # editor mode button
+        self.button(buttonX, buttonY + 2 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Editor mode", pauseMenu, 
+                    lambda : [setattr(self.game, "editorMode", not self.game.editorMode), 
+                              setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu")), 
+                              setattr(self.game, "renderHeight", False)],)
+        # # Follow best bob button
+        # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Follow best bob", pauseMenu, self.followBestBobButtonWithCooldown)
+        
+        # Multiplayer mode
+        self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, 
+                    lambda: [setattr(self.game, "multiplayerMenu", not self.game.multiplayerMenu),
+                            #  setattr(self.game, "onlineMode", False),
+                             setattr(self, "showOnlineMenu", not self.showOnlineMenu), 
+                             setattr(self, "displayPauseMenu", not self.displayPauseMenu), 
+                             pygame.time.delay(200)])
+        # self.button(buttonX, buttonY + 3 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Multiplayer", pauseMenu, lambda : [setattr(self.game, "editorMode", not self.game.editorMode), setattr(self.game, "paused", False), setattr(self, "displayPauseMenu", not getattr(self, "displayPauseMenu"))])
+        
+        # quit button
+        self.button(buttonX, buttonY + 4 * (buttonHeight + 10), pauseMenuOffset, buttonWidth, buttonHeight, "Quit", pauseMenu, 
+                    lambda : setattr(self.game, "running", False))
+
+        self.guiSurface.blit(pauseMenu, (self.guiSurface.get_width() / 2 - pauseMenuWidth / 2, self.guiSurface.get_height() / 2 - pauseMenuHeight / 2))
 
 
     def followBestBobButtonWithCooldown(self):
         if time.time() - self.lastFollowBestBobButtonClick > self.followBestBobButtonCooldown:
             self.lastFollowBestBobButtonClick = time.time()
             self.game.followBestBob = not self.game.followBestBob
+
 
     def button(self, x, y, pauseMenuOffset, width, height, text, surface, action):
         mouse = pygame.mouse.get_pos()
