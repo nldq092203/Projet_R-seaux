@@ -630,7 +630,7 @@ class Game:
                         
                         case NetworkCommandsTypes.BOB_EATEN:
                             # self.grid.removeBob(bobID=int(data["id"]), player_id=int(data["energy"]), x=int(data["position"][0]), y=int(data["position"][1]),)
-                            # print("Bob has been eaten in receive")
+                            print("Bob has been eaten in receive")
                             bobs = self.grid.getAllBobs()
                             for b in bobs:
                                 if b.player_id == int(data["energy"]) and b.id == int(data["id"]):

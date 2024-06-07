@@ -156,12 +156,12 @@ class Cell:
                 # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
                 if Settings.enableMass:
                     for otherBob in otherBobs:
-                        print("Bob has been eaten in send")
                         massRatio = otherBob.mass / bob.mass
                         otherBobEnergy = otherBob.energy
 
                         # If the mass ratio is less than the threshold
                         if massRatio < Settings.massRatioThreshold:
+                            print("Bob has been eaten in send")
                             # The Bob consumes the energy of the other Bob object
                             bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
                             # The other Bob's energy is reduced
