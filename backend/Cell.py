@@ -147,7 +147,7 @@ class Cell:
         my_bobs = list(filter(lambda x: not x.other_player_bob, self.bobs))
         # Make each bob that has not performed any action yet eat
         for bob in my_bobs:
-            sys = SystemAgent.get_intance()
+            sys = SystemAgent.get_instance()
             if bob.action == "idle":
                 
                 # Get the list all other Bobs in the cell
