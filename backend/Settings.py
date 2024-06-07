@@ -50,7 +50,7 @@ class Settings:
 
     maxTps = 5 # the maximum number of ticks per second
 
-    maxFps = 100 # the maximum number of frames per second
+    maxFps = 60 # the maximum number of frames per second
 
     #----------------------------------------------ENERGY--------------------------------------------
 

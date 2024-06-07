@@ -1,4 +1,5 @@
 import pygame
+import random
 from backend.Settings import *
 
 class Sprite:
@@ -92,8 +93,9 @@ class BobSprite(Sprite):
 
         # Get the color to apply
         color = self.calculateColor()
+        # random.shuffle(color)
 
-        image.fill((200,200,200) , special_flags=pygame.BLEND_SUB)
+        # image.fill((100,100,100) , special_flags=pygame.BLEND_SUB)
 
         # Apply the color
         image.fill(color, special_flags=pygame.BLEND_ADD)
@@ -107,11 +109,12 @@ class BobSprite(Sprite):
         # r = int(min(self.bob.velocity * Settings.velocityFactor,255))
         # g = int(min(self.bob.perception * Settings.perceptionFactor,255))
         # b = int(min(self.bob.memorySize * Settings.memoryFactor,255))
-        r = int(min(int(self.bob.player_id) % 255,255))
-        g = int(min(int(self.bob.player_id) % 255,255))
-        b = int(min(int(self.bob.player_id) % 255,255))
+        r = int(self.bob.player_id) % 255
+        g = int(self.bob.player_id) % 255
+        b = int(self.bob.player_id) % 255
+        color = [r if i == self.bob.player_id % 3 else 0 for i in range(3)]
         # Return the color
-        return (r,g,b)
+        return color
 
 class EffectSprite(Sprite):
     def __init__(self, effect):

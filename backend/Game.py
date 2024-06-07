@@ -159,7 +159,7 @@ class Game:
                         self.receive_messages()
                         end_time =time.time()
                         print("time to receive: ", end_time - start_time)
-                        time.sleep(0.001)
+                        time.sleep(0.0001)
                         self.grid.newTickEvents()
                     else:
                         if sys and self.grid.list_message:
@@ -169,7 +169,7 @@ class Game:
                             print("time to send: ", end_time - start_time)
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
-                            time.sleep(0.001)
+                            time.sleep(0.0001)
                     
 
                     # Compute the best bob, update the stats
@@ -180,7 +180,6 @@ class Game:
                     
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)
-                print(f"alpha : {alpha}")
             if self.gui.displaySettings:
                 self.gui.createSettingsWindow()
                 
@@ -195,7 +194,7 @@ class Game:
                 continue
 
             if self.render:
-                if self.tickCount % 2 == 0:
+                if self.tickCount % 2 == 1:
                     self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
