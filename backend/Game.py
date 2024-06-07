@@ -526,21 +526,7 @@ class Game:
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
-        bob = Bob(x=10, 
-        y=10, 
-        mass=1, 
-        totalVelocity=1,
-        energy=100,
-        id_bob=1,
-        player_id=99,
-        )
-        bob.action = "love"
-        bob.other_player_bob = True
-        # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
-        self.grid.addBob(bob)
-
-
-     
+        
         messages = sys.read_message()
         header = None
         if messages:
