@@ -146,7 +146,7 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
-                    if self.tickClock % 2 == 0:
+                    if self.tickCount % 2 == 0:
                         bobsList = self.grid.getAllBobs()
                         for b in bobsList:
                 # Set the bob's action to idle if it is not dying
@@ -195,7 +195,7 @@ class Game:
                 continue
 
             if self.render:
-                if self.tickClock % 2 == 0:
+                if self.tickCount % 2 == 0:
                     self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
