@@ -83,7 +83,7 @@ class Cell:
 
     # Feed all bobs in the cell
         
-    def eat(b, edibleObject, list_food_message, list_bob_message):
+    def eat(self, b, edibleObject, list_food_message, list_bob_message):
         """
         This method makes a Bob eat an edible object.
 
@@ -175,7 +175,7 @@ class Cell:
                 
                 # If the Bob has not eaten yet, make it eat the edible object if there is one in the cell
                 if self.edibleObject is not None:
-                    self.eat(bob, self.edibleObject, list_food_message=list_food_message, list_bob_message=list_bob_message)
+                    self.eat(bob, self.edibleObject, list_food_message, list_bob_message)
 
     # Split a bob into two bobs, (reproduction by parthenogenesis)
     def split(self, b):
