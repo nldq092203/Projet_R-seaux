@@ -161,7 +161,7 @@ class Cell:
 
                         # If the mass ratio is less than the threshold
                         if massRatio < Settings.massRatioThreshold:
-                            print("Bob has been eaten in send")
+                            # print("Bob has been eaten in send")
                             # The Bob consumes the energy of the other Bob object
                             bob.energy = min(bob.energyMax, otherBobEnergy * .5 * (1 - massRatio))
                             # The other Bob's energy is reduced
@@ -202,15 +202,27 @@ class Cell:
                     self.eat(bob, self.edibleObject, list_food_message=list_food_message, list_bob_message=list_bob_message)
 
     # Split a bob into two bobs, (reproduction by parthenogenesis)
-    def split(self, b):
+    def split(self, b, list_bob_message):
         """
         This method makes a Bob split into two Bobs.
 
         Args:
             b (Bob): The Bob object to be split.
         """
+        sys = SystemAgent.get_instance()
         # Create a new bob
         bornBob = b.createMonoparentalChild()
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            last_position=[0, 0],
+            position=[bornBob.currentX, bornBob.currentY],
+            mass=bornBob.mass,
+            velocity=bornBob.totalVelocity,
+            id=bornBob.id,
+            energy=bornBob.energy,
+            action_type=NetworkCommandsTypes.BORN_BOB,
+        )
+        
 
         # Add the new bob to the cell
         self.addBob(bornBob)
@@ -224,9 +236,19 @@ class Cell:
 
         # Reduce the energy of the parent
         b.incrementEnergy(-Settings.motherEnergy)
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            last_position=[b.lastX, b.lastY],
+            position=[b.currentX, b.currentY],
+            mass=0,
+            velocity=0,
+            id=b.id,
+            energy=b.energy,
+            action_type= NetworkCommandsTypes.PARTHENOGENESIS_BOB,
+        )
 
     # Make two bobs reproduce (sexual reproduction)
-    def mate(self, b1, b2):
+    def mate(self, b1, b2, list_bob_message):
         """
         This method makes two Bob mate and creates a new Bob.
 
@@ -234,16 +256,26 @@ class Cell:
             b1 (Bob): The first Bob.
             b2 (Bob): The second Bob.
         """
+        sys = SystemAgent.get_instance()
         # Create a new bob
         bornBob = Bob.createBiParentalChild(b1, b2)
-
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            last_position=[0, 0],
+            position=[bornBob.currentX, bornBob.currentY],
+            mass=bornBob.mass,
+            velocity=bornBob.totalVelocity,
+            id=bornBob.id,
+            energy=bornBob.energy,
+            action_type=NetworkCommandsTypes.BORN_BOB,
+        )
         # Add the new bob to the cell
         self.addBob(bornBob)
         
         # Set the action of the two parents to "mate"
         b1.action = "love"
         b2.action = "love"
-
+        
         # Remove SuperMutation effects
         b1.effects = [effect for effect in b1.effects if not isinstance(effect, SuperMutation)]
         b2.effects = [effect for effect in b2.effects if not isinstance(effect, SuperMutation)]
@@ -254,8 +286,30 @@ class Cell:
         b1.incrementEnergy(-Settings.matingEnergyConsumption)
         b2.incrementEnergy(-Settings.matingEnergyConsumption)
         
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            last_position=[b1.lastX, b1.lastY],
+            position=[b1.currentX, b1.currentY],
+            mass=b1.mass,
+            velocity=b1.totalVelocity,
+            id=b1.id,
+            energy=b1.energy,
+            action_type=NetworkCommandsTypes.SEXUAL_BOB,
+        )
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            last_position=[b2.lastX, b2.lastY],
+            position=[b2.currentX, b2.currentY],
+            mass=b2.mass,
+            velocity=b2.totalVelocity,
+            id=b2.id,
+            energy=b2.energy,
+            action_type=NetworkCommandsTypes.SEXUAL_BOB,
+        )
+
+        
     # Make all bobs in the cell reproduce (parthenogenesis or sexual reproduction)
-    def reproduceCellBobs(self):
+    def reproduceCellBobs(self, list_bob_message):
         """
         This method makes the Bobs in the cell reproduce.
         """
@@ -270,10 +324,10 @@ class Cell:
             if bob.action == "idle":
                 # Make the Bob reproduce by parthenogenesis if it has enough energy
                 if Settings.enableParthenogenesis and bob.energy >= bob.energyMax:
-                    self.split(bob)
+                    self.split(bob, list_bob_message)
                 elif Settings.enableSexualReproduction and bob.energy >= Settings.matingEnergyRequirement:
                     # Get the list of Bob objects in the cell
-                    otherBobs = [otherBob for otherBob in self.bobs if otherBob != bob]
+                    otherBobs = [otherBob for otherBob in my_bobs_list if otherBob != bob]
                     # If there is another Bob object in the cell
                     if otherBobs:
                         # Select a random Bob object from the list of Bob objects in the cell
@@ -281,7 +335,7 @@ class Cell:
                         # If the other Bob object has enough energy to reproduce by parthenogenesis
                         if otherBob.energy >= Settings.matingEnergyRequirement:
                             # The two Bobs mate
-                            self.mate(bob, otherBob)
+                            self.mate(bob, otherBob, list_bob_message)
 
     # Delete all dead bobs in the cell
     def cleanCellDeadBobs(self, sys, list_bob_message):

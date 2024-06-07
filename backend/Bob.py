@@ -149,6 +149,9 @@ class Bob:
                     memorySize = self.memorySize,
                     energy = Settings.pBirthEnergy
         )
+        Bob.id_bob_origin += 1
+        bornBob.id = Bob.id_bob_origin
+
         # Make the bob mutate
         if Settings.enableMutation:
             bornBob.totalVelocity = max(0, bornBob.totalVelocity + choice((-Settings.velocityMutation, Settings.velocityMutation)) * self.mutationFactor)
@@ -189,6 +192,8 @@ class Bob:
                     memorySize = (b1.memorySize + b2.memorySize) / 2,
                     energy = Settings.sBirthEnergy
         )
+        Bob.id_bob_origin += 1
+        bornBob.id = Bob.id_bob_origin
         # Make the bob mutate
         if Settings.enableMutation:
             bornBob.totalVelocity = max(0, bornBob.totalVelocity + choice((-Settings.velocityMutation, Settings.velocityMutation)) * (b1.mutationFactor + b2.mutationFactor - 1))

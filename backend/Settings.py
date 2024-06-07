@@ -30,9 +30,9 @@ class Settings:
 
     enableSpitting = False # Enables the spitting mechanism for Bob objects. Bobs can spit ammos to hinder other bobs.
 
-    enableSexualReproduction = False # Enables the sexual reproduction mechanism for Bob objects. Bobs can reproduce with other bobs.
+    enableSexualReproduction = True # Enables the sexual reproduction mechanism for Bob objects. Bobs can reproduce with other bobs.
 
-    enableParthenogenesis = False # Enables the parthenogenesis mechanism for Bob objects. Bobs can reproduce without other bobs.
+    enableParthenogenesis = True # Enables the parthenogenesis mechanism for Bob objects. Bobs can reproduce without other bobs.
 
     enableMutation = True # Enables the mutation mechanism for Bob objects. Bobs can mutate when they reproduce.
 

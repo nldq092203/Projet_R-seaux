@@ -98,6 +98,13 @@ class Grid:
         # else:
         #     return[]
 
+    def getMyAllBobs(self, is_online = False):
+        """Return a list of all bobs in the grid"""
+        if not is_online:
+            return [b for cell in self.gridDict.copy().values() for b in cell.bobs if not b.other_player_bob]
+        # else:
+        #     return[]
+
     # Retrieve the food value at the position (x,y) in the grid
     def getFoodValueAt(self, x, y):
         cell = self.gridDict.get((x, y))
@@ -595,7 +602,7 @@ class Grid:
         for cell in self.getAllCells():
             if cell.bobs:
                 # Make all bobs in the cell reproduce (parthenogenesis or sexual reproduction)
-                cell.reproduceCellBobs()
+                cell.reproduceCellBobs(list_bob_message = self.list_message)
                 
                 # Feed all bobs in the cell if they are able to
                 if Settings.enableFeed:
@@ -659,12 +666,14 @@ class Grid:
 
 
     # Delete all food in the grid
-    def removeAllEdibles(self):
+    def removeAllEdibles(self, list_food_message):
         """
         This method removes all Food objects from the grid.
         It iterates over the grid dictionary and removes all Food objects from each cell.
         If a cell is now empty, it is removed from the grid dictionary.
         """
+        
+        sys = SystemAgent.get_instance()
         # Store the keys to remove in a list to avoid modifying the dictionary during iteration
         keysToRemove = []
         
@@ -678,16 +687,35 @@ class Grid:
         # Remove all empty cells from the grid dictionary in a seeparate loop
         for key in keysToRemove:
             del self.gridDict[key]
+            
+        sys.send_to_list_food_message(
+            list_food_message,
+            action_type=NetworkCommandsTypes.DELETE_ALL_FOOD,
+            position=[0, 0],
+            energy=0,
+        )
 
     # Delete all bobs in the grid
-    def removeAllBobs(self):
+    def removeAllBobs(self, list_bob_message):
         keysToRemove = []
         for key, cell in self.gridDict.items():
-            cell.bobs = []
+            cell.bobs = list(filter(lambda x: x.other_player_bob, cell.bobs))
             if cell.isEmpty():
                 keysToRemove.append(key)
         for key in keysToRemove:
             del self.gridDict[key]
+            
+        sys = SystemAgent.get_instance()
+        sys.send_to_list_bob_message(
+            list_bob_message,
+            action_type=NetworkCommandsTypes.DELETE_ALL_PLAYER_BOB,
+            last_position=[0, 0],
+            position=[0, 0],
+            mass=0,
+            velocity=0,
+            energy=0,
+            id=0,
+        )
         
     # Populates the grid with bobs at the start of a new day
     def spawnBobs(self):
