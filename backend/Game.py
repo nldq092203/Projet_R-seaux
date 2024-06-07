@@ -156,7 +156,7 @@ class Game:
                         start_time = time.time()
                         sys.send_bob_and_food(list_message=self.grid.list_message)
                         end_time =time.time()
-                        print("time to receive: ", end_time - start_time)
+                        print("time to send: ", end_time - start_time)
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                     
