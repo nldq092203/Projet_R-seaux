@@ -156,6 +156,7 @@ class Cell:
                 # If the mass mechanism is enabled, make the Bob eats its prey if there is one in the cell
                 if Settings.enableMass:
                     for otherBob in otherBobs:
+                        print("Bob has been eaten in send")
                         massRatio = otherBob.mass / bob.mass
                         otherBobEnergy = otherBob.energy
 
