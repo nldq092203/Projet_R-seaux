@@ -143,16 +143,22 @@ int send_to_python(const game_packet *packet,int system_socket){
 
 int send_ask_save(Object_packet *save_object){
     if (save_object == NULL){
+        printf("Object null \n");
         return -1;
     }
+
     client_game *client = first_client();
     if (client == NULL){
+        printf("No client found \n");
         return -1;
     }
+    
     game_packet *save_packet = encapsulate_object_packets(save_object,1,GPP_ASK_GAME_STATUS);
     if (save_packet == NULL){
+        printf("Packet null");
         return -1;
     }
+    
     printf("sending ask\n");
     return send_game_packet(save_packet,client->socket_client);
 }

@@ -7,6 +7,7 @@ from frontend.settingsWindow import SettingsWindow
 from backend.Grid import Grid
 # from backend.Game import Game
 from backend.InputBox import *
+from network_system.networkCommandsTypes import NetworkCommandsTypes
 
 import time
 
@@ -472,6 +473,11 @@ class Gui:
         si.ip = ip
         si.is_online = True
         si.run_subprocess()
+
+        if si.ip:
+            si.send_message(NetworkCommandsTypes.ASK_SAVE, 0, None, encode=False)
+            si.receive_game_save(game = self.game)
+
         self.game.grid.set_all_player_id(si.player_id)
 
     def goBackToPauseMenu(self):

@@ -82,7 +82,7 @@ class SystemAgent:
 
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        # time.sleep(0.001)
+        time.sleep(0.001)
         if not self.connection:
             print("Error send C connection")
             return
@@ -218,23 +218,28 @@ class SystemAgent:
     def recieve_connect(self, datas):
         pass
 
-    def send_game_save(self):
-        from backend.Grid import Grid
+    def send_game_save(self, game):
         import pickle
-        read_write_py_c = SystemAgent.get_instance()
-        serialize_data = pickle.dumps(Grid.__dict__)
-        read_write_py_c.send_message(command=NetworkCommandsTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
 
-    def recieve_game_save(self):
-        from backend.Grid import Grid
+        sys = SystemAgent.get_instance()
+        serialize_data = pickle.dumps({ 'grid': game.grid,'tickCount': game.tickCount })
+        sys.send_message(command=NetworkCommandsTypes.GAME_SAVE, id_object=1, data=serialize_data, encode=False)
+
+    def receive_game_save(self, game):
         import pickle
 
         message = self.read_message(block=True)
-
         if message["header"]["command"] != NetworkCommandsTypes.GAME_SAVE:
             return
-
-        Grid.__dict__ = pickle.loads(message["data"][0])
+            
+        gameSave = pickle.loads(message["data"][0])
+        game.grid = gameSave["grid"]
+        print(f"Grid: {game.grid}")
+        bobs = game.grid.getAllBobs()
+        for b in bobs:
+            print(f"bob: {b.id} {b.player_id}")
+            b.other_player_bob = True
+        game.tickCount = gameSave["tickCount"]
         # Grid.save_load()
 
 

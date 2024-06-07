@@ -20,7 +20,10 @@ from network_system.system_layer.SystemAgent import SystemAgent
 from network_system.networkCommandsTypes import NetworkCommandsTypes
 from backend.Bob import Bob
 
+import ast
+
 class Game:
+    instance = None;
 
     def __init__(self, grid, screenWidth=930, screenHeight=640, dayLimit = 0, noInterface=False):
         
@@ -136,6 +139,7 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
+                    self.receive_messages()
                     self.grid.newTickEvents()
 
                     # Compute the best bob, update the stats
@@ -288,7 +292,7 @@ class Game:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
                             self.grid.addBob(bob)
                             self.grid.bob_dict[(int(sys.player_id), int(bob.id))] = bob
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
@@ -317,7 +321,7 @@ class Game:
                         if self.onlineModeType == "bob":
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
-                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin)
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
                             self.grid.addBob(bob)
                             sys.send_bob(command=NetworkCommandsTypes.SPAWN_BOB,
                                          last_position= [self.onlineModeCoords[0], self.onlineModeCoords[1]],
@@ -449,23 +453,72 @@ class Game:
         print("Game loaded from " + pathToSaveFile)
 
         return True
+
+    @staticmethod
+    def get_instance():
+        if Game.instance is None:
+            Game.instance = Game()
+        return Game.instance
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
-        
+     
         messageReceived = sys.read_message()
         
-        if messageReceived is not None:
-            match(messageReceived["header"]["command"]):
-                
-                case NetworkCommandsTypes.SPAWN_BOB:
-                    data =  messageReceived["data"]
-                    data = json.loads(data)
-                    bob = Bob(data["position"][0], 
-                              data["position"][1], 
-                              mass=data["mass"], 
-                              totalVelocity=data["velocity"])
-                    self.grid.addBob(bob)
-                    
-                # case NetworkCommandsTypes.
+        if messageReceived:
+            header = messageReceived["header"]
+            if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+                sys.send_game_save(game = self)
+            if messageReceived["data"]:
+                data =  messageReceived["data"][0]
+                data = data.decode()
+                # data = json.loads(data)
+                data = ast.literal_eval(data)
+                match(header["command"]):
+                    case NetworkCommandsTypes.SPAWN_BOB:
+                        bob = Bob(x=data["position"][0], 
+                                y=data["position"][1], 
+                                mass=data["mass"], 
+                                totalVelocity=data["velocity"],
+                                energy=data["energy"],
+                                id_bob=int(data["id"]),
+                                player_id=int(header["player_id"]),
+                                )
+                        bob.action = "idle"
+                        bob.other_player_bob = True
+                        # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
+                        self.grid.addBob(bob)
+                        
+                    case NetworkCommandsTypes.DELETE_BOB:
+                        self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]))
+                        
+                    case NetworkCommandsTypes.SPAWN_FOOD:
+                        self.grid.addEdible(Food(data["position"][0], data["position"][1]))
+                        
+                    case NetworkCommandsTypes.DELETE_FOOD:
+                        self.grid.removeFoodAt(data["position"][0], data["position"][1])
+                        
+                    case NetworkCommandsTypes.MOVE_BOB:
+                        # bobs = self.grid.getAllBobs()
+                        # other_player_bobs = list(filter(lambda x: x.other_player_bob == True, bobs))
+                        # for bob in other_player_bobs:
+                        #     if bob.id == int(data["id"]) and bob.player_id == int(header["player_id"]):
+                        #         bob.action = "idle"
+                        #         self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        #         break
+                        # bob = self.grid.bob_dict[(int(header["player_id"]), int(data["id"]))]
+                        # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1])   
+                        
+                        # cell = self.grid.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bobs_at_position = self.grid.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                        bob = None
+                        for b in bobs_at_position:
+                            if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                bob = b
+                        # print(f"Cell:{cell}")
+                        # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                        #     )
+                        # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        if bob:
+                            self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
 
