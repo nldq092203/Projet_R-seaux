@@ -629,7 +629,7 @@ class Game:
                             self.grid.removeBob(bobID=int(data["id"]), player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
                         
                         case NetworkCommandsTypes.BOB_EATEN:
-                            self.grid.removeBob(x=int(data["position"][0]), y=int(data["position"][1]), bobID=int(data["id"]), player_id=int(data["energy"]))
+                            self.grid.removeBob(bobID=int(data["id"]), player_id=int(data["energy"]), x=int(data["position"][0]), y=int(data["position"][1]),)
                             print("Bob has been eaten in receive")
 
                             

@@ -185,16 +185,12 @@ class Cell:
                                 energy=otherBob.player_id,
                                 id=otherBob.id, 
                                 )
-                            if (otherBob.other_player_bob):
-                                self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)
-                            else:
-                                self.removeBob(otherBob.id)
-                                
+                            self.removeBob(bobID=otherBob.id, player_id=otherBob.player_id)                                
+                            otherBob.action = "eaten"
 
                             # Set the actions of the two Bob objects
                             
                             bob.action = "eat"
-                            otherBob.action = "eaten"
 
                             # print("cannibalism")
 
