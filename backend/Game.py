@@ -681,6 +681,7 @@ class Game:
                             for b in bobs:
                                 if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
                                     bob = b
+                                    bob.action = "move"
                                     break
                             # print(f"Cell:{cell}")
                             # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
