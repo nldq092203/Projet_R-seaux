@@ -22,6 +22,7 @@ from backend.Bob import Bob
 from backend.Edible import Food
 
 import ast
+import time
 
 class Game:
     instance = None;
@@ -145,10 +146,17 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
+                    
+                    start_time = time.time()
                     self.receive_messages()
+                    end_time =time.time()
+                    print("time to receive: ", end_time - start_time)
                     self.grid.newTickEvents()
                     if sys and self.grid.list_message:
+                        start_time = time.time()
                         sys.send_bob_and_food(list_message=self.grid.list_message)
+                        end_time =time.time()
+                        print("time to receive: ", end_time - start_time)
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                     
@@ -308,6 +316,7 @@ class Game:
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
+                            bob.sprite.applyColor()
                             self.grid.addBob(bob)
                             self.grid.list_message = sys.send_to_list_bob_message(
                                          list_bob_message=self.grid.list_message,
@@ -620,6 +629,8 @@ class Game:
                                     id_bob=int(data["id"]),
                                     player_id=int(header["player_id"]),
                                     )
+                            bob.sprite.applyColor()
+
                             bob.action = None
                             if int(data["action_type"]) == NetworkCommandsTypes.SPAWN_BOB:
                                 bob.action = "idle"
