@@ -82,7 +82,7 @@ class SystemAgent:
 
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        time.sleep(0.0001)
+        # time.sleep(0.0001)
         if not self.connection:
             print("Error send C connection")
             return

@@ -696,7 +696,7 @@ class Grid:
         )
 
     # Delete all bobs in the grid
-    def removeAllBobs(self, list_bob_message):
+    def removeAllBobs(self, list_bob_message, onlineMode = False):
         keysToRemove = []
         for key, cell in self.gridDict.items():
             cell.bobs = list(filter(lambda x: x.other_player_bob, cell.bobs))
@@ -704,18 +704,19 @@ class Grid:
                 keysToRemove.append(key)
         for key in keysToRemove:
             del self.gridDict[key]
-            
-        sys = SystemAgent.get_instance()
-        sys.send_to_list_bob_message(
-            list_bob_message,
-            action_type=NetworkCommandsTypes.DELETE_ALL_PLAYER_BOB,
-            last_position=[0, 0],
-            position=[0, 0],
-            mass=0,
-            velocity=0,
-            energy=0,
-            id=0,
-        )
+        
+        if onlineMode:    
+            sys = SystemAgent.get_instance()
+            sys.send_to_list_bob_message(
+                list_bob_message,
+                action_type=NetworkCommandsTypes.DELETE_ALL_PLAYER_BOB,
+                last_position=[0, 0],
+                position=[0, 0],
+                mass=0,
+                velocity=0,
+                energy=0,
+                id=0,
+            )
         
     # Populates the grid with bobs at the start of a new day
     def spawnBobs(self):
