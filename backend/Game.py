@@ -638,12 +638,10 @@ class Game:
                                     break
                         
                         case NetworkCommandsTypes.DELETE_ALL_PLAYER_BOB:
-                            bobs = self.grid.getAllBobs()
+                            print("DEALTE_ALL_PLAYER_BOB")
                             for b in bobs:
                                 if b.player_id == int(header["player_id"]):
                                     b.energy = 0
-                                    break
-
                             
                         case NetworkCommandsTypes.BOB_EATEN:
                             # self.grid.removeBob(bobID=int(data["id"]), player_id=int(data["energy"]), x=int(data["position"][0]), y=int(data["position"][1]),)
