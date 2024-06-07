@@ -103,14 +103,13 @@ class BobSprite(Sprite):
 
     
     def calculateColor(self):
-        print("Calculate color")
         # Calculate the r, g, b color depending on the velocity, perception, and memory
         # r = int(min(self.bob.velocity * Settings.velocityFactor,255))
         # g = int(min(self.bob.perception * Settings.perceptionFactor,255))
         # b = int(min(self.bob.memorySize * Settings.memoryFactor,255))
-        r = int(min(int(self.bob.player_id)*10 % 255,255))
-        g = int(min(int(self.bob.player_id)*10 % 255,255))
-        b = int(min(int(self.bob.player_id)*10 % 255,255))
+        r = int(min(int(self.bob.player_id) % 255,255))
+        g = int(min(int(self.bob.player_id) % 255,255))
+        b = int(min(int(self.bob.player_id) % 255,255))
         # Return the color
         return (r,g,b)
 

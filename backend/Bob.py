@@ -149,6 +149,7 @@ class Bob:
                     memorySize = self.memorySize,
                     energy = Settings.pBirthEnergy
         )
+        bornBob.player_id = self.player_id
         Bob.id_bob_origin += 1
         bornBob.id = Bob.id_bob_origin
 
@@ -192,6 +193,7 @@ class Bob:
                     memorySize = (b1.memorySize + b2.memorySize) / 2,
                     energy = Settings.sBirthEnergy
         )
+        bornBob.player_id = b1.player_id
         Bob.id_bob_origin += 1
         bornBob.id = Bob.id_bob_origin
         # Make the bob mutate

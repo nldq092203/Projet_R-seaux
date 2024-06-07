@@ -180,7 +180,7 @@ class Game:
                     
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)
-
+                print(f"alpha : {alpha}")
             if self.gui.displaySettings:
                 self.gui.createSettingsWindow()
                 
@@ -526,8 +526,20 @@ class Game:
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
-        # print(f"my id : {sys.player_id}")
-        # print(f"my id : {sys.player_id}")
+        bob = Bob(x=10, 
+        y=10, 
+        mass=1, 
+        totalVelocity=1,
+        energy=100,
+        id_bob=1,
+        player_id=99,
+        )
+        bob.action = "love"
+        bob.other_player_bob = True
+        # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
+        self.grid.addBob(bob)
+
+
      
         messages = sys.read_message()
         header = None
