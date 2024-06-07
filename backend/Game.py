@@ -121,12 +121,14 @@ class Game:
             # handle events
             self.events()
 
+
             if not self.noInterface:            
                 # display fps in title
                 pygame.display.set_caption('Game of Life - FPS: ' + str(int(self.frameClock.get_fps())))
 
             # Refresh the frame clock
             self.frameClock.tick(Settings.maxFps)
+
 
             if not self.paused:
                 sys = None
@@ -160,6 +162,9 @@ class Game:
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)
 
+            if self.gui.displaySettings:
+                self.gui.createSettingsWindow()
+                
             if self.noInterface:
                 bobCount = len(self.grid.getAllBobs())
                 if bobCount == 0:
@@ -173,6 +178,7 @@ class Game:
             if self.render:
                 self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
+
 
 
             pygame.display.update()
@@ -499,6 +505,7 @@ class Game:
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
+        # print(f"my id : {sys.player_id}")
         # print(f"my id : {sys.player_id}")
      
         messages = sys.read_message()

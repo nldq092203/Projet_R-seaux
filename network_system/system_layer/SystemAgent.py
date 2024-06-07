@@ -82,7 +82,7 @@ class SystemAgent:
 
 
     def send_message(self, command, id_object, data, id_player=1, encode=True):
-        time.sleep(0.001)
+        time.sleep(0.0001)
         if not self.connection:
             print("Error send C connection")
             return
@@ -235,7 +235,7 @@ class SystemAgent:
         gameSave = pickle.loads(message["data"][0])
         # print(f"type Grid: {type(gameSave['grid'])}")
         game.grid = gameSave["grid"]
-        print(f"Grid: {game.grid}")
+        # print(f"Grid: {game.grid}")
         bobs = game.grid.getAllBobs()
         for b in bobs:
             b.other_player_bob = True
