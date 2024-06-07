@@ -195,7 +195,8 @@ class Game:
                 continue
 
             if self.render:
-                self.map.render(alpha)
+                if self.tickClock % 2 == 0:
+                    self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
