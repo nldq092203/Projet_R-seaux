@@ -170,7 +170,9 @@ class Game:
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
                             time.sleep(0.0001)
-                
+                    elif self.tickCount % 2 == 0:
+                        if self.render:
+                            self.map.render(alpha)
 
                     # Compute the best bob, update the stats
                     self.currentBestBob = self.grid.getBestBob()
@@ -194,8 +196,8 @@ class Game:
                 continue
 
             if self.render:
-                if self.tickCount % 2 == 0:
-                    self.map.render(alpha)
+                # if self.tickCount % 2 == 0:
+                #     self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
