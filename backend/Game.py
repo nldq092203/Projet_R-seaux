@@ -147,7 +147,7 @@ class Game:
                     # Launch tick events
                     self.tickCount += 1
 
-                    if self.tickCount % 2 == 1:
+                    if self.tickCount % 3 == 1:
                         bobsList = self.grid.getAllBobs()
                         for b in bobsList:
                 # Set the bob's action to idle if it is not dying
@@ -171,10 +171,16 @@ class Game:
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
                             time.sleep(0.0001)
-                    else:
+                    elif self.tickCount % 3 == 2:
                         print("In second tick")
                         self.receive_messages()
                         time.sleep(0.0001)
+                    else:
+                        print("In third tick")
+                        self.receive_messages()
+                        time.sleep(0.0001)
+
+                        
 
 
                     # # Compute the best bob, update the stats
