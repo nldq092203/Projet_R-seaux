@@ -162,8 +162,8 @@ class Game:
                         # end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
-                        self.receive_messages()
-                        time.sleep(0.0001)
+                        # self.receive_messages()
+                        # time.sleep(0.0001)
                         self.grid.newTickEvents()
                         # else:
                         if sys and self.grid.list_message:
