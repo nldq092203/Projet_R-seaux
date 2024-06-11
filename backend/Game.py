@@ -331,6 +331,7 @@ class Game:
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
+                            bob.action = "birth"
                             # bob.sprite.applyColor()
                             self.grid.addBob(bob)
                             self.grid.list_message = sys.send_to_list_bob_message(
@@ -376,6 +377,7 @@ class Game:
                             print("Spawn bob")
                             Bob.id_bob_origin += 1
                             bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
+                            bob.action = "birth"
                             self.grid.addBob(bob)
                             self.grid.list_message = sys.send_to_list_bob_message(
                                          list_bob_message=self.grid.list_message,
