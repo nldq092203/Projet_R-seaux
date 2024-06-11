@@ -93,24 +93,30 @@ class BobSprite(Sprite):
 
         # Get the color to apply
         color = self.calculateColor()
+        # random.shuffle(color)
 
-        image.fill((200,200,200) , special_flags=pygame.BLEND_SUB)
+        # image.fill((100,100,100) , special_flags=pygame.BLEND_SUB)
 
         # Apply the color
-        image.fill(color, special_flags=pygame.BLEND_ADD)
+        if self.bob.player_id % 2:
+            image.fill(color, special_flags=pygame.BLEND_ADD)
+        else:
+            image.fill(color, special_flags=pygame.BLEND_SUB)
+           
 
         # Set the image
         self.image = image
 
     
     def calculateColor(self):
-            # Calculate the r, g, b color depending on the velocity, perception, and memory
-            r = int(min(self.bob.velocity * Settings.velocityFactor,255))
-            g = int(min(self.bob.perception * Settings.perceptionFactor,255))
-            b = int(min(self.bob.memorySize * Settings.memoryFactor,255))
-
-            # Return the color
-            return (r,g,b)
+        # Calculate the r, g, b color depending on the velocity, perception, and memory
+        # r = int(min(self.bob.velocity * Settings.velocityFactor,255))
+        # g = int(min(self.bob.perception * Settings.perceptionFactor,255))
+        # b = int(min(self.bob.memorySize * Settings.memoryFactor,255))
+        r = int(self.bob.player_id) % 200
+        color = [r if i == self.bob.player_id % 3 else 0 for i in range(3)]
+        # Return the color
+        return color
 
 class EffectSprite(Sprite):
     def __init__(self, effect):
