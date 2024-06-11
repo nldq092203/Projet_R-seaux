@@ -154,25 +154,21 @@ class Game:
 
                 #             b.age += 1
 
-                    if self.tickCount % 2 == 1:
-                        self.grid.newTickEvents()
-                        # else:
-                        if sys and self.grid.list_message:
-                            start_time = time.time()
-                            sys.send_bob_and_food(list_message=self.grid.list_message)
-                            end_time =time.time()
-                            # print("time to send: ", end_time - start_time)
-                            # sys.send_food(list_food_message=self.grid.list_message)
-                            self.grid.list_message = []
-                            time.sleep(0.0001)
-                    else:
+                    self.grid.newTickEvents()
+                    if sys and self.grid.list_message:
+                        start_time = time.time()
+                        sys.send_bob_and_food(list_message=self.grid.list_message)
+                        end_time =time.time()
+                        print("time to send: ", end_time - start_time)
+
+                        self.grid.list_message = []
+                        # time.sleep(0.0001)
+
                         start_time = time.time()
                         self.receive_messages()
                         end_time =time.time()
-                        # print("time to receive: ", end_time - start_time)
-                        time.sleep(0.0001)
-                        if self.render:
-                            self.map.render(alpha)
+                        print("time to receive: ", end_time - start_time)
+                        
 
                     # # Compute the best bob, update the stats
                     # self.currentBestBob = self.grid.getBestBob()
@@ -196,7 +192,7 @@ class Game:
                 continue
 
             if self.render:
-                # self.map.render(alpha)
+                self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
@@ -531,6 +527,10 @@ class Game:
         header = None
         if messages:
             header = messages["header"]
+            print("=============Header object size===============")
+            print(header["object_size"])
+            print("=============End header object size===============")
+
         
         if not header:
             return
