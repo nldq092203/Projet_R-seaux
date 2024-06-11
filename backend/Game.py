@@ -542,65 +542,65 @@ class Game:
 
         
                     match(int(data["action_type"])):
-        #                 case NetworkCommandsTypes.SPAWN_BOB:
-        #                     bob = Bob(x=data["position"][0], 
-        #                             y=data["position"][1], 
-        #                             mass=data["mass"], 
-        #                             totalVelocity=data["velocity"],
-        #                             energy=data["energy"],
-        #                             id_bob=int(data["id"]),
-        #                             player_id=int(header["player_id"]),
-        #                             )
-        #                     bob.action = "idle"
-        #                     bob.other_player_bob = True
-        #                     # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
-        #                     self.grid.addBob(bob)
+                        case NetworkCommandsTypes.SPAWN_BOB:
+                            bob = Bob(x=data["position"][0], 
+                                    y=data["position"][1], 
+                                    mass=data["mass"], 
+                                    totalVelocity=data["velocity"],
+                                    energy=data["energy"],
+                                    id_bob=int(data["id"]),
+                                    player_id=int(header["player_id"]),
+                                    )
+                            bob.action = "idle"
+                            bob.other_player_bob = True
+                            # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
+                            self.grid.addBob(bob)
                             
-        #                 case NetworkCommandsTypes.DELETE_BOB:
-        #                     self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
+                        case NetworkCommandsTypes.DELETE_BOB:
+                            self.grid.removeBob(bobID=data["id"], player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
                             
                             
-        #                 case NetworkCommandsTypes.MOVE_BOB:                                
-        #                     # cell = self.grid.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-        #                     bobs_at_position = self.grid.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
-        #                     bob = None
-        #                     for b in bobs_at_position:
-        #                         if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
-        #                             bob = b
-        #                             bob.action="move"
-        #                             break
-        #                     # bobs = self.grid.getAllBobs()
-        #                     # for b in bobs:
-        #                     #     if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
-        #                     #         bob = b
-        #                     #         break
-        #                     # print(f"Cell:{cell}")
-        #                     # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
-        #                     #     )
-        #                     # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
-        #                     if bob:
-        #                         self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                        case NetworkCommandsTypes.MOVE_BOB:                                
+                            # cell = self.grid.getCellAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                            bobs_at_position = self.grid.getBobsAt(x=int(data["last_position"][0]),y=int(data["last_position"][1]))
+                            bob = None
+                            for b in bobs_at_position:
+                                if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                    bob = b
+                                    bob.action="move"
+                                    break
+                            # bobs = self.grid.getAllBobs()
+                            # for b in bobs:
+                            #     if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                            #         bob = b
+                            #         break
+                            # print(f"Cell:{cell}")
+                            # bob = cell.get_bob_by_id(bob_id=data["id"], player_id = int(header["player_id"])
+                            #     )
+                            # self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
+                            if bob:
+                                self.grid.moveBobTo(bob, int(data["position"][0]), int(data["position"][1]))
                                 
-        #                 case NetworkCommandsTypes.EAT_FOOD:
-        #                     bobs_at_position = self.grid.getBobsAt(x=int(data["position"][0]),y=int(data["position"][1]))
-        #                     bob = None
-        #                     for b in bobs_at_position:
-        #                         if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
-        #                             bob = b
-        #                             bob.action="eat"
-        #                             break
+                        case NetworkCommandsTypes.EAT_FOOD:
+                            bobs_at_position = self.grid.getBobsAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                            bob = None
+                            for b in bobs_at_position:
+                                if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
+                                    bob = b
+                                    bob.action="eat"
+                                    break
                                 
-        #                     if bob:
-        #                         cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
-        #                         cell.eat(b=bob, edibleObject=cell.edibleObject, list_bob_message=None, list_food_message=None)
-        # elif header["command"] == NetworkCommandsTypes.FOOD_MESSAGE:
-        #     if messageReceived:
-        #         match(int(messageReceived["action_type"])):
-        #             case NetworkCommandsTypes.SPAWN_FOOD:
-        #                 self.grid.addEdible(Food(int(messageReceived["position"][0]), int(messageReceived["position"][1])))
+                            if bob:
+                                cell = self.grid.getCellAt(x=int(data["position"][0]),y=int(data["position"][1]))
+                                cell.eat(b=bob, edibleObject=cell.edibleObject, list_bob_message=None, list_food_message=None)
+        elif header["command"] == NetworkCommandsTypes.FOOD_MESSAGE:
+            if messageReceived:
+                match(int(messageReceived["action_type"])):
+                    case NetworkCommandsTypes.SPAWN_FOOD:
+                        self.grid.addEdible(Food(int(messageReceived["position"][0]), int(messageReceived["position"][1])))
                                         
-        #             case NetworkCommandsTypes.DELETE_FOOD:
-        #                 self.grid.removeFoodAt(data["position"][0], data["position"][1])
+                    case NetworkCommandsTypes.DELETE_FOOD:
+                        self.grid.removeFoodAt(data["position"][0], data["position"][1])
 
         if header["command"] == NetworkCommandsTypes.UPDATE_MAP:
             for data in messageReceived:
