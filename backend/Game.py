@@ -149,7 +149,7 @@ class Game:
                         if b.action != "decay":
                             b.action = "idle"
 
-                    b.age += 1
+                        b.age += 1
 
                     self.receive_messages()
                     self.grid.newTickEvents()
