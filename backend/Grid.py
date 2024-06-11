@@ -608,7 +608,7 @@ class Grid:
                 if Settings.enableFeed:
                     cell.feedCellBobs(list_food_message = self.list_message, list_bob_message = self.list_message)
 
-        for b in my_bobs_list:
+        for b in bobsList:
             # Update the perception of the bob
             if Settings.enablePerception and b.action == "idle":
                 self.updatePerception(b)
@@ -625,16 +625,17 @@ class Grid:
             # Move the bob if it is able to
             if Settings.enableMovement and b.action == "idle":
                 self.moveBob(b)
-                sys.send_to_list_bob_message(
-                    list_bob_message=self.list_message,
-                    action_type=NetworkCommandsTypes.MOVE_BOB,
-                    last_position=[b.lastX, b.lastY],
-                    position=[b.currentX, b.currentY],
-                    mass=b.mass,
-                    velocity=b.totalVelocity,
-                    energy=b.energy,
-                    id=b.id
-                    )
+                if b in my_bobs_list:
+                    sys.send_to_list_bob_message(
+                        list_bob_message=self.list_message,
+                        action_type=NetworkCommandsTypes.MOVE_BOB,
+                        last_position=[b.lastX, b.lastY],
+                        position=[b.currentX, b.currentY],
+                        mass=b.mass,
+                        velocity=b.totalVelocity,
+                        energy=b.energy,
+                        id=b.id
+                        )
                 # sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
                 #              last_position=[b.lastX, b.lastY],
                 #              position=[b.currentX, b.currentY],
