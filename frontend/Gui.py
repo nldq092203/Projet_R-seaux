@@ -486,6 +486,7 @@ class Gui:
         if si.ip:
             si.send_message(NetworkCommandsTypes.ASK_SAVE, 0, None, encode=False)
             si.receive_game_save(game = self.game)
+            self.game.joined = True
 
 
     def goBackToPauseMenu(self):
