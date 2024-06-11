@@ -158,10 +158,10 @@ class Game:
                         # print("In first tick")
                         # start_time = time.time()
                         # self.receive_messages()
-                        self.receive_save_message()
+                        # self.receive_save_message()
                         # end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
-                        time.sleep(0.0001)
+                        # time.sleep(0.0001)
                         # self.receive_messages()
                         # time.sleep(0.0001)
                         self.grid.newTickEvents()
@@ -179,9 +179,9 @@ class Game:
                         time.sleep(0.0001)
                         # print("In second tick")
                         if sys and self.grid.list_message:
-                            start_time = time.time()
+                            # start_time = time.time()
                             sys.send_bob_and_food(list_message=self.grid.list_message)
-                            end_time =time.time()
+                            # end_time =time.time()
                             # print("time to send: ", end_time - start_time)
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
@@ -542,17 +542,17 @@ class Game:
             Game.instance = Game()
         return Game.instance
     
-    def receive_save_message(self):
-        sys = SystemAgent.get_instance()
+    # def receive_save_message(self):
+    #     sys = SystemAgent.get_instance()
                 
-        messages = sys.read_message()
-        header = None
-        if messages:
-            header = messages["header"]
+    #     messages = sys.read_message()
+    #     header = None
+    #     if messages:
+    #         header = messages["header"]
 
 
-        if header and (header["command"] == NetworkCommandsTypes.ASK_SAVE):
-            sys.send_game_save(game = self)
+    #     if header and (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+    #         sys.send_game_save(game = self)
 
     
     def receive_messages(self):
@@ -566,8 +566,8 @@ class Game:
         if not header:
             return
         
-        # if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
-        #     sys.send_game_save(game = self)
+        if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+            sys.send_game_save(game = self)
         
         if not messages["data"]:
             return
