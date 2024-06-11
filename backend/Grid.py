@@ -587,12 +587,12 @@ class Grid:
                 self.updateMemory(b)
             # Move the bob if it is able to
             if Settings.enableMovement and b.action == "idle":
-                newX, newY = self.moveBob(b)
+                self.moveBob(b)
                 sys.send_to_list_bob_message(
                     list_bob_message=self.list_message,
                     action_type=NetworkCommandsTypes.MOVE_BOB,
                     last_position=[b.currentX, b.currentY],
-                    position=[newX, newY],
+                    position=[b.newX, b.newY],
                     mass=b.mass,
                     velocity=b.totalVelocity,
                     energy=b.energy,
@@ -652,9 +652,9 @@ class Grid:
                 #              id=b.id)
 
         # Delete all dead Bob objects in the grid
-        for b in my_bobs_list:
+        for b in bobsList:
             if Settings.enableMovement and b.action == "idle":
-                if b.newX == b.currentX or b.newY == b.currentY:
+                if b in my_bobs_list:
                     self.moveBob(b)
                 self.moveBobTo(b,b.newX, b.newY)
                 b.newX = b.currentX
