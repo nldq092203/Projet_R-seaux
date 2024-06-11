@@ -610,7 +610,7 @@ class Grid:
         """
         # Get a list of all bobs in the grid        
         bobsList = self.getAllBobs()
-        other_bob_list = list(filter(lambda x: x.other_player_bob, bobsList))
+        my_list_bob = list(filter(lambda x: not x.other_player_bob, bobsList))
         # print(f"************all bob:*******************")
         # for b in bobsList:
         #     print(f"{b.currentX} + {b.currentY}")
@@ -652,7 +652,7 @@ class Grid:
                 #              id=b.id)
 
         # Delete all dead Bob objects in the grid
-        for b in bobsList:
+        for b in my_list_bob:
             if Settings.enableMovement and b.action == "idle":
                 if not sys:
                     self.moveBob(b)
