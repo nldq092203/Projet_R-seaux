@@ -159,12 +159,13 @@ class Game:
                     print("time to receive: ", end_time - start_time)
 
                     # self.grid.newTickEvents()
-                    if sys and self.grid.list_message:
+                    if sys:
                         self.grid.newTickEventsOnline()
-                        start_time = time.time()
-                        sys.send_bob_and_food(list_message=self.grid.list_message)
-                        end_time =time.time()
-                        print("time to send: ", end_time - start_time)
+                        if self.grid.list_message:
+                            start_time = time.time()
+                            sys.send_bob_and_food(list_message=self.grid.list_message)
+                            end_time =time.time()
+                            print("time to send: ", end_time - start_time)
 
                     self.grid.newTickEvents()
                     self.grid.list_message = []
