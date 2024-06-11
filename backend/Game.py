@@ -153,23 +153,24 @@ class Game:
                             b.action = "idle"
 
                         b.age += 1
-                        
                     start_time = time.time()
                     self.receive_messages()
                     end_time =time.time()
                     print("time to receive: ", end_time - start_time)
 
-                    self.grid.newTickEvents()
+                    # self.grid.newTickEvents()
                     if sys and self.grid.list_message:
+                        self.grid.newTickEventsOnline()
                         start_time = time.time()
                         sys.send_bob_and_food(list_message=self.grid.list_message)
                         end_time =time.time()
                         print("time to send: ", end_time - start_time)
 
-                        self.grid.list_message = []
+                    self.grid.newTickEvents()
+                    self.grid.list_message = []
                         # time.sleep(0.0001)
 
-                        
+                    
 
                     # # Compute the best bob, update the stats
                     # self.currentBestBob = self.grid.getBestBob()

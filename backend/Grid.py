@@ -563,7 +563,38 @@ class Grid:
         
         # Move Bob to the best position
         self.moveBobTo(b, newX, newY)
-  
+    
+    def newTickEventsOnline(self):
+        sys = SystemAgent.get_instance()
+        bobsList = self.getAllBobs()
+        my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
+        for b in my_bobs_list:
+            # Update the perception of the bob
+            if Settings.enablePerception and b.action == "idle":
+                self.updatePerception(b)
+                
+            # Make the bob spit if it is able to
+            if Settings.enableSpitting and b.action == "idle":
+                self.spit(b)
+            # Apply the effects of the bob
+            if Settings.enableEffects:
+                b.updateEffects()
+            # Update the memory of the bob
+            if Settings.enableMemory and b.action == "idle":
+                self.updateMemory(b)
+            # Move the bob if it is able to
+            if Settings.enableMovement and b.action == "idle":
+                # self.moveBob(b)
+                sys.send_to_list_bob_message(
+                    list_bob_message=self.list_message,
+                    action_type=NetworkCommandsTypes.MOVE_BOB,
+                    last_position=[b.lastX, b.lastY],
+                    position=[b.currentX, b.currentY],
+                    mass=b.mass,
+                    velocity=b.totalVelocity,
+                    energy=b.energy,
+                    id=b.id
+                    )
     # Launches all the events of the grid in a game's tick
     def newTickEvents(self):
         sys = SystemAgent.get_instance()
@@ -608,34 +639,7 @@ class Grid:
                 if Settings.enableFeed:
                     cell.feedCellBobs(list_food_message = self.list_message, list_bob_message = self.list_message)
 
-        for b in bobsList:
-            # Update the perception of the bob
-            if Settings.enablePerception and b.action == "idle":
-                self.updatePerception(b)
-                
-            # Make the bob spit if it is able to
-            if Settings.enableSpitting and b.action == "idle":
-                self.spit(b)
-            # Apply the effects of the bob
-            if Settings.enableEffects:
-                b.updateEffects()
-            # Update the memory of the bob
-            if Settings.enableMemory and b.action == "idle":
-                self.updateMemory(b)
-            # Move the bob if it is able to
-            if Settings.enableMovement and b.action == "idle":
-                self.moveBob(b)
-                if b in my_bobs_list:
-                    sys.send_to_list_bob_message(
-                        list_bob_message=self.list_message,
-                        action_type=NetworkCommandsTypes.MOVE_BOB,
-                        last_position=[b.lastX, b.lastY],
-                        position=[b.currentX, b.currentY],
-                        mass=b.mass,
-                        velocity=b.totalVelocity,
-                        energy=b.energy,
-                        id=b.id
-                        )
+
                 # sys.send_bob(command=NetworkCommandsTypes.MOVE_BOB,
                 #              last_position=[b.lastX, b.lastY],
                 #              position=[b.currentX, b.currentY],
@@ -645,7 +649,9 @@ class Grid:
                 #              id=b.id)
 
         # Delete all dead Bob objects in the grid
-        
+        for b in my_bobs_list:
+            if Settings.enableMovement and b.action == "idle":
+                self.moveBob(b)
         self.cleanDeadBobs(sys, self.list_message)
         
         for b in bobsList:
