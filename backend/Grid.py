@@ -566,6 +566,7 @@ class Grid:
   
     # Launches all the events of the grid in a game's tick
     def newTickEvents(self):
+        print("logic game")
         sys = SystemAgent.get_instance()
         """
         This method updates the state of the grid. 
