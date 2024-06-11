@@ -171,6 +171,8 @@ class Game:
                         end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
+                        if self.render:
+                            self.map.render(alpha)
 
                     # # Compute the best bob, update the stats
                     # self.currentBestBob = self.grid.getBestBob()
@@ -194,7 +196,7 @@ class Game:
                 continue
 
             if self.render:
-                self.map.render(alpha)
+                # self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
