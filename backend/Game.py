@@ -155,7 +155,7 @@ class Game:
                                 b.action = "idle"
 
                             b.age += 1
-                        print("In first tick")
+                        # print("In first tick")
                         start_time = time.time()
                         # self.receive_messages()
                         self.receive_save_message()
@@ -173,7 +173,7 @@ class Game:
                             self.grid.list_message = []
                             time.sleep(0.0001)
                     elif self.tickCount % 2 == 0:
-                        print("In second tick")
+                        # print("In second tick")
                         self.receive_messages()
                         time.sleep(0.0001)
 
@@ -566,7 +566,7 @@ class Game:
         messageReceived = ast.literal_eval(messageReceived)
 
         if header["command"] == NetworkCommandsTypes.UPDATE_MAP:
-            print("read  messages")
+            # print("read  messages")
             for data in messageReceived:
                 if data:
         

@@ -312,7 +312,7 @@ class Map:
             self.mustReRenderTerrain = False
 
         if self.Game.tickCount % 2 == 0:
-            print("Render")
+            # print("Render")
             self.renderEntities(alpha)
 
         self.screen.blit(self.terrainSurface, (self.xScreenOffset + (self.screenWidth - self.terrainSurface.get_width()) / 2, self.yScreenOffset))
