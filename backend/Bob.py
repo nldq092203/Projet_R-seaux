@@ -29,8 +29,8 @@ class Bob:
         self.currentY = y
         self.lastX = x
         self.lastY = y
-        self.newX = newX
-        self.newY = newY
+        self.newX = x
+        self.newY = y
         # Action performed
         self.action = "idle"
         self.effects = []
