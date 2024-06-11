@@ -146,30 +146,30 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
-                    # if self.tickCount % 2 == 0:
-                    bobsList = self.grid.getAllBobs()
-                    for b in bobsList:
-            # Set the bob's action to idle if it is not dying
-                        if b.action != "decay":
-                            b.action = "idle"
+                    if self.tickCount % 2 == 1:
+                        bobsList = self.grid.getAllBobs()
+                        for b in bobsList:
+                # Set the bob's action to idle if it is not dying
+                            if b.action != "decay":
+                                b.action = "idle"
 
-                        b.age += 1
+                            b.age += 1
 
-                    start_time = time.time()
-                    self.receive_messages()
-                    end_time =time.time()
-                    # print("time to receive: ", end_time - start_time)
-                    time.sleep(0.0001)
-                    self.grid.newTickEvents()
-                    # else:
-                    if sys and self.grid.list_message:
                         start_time = time.time()
-                        sys.send_bob_and_food(list_message=self.grid.list_message)
+                        self.receive_messages()
                         end_time =time.time()
-                        # print("time to send: ", end_time - start_time)
-                        # sys.send_food(list_food_message=self.grid.list_message)
-                        self.grid.list_message = []
+                        # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
+                        self.grid.newTickEvents()
+                        # else:
+                        if sys and self.grid.list_message:
+                            start_time = time.time()
+                            sys.send_bob_and_food(list_message=self.grid.list_message)
+                            end_time =time.time()
+                            # print("time to send: ", end_time - start_time)
+                            # sys.send_food(list_food_message=self.grid.list_message)
+                            self.grid.list_message = []
+                            time.sleep(0.0001)
                 
 
                     # Compute the best bob, update the stats
@@ -194,8 +194,8 @@ class Game:
                 continue
 
             if self.render:
-            # if self.tickCount % 2 == 1:
-                self.map.render(alpha)
+                if self.tickCount % 2 == 0:
+                    self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
