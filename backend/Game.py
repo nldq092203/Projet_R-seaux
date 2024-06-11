@@ -164,6 +164,8 @@ class Game:
                     time.sleep(0.0001)
                     # self.receive_messages()
                     # time.sleep(0.0001)
+                    self.receive_messages()
+                    time.sleep(0.0001)
                     self.grid.newTickEvents()
                     # else:
                     if sys and self.grid.list_message:
@@ -176,8 +178,6 @@ class Game:
                         time.sleep(0.0001)
                 # elif self.tickCount % 2 == 0:
                     # print("In second tick")
-                    self.receive_messages()
-                    time.sleep(0.0001)
                     # if sys and self.grid.list_message:
                     #     start_time = time.time()
                     #     sys.send_bob_and_food(list_message=self.grid.list_message)
