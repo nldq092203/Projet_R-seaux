@@ -160,7 +160,6 @@ class Game:
                         end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
-                    else:
                         self.grid.newTickEvents()
                         # else:
                         if sys and self.grid.list_message:
@@ -170,8 +169,9 @@ class Game:
                             # print("time to send: ", end_time - start_time)
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
-                            time.sleep(0.001)
-                        
+                            time.sleep(0.0001)
+                    else:
+                        time.sleep(0.01)
                         self.receive_messages()
                         time.sleep(0.0001)
 
