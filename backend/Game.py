@@ -162,6 +162,8 @@ class Game:
                         end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
+                        self.receive_messages()
+                        time.sleep(0.0001)
                         self.grid.newTickEvents()
                         # else:
                         if sys and self.grid.list_message:
@@ -176,6 +178,14 @@ class Game:
                         # print("In second tick")
                         self.receive_messages()
                         time.sleep(0.0001)
+                        if sys and self.grid.list_message:
+                            start_time = time.time()
+                            sys.send_bob_and_food(list_message=self.grid.list_message)
+                            end_time =time.time()
+                            # print("time to send: ", end_time - start_time)
+                            # sys.send_food(list_food_message=self.grid.list_message)
+                            self.grid.list_message = []
+                            time.sleep(0.0001)
 
 
                     # # Compute the best bob, update the stats
