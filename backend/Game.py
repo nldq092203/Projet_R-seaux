@@ -172,11 +172,11 @@ class Game:
                             time.sleep(0.0001)
                 
 
-                    # Compute the best bob, update the stats
-                    self.currentBestBob = self.grid.getBestBob()
-                    if self.currentBestBob is not None:
-                        self.bobCountHistory.append(len(self.grid.getAllBobs()))
-                        self.bestBobGenerationHistory.append(self.currentBestBob.generation)
+                    # # Compute the best bob, update the stats
+                    # self.currentBestBob = self.grid.getBestBob()
+                    # if self.currentBestBob is not None:
+                    #     self.bobCountHistory.append(len(self.grid.getAllBobs()))
+                    #     self.bestBobGenerationHistory.append(self.currentBestBob.generation)
                     
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)

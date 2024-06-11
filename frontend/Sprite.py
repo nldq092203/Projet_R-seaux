@@ -98,7 +98,11 @@ class BobSprite(Sprite):
         # image.fill((100,100,100) , special_flags=pygame.BLEND_SUB)
 
         # Apply the color
-        image.fill(color, special_flags=pygame.BLEND_ADD)
+        if self.bob.player_id % 2:
+            image.fill(color, special_flags=pygame.BLEND_ADD)
+        else:
+            image.fill(color, special_flags=pygame.BLEND_SUB)
+           
 
         # Set the image
         self.image = image
@@ -109,9 +113,7 @@ class BobSprite(Sprite):
         # r = int(min(self.bob.velocity * Settings.velocityFactor,255))
         # g = int(min(self.bob.perception * Settings.perceptionFactor,255))
         # b = int(min(self.bob.memorySize * Settings.memoryFactor,255))
-        r = int(self.bob.player_id) % 255
-        g = int(self.bob.player_id) % 255
-        b = int(self.bob.player_id) % 255
+        r = int(self.bob.player_id) % 200
         color = [r if i == self.bob.player_id % 3 else 0 for i in range(3)]
         # Return the color
         return color
