@@ -146,21 +146,21 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
-                    bobsList = self.grid.getAllBobs()
-                    for b in bobsList:
-            # Set the bob's action to idle if it is not dying
-                        if b.action != "decay":
-                            b.action = "idle"
 
-                        b.age += 1
+                    if self.tickCount % 3 == 1:
+                        bobsList = self.grid.getAllBobs()
+                        for b in bobsList:
+                # Set the bob's action to idle if it is not dying
+                            if b.action != "decay":
+                                b.action = "idle"
 
-                    if self.tickCount % 2 == 1:
+                            b.age += 1
                         start_time = time.time()
                         self.receive_messages()
                         end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         time.sleep(0.0001)
-                    else:
+                    elif self.tickCount % 3 == 2:
                         self.grid.newTickEvents()
                         # else:
                         if sys and self.grid.list_message:

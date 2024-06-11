@@ -592,10 +592,10 @@ class Grid:
         # print("*****************************************")
                   
 
-        for b in bobsList:
-            # Set the bob's action to idle if it is not dying
-            if b.action != "decay":
-                b.action = "idle"
+        # for b in bobsList:
+        #     # Set the bob's action to idle if it is not dying
+        #     if b.action != "decay":
+        #         b.action = "idle"
 
             b.age += 1
         
