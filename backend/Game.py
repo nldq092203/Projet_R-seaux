@@ -541,7 +541,7 @@ class Game:
             header = messages["header"]
 
 
-        if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+        if header and (header["command"] == NetworkCommandsTypes.ASK_SAVE):
             sys.send_game_save(game = self)
 
     
