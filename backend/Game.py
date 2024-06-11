@@ -155,6 +155,7 @@ class Game:
                                 b.action = "idle"
 
                             b.age += 1
+                        print("In first tick")
                         start_time = time.time()
                         self.receive_messages()
                         end_time =time.time()
@@ -171,7 +172,7 @@ class Game:
                             self.grid.list_message = []
                             time.sleep(0.0001)
                     else:
-                        time.sleep(0.01)
+                        print("In second tick")
                         self.receive_messages()
                         time.sleep(0.0001)
 
@@ -184,6 +185,11 @@ class Game:
                     
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)
+            if self.render:
+                # if self.tickCount % 2 == 0:
+                self.map.render(alpha)
+                self.gui.render(self.map.screen, self.displayStats)
+                
             if self.gui.displaySettings:
                 self.gui.createSettingsWindow()
                 
@@ -197,10 +203,6 @@ class Game:
                 self.renderInTerminal()
                 continue
 
-            if self.render:
-                # if self.tickCount % 2 == 0:
-                self.map.render(alpha)
-                self.gui.render(self.map.screen, self.displayStats)
 
 
 
@@ -550,6 +552,7 @@ class Game:
         messageReceived = ast.literal_eval(messageReceived)
 
         if header["command"] == NetworkCommandsTypes.UPDATE_MAP:
+            print("read  messages")
             for data in messageReceived:
                 if data:
         
