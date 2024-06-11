@@ -160,9 +160,9 @@ class Game:
                         # print("In first tick")
                         # start_time = time.time()
                         # self.receive_messages()
-                        # if not self.joined:
-                        #     self.receive_save_message()
-                        #     time.sleep(0.0001)
+                        if not self.joined:
+                            self.receive_save_message()
+                            time.sleep(0.0001)
                         # end_time =time.time()
                         # print("time to receive: ", end_time - start_time)
                         # time.sleep(0.0001)
