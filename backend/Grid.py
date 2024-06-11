@@ -599,7 +599,7 @@ class Grid:
                     id=b.id
                     )
     # Launches all the events of the grid in a game's tick
-    def newTickEvents(self,sys=None):
+    def newTickEvents(self):
         sys = SystemAgent.get_instance()
         """
         This method updates the state of the grid. 
@@ -654,7 +654,7 @@ class Grid:
         # Delete all dead Bob objects in the grid
         for b in bobsList:
             if Settings.enableMovement and b.action == "idle":
-                if sys or b in other_bob_list :
+                if not sys:
                     self.moveBob(b)
                 self.moveBobTo(b,b.newX, b.newY)
                 b.newX = b.currentX

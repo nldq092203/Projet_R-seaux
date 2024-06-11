@@ -161,7 +161,7 @@ class Game:
                         if self.grid.list_message:
                             sys.send_bob_and_food(list_message=self.grid.list_message)
 
-                    self.grid.newTickEvents(sys)
+                    self.grid.newTickEvents()
                     self.grid.list_message = []
                         # time.sleep(0.0001)
 
