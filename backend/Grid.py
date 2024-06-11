@@ -654,7 +654,7 @@ class Grid:
         # Delete all dead Bob objects in the grid
         for b in bobsList:
             if Settings.enableMovement and b.action == "idle":
-                if b not in my_bobs_list:
+                if b not in my_bobs_list or (b in my_bobs_list and b.newX == b.currentX and b.newY == b.currentY):
                     self.moveBob(b)
                 self.moveBobTo(b,b.newX, b.newY)
                 b.newX = b.currentX
