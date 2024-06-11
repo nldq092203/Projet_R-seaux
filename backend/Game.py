@@ -146,15 +146,21 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
-                #         bobsList = self.grid.getAllBobs()
-                #         for b in bobsList:
-                # # Set the bob's action to idle if it is not dying
-                #             if b.action != "decay":
-                #                 b.action = "idle"
+                    bobsList = self.grid.getAllBobs()
+                    for b in bobsList:
+            # Set the bob's action to idle if it is not dying
+                        if b.action != "decay":
+                            b.action = "idle"
 
-                #             b.age += 1
+                        b.age += 1
 
                     if self.tickCount % 2 == 1:
+                        start_time = time.time()
+                        self.receive_messages()
+                        end_time =time.time()
+                        # print("time to receive: ", end_time - start_time)
+                        time.sleep(0.0001)
+                    else:
                         self.grid.newTickEvents()
                         # else:
                         if sys and self.grid.list_message:
@@ -165,14 +171,6 @@ class Game:
                             # sys.send_food(list_food_message=self.grid.list_message)
                             self.grid.list_message = []
                             time.sleep(0.0001)
-                    else:
-                        start_time = time.time()
-                        self.receive_messages()
-                        end_time =time.time()
-                        # print("time to receive: ", end_time - start_time)
-                        time.sleep(0.0001)
-                        if self.render:
-                            self.map.render(alpha)
 
                     # # Compute the best bob, update the stats
                     # self.currentBestBob = self.grid.getBestBob()
@@ -196,7 +194,8 @@ class Game:
                 continue
 
             if self.render:
-                # self.map.render(alpha)
+                # if self.tickCount % 2 == 0:
+                self.map.render(alpha)
                 self.gui.render(self.map.screen, self.displayStats)
 
 
