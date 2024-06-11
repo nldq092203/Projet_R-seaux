@@ -175,12 +175,6 @@ class Game:
                         print("In second tick")
                         self.receive_messages()
                         time.sleep(0.0001)
-                    else:
-                        print("In third tick")
-                        self.receive_messages()
-                        time.sleep(0.0001)
-
-                        
 
 
                     # # Compute the best bob, update the stats
