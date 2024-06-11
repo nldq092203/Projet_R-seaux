@@ -147,7 +147,7 @@ class Game:
                     # Launch tick events
                     self.tickCount += 1
 
-                # if self.tickCount % 2 == 1:
+                if self.tickCount % 2 == 1:
                     bobsList = self.grid.getAllBobs()
                     for b in bobsList:
             # Set the bob's action to idle if it is not dying
@@ -164,8 +164,6 @@ class Game:
                     time.sleep(0.0001)
                     # self.receive_messages()
                     # time.sleep(0.0001)
-                    self.receive_messages()
-                    time.sleep(0.0001)
                     self.grid.newTickEvents()
                     # else:
                     if sys and self.grid.list_message:
@@ -176,16 +174,18 @@ class Game:
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                         time.sleep(0.0001)
-                # elif self.tickCount % 2 == 0:
+                elif self.tickCount % 2 == 0:
+                    self.receive_messages()
+                    time.sleep(0.0001)
                     # print("In second tick")
-                    # if sys and self.grid.list_message:
-                    #     start_time = time.time()
-                    #     sys.send_bob_and_food(list_message=self.grid.list_message)
-                    #     end_time =time.time()
-                    #     # print("time to send: ", end_time - start_time)
-                    #     # sys.send_food(list_food_message=self.grid.list_message)
-                    #     self.grid.list_message = []
-                    #     time.sleep(0.0001)
+                    if sys and self.grid.list_message:
+                        start_time = time.time()
+                        sys.send_bob_and_food(list_message=self.grid.list_message)
+                        end_time =time.time()
+                        # print("time to send: ", end_time - start_time)
+                        # sys.send_food(list_food_message=self.grid.list_message)
+                        self.grid.list_message = []
+                        time.sleep(0.0001)
 
 
                     # # Compute the best bob, update the stats
