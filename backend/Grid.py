@@ -597,7 +597,7 @@ class Grid:
         #     if b.action != "decay":
         #         b.action = "idle"
 
-            b.age += 1
+        #     b.age += 1
         
         for cell in self.getAllCells():
             if cell.bobs:
