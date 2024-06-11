@@ -567,7 +567,7 @@ class Grid:
         return (newX, newY)
         # self.moveBobTo(b, newX, newY)
     
-    def newTickEventsOnline(self):
+    def updateNewState(self):
         sys = SystemAgent.get_instance()
         bobsList = self.getAllBobs()
         my_bobs_list = list(filter(lambda x: not x.other_player_bob, bobsList))
@@ -599,7 +599,7 @@ class Grid:
                     id=b.id
                     )
     # Launches all the events of the grid in a game's tick
-    def newTickEvents(self):
+    def newTickEvents(self,sys=None):
         sys = SystemAgent.get_instance()
         """
         This method updates the state of the grid. 
@@ -654,7 +654,7 @@ class Grid:
         # Delete all dead Bob objects in the grid
         for b in bobsList:
             if Settings.enableMovement and b.action == "idle":
-                if b not in other_bob_list:
+                if sys or b in other_bob_list :
                     self.moveBob(b)
                 self.moveBobTo(b,b.newX, b.newY)
                 b.newX = b.currentX
