@@ -562,7 +562,10 @@ class Grid:
             b.incrementEnergy(-movementCost)
         
         # Move Bob to the best position
-        self.moveBobTo(b, newX, newY)
+        b.newX = newX
+        b.newY = newY
+        return (newX, newY)
+        # self.moveBobTo(b, newX, newY)
     
     def newTickEventsOnline(self):
         sys = SystemAgent.get_instance()
@@ -584,12 +587,12 @@ class Grid:
                 self.updateMemory(b)
             # Move the bob if it is able to
             if Settings.enableMovement and b.action == "idle":
-                # self.moveBob(b)
+                newX, newY = self.moveBob(b)
                 sys.send_to_list_bob_message(
                     list_bob_message=self.list_message,
                     action_type=NetworkCommandsTypes.MOVE_BOB,
-                    last_position=[b.lastX, b.lastY],
-                    position=[b.currentX, b.currentY],
+                    last_position=[b.currentX, b.currentY],
+                    position=[newX, newY],
                     mass=b.mass,
                     velocity=b.totalVelocity,
                     energy=b.energy,
@@ -651,7 +654,7 @@ class Grid:
         # Delete all dead Bob objects in the grid
         for b in my_bobs_list:
             if Settings.enableMovement and b.action == "idle":
-                self.moveBob(b)
+                self.moveBobTo(b,b.newX, b.newY)
         self.cleanDeadBobs(sys, self.list_message)
         
         for b in bobsList:

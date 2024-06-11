@@ -8,7 +8,7 @@ class Bob:
     id_bob_origin = 0
     
 
-    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None, player_id: int = 0, id_bob: int = None):
+    def __init__(self, x = 0, y = 0, totalVelocity = None, mass = None, energy = None, perception = None, memorySize = None, maxAmmos = None, player_id: int = 0, id_bob: int = None, newX=0, newY=0):
         
         # Physical properties
         self.totalVelocity = totalVelocity if not totalVelocity is None else Settings.spawnVelocity
@@ -29,6 +29,8 @@ class Bob:
         self.currentY = y
         self.lastX = x
         self.lastY = y
+        self.newX = newX
+        self.newY = newY
         # Action performed
         self.action = "idle"
         self.effects = []
