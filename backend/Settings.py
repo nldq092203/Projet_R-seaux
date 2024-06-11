@@ -24,15 +24,15 @@ class Settings:
 
     enableAnimation = True # Enables the animation mechanism for Bob objects. Bobs have an animation when they move, eat, etc.
 
-    computeColorSprite = False  # Enables the color mechanism for Bob objects. Faster bobs are redder, etc
+    computeColorSprite = True  # Enables the color mechanism for Bob objects. Faster bobs are redder, etc
 
     enableEffects = False # Enables the effects mechanism for Bob objects. Bobs can be affected by effects such as being spit at.
 
     enableSpitting = False # Enables the spitting mechanism for Bob objects. Bobs can spit ammos to hinder other bobs.
 
-    enableSexualReproduction = False # Enables the sexual reproduction mechanism for Bob objects. Bobs can reproduce with other bobs.
+    enableSexualReproduction = True # Enables the sexual reproduction mechanism for Bob objects. Bobs can reproduce with other bobs.
 
-    enableParthenogenesis = False # Enables the parthenogenesis mechanism for Bob objects. Bobs can reproduce without other bobs.
+    enableParthenogenesis = True # Enables the parthenogenesis mechanism for Bob objects. Bobs can reproduce without other bobs.
 
     enableMutation = True # Enables the mutation mechanism for Bob objects. Bobs can mutate when they reproduce.
 
@@ -48,7 +48,7 @@ class Settings:
     
     dayLength = 100 # the number of ticks in a day
 
-    maxTps = 5 # the maximum number of ticks per second
+    maxTps = 2 # the maximum number of ticks per second
 
     maxFps = 60 # the maximum number of frames per second
 
