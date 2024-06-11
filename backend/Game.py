@@ -142,8 +142,8 @@ class Game:
                     if self.tickCount % Settings.dayLength == 0 and (self.dayLimit == 0 or self.grid.dayCount < self.dayLimit):
                         self.grid.newDayEvents()
                     # Launch tick events
-                    bobsList = self.grid.getAllBobs()
                     self.tickCount += 1
+                    bobsList = self.grid.getAllBobs()
                     for b in bobsList:
                     # Set the bob's action to idle if it is not dying
                         if b.action != "decay":
