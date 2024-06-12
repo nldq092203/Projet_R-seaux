@@ -131,7 +131,7 @@ class Gui:
         self.smallButton(buttonX, buttonY - (buttonHeight + 10), buttonWidth, buttonHeight, "Add / remove food", self.guiSurface, lambda : setattr(self.game, "onlineModeType", "food"), self.game.onlineModeType == "food")
 
         # Clear bobs button
-        self.smallButton(buttonX - (buttonWidth + 10), buttonY, buttonWidth, buttonHeight, "Clear bobs", self.guiSurface, lambda : self.game.grid.removeAllBobs(), len(self.game.grid.getAllBobs()) == 0)
+        self.smallButton(buttonX - (buttonWidth + 10), buttonY, buttonWidth, buttonHeight, "Clear bobs", self.guiSurface, lambda : self.game.grid.removeAllBobs(self.game.grid.list_message, onlineMode = True), len(self.game.grid.getMyAllBobs()) == 0)
 
         # Clear food button
         self.smallButton(buttonX - (buttonWidth + 10), buttonY - (buttonHeight + 10), buttonWidth, buttonHeight, "Clear food", self.guiSurface, lambda : self.game.grid.removeAllEdibles(), len(self.game.grid.getAllEdibleObjects()) == 0)
