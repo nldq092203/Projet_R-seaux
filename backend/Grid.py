@@ -719,6 +719,7 @@ class Grid:
 
     # Populates the grid with food at the start of a new day
     def spawnFood(self):
+        sys = SystemAgent.get_instance()
         """
         This method populates the grid with Food objects at the start of a new day.
         The food objetcs aer assigned a random energy value between 25 and 100.
@@ -733,6 +734,12 @@ class Grid:
                 self.addEdible(EffectFood(x, y, energy=10, effect=PowerCharged()))
             else:
                 self.addEdible(Food(x,y))
+                sys.send_to_list_food_message(
+                    self.list_message,
+                    position=[x, y],
+                    energy=Settings.spawnedFoodEnergy,
+                    action_type=NetworkCommandsTypes.SPAWN_FOOD
+                )
         
     # Populates the grid with sausages at the start of a new day
     def spawnSausages(self):
@@ -779,7 +786,7 @@ class Grid:
             return
 
         # Remove all food from the grid
-        self.removeAllEdibles(list_food_message=self.list_message, onlineMode=True)
+        # self.removeAllEdibles(list_food_message=self.list_message, onlineMode=True)
 
         # Spawn food
         self.spawnFood()
