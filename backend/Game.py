@@ -71,9 +71,7 @@ class Game:
         self.onlineMode = False
         self.onlineModeType = "bob" # "bob" or "food"
         self.onlineModeCoords = None
-        
-        self.joined  = False
-        
+                
         
         
         # Grid related variables
@@ -517,9 +515,6 @@ class Game:
 
         if header and (header["command"] == NetworkCommandsTypes.ASK_SAVE):
             sys.send_game_save(game = self)
-        
-        self.joined = True
-
     
     def receive_messages(self):
         sys = SystemAgent.get_instance()
@@ -532,8 +527,8 @@ class Game:
         if not header:
             return
         
-        # if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
-        #     sys.send_game_save(game = self)
+        if (header["command"] == NetworkCommandsTypes.ASK_SAVE):
+            sys.send_game_save(game = self)
         
         if not messages["data"]:
             return
@@ -564,11 +559,9 @@ class Game:
                             elif int(data["action_type"]) == NetworkCommandsTypes.BORN_BOB:
                                 bob.action = "idle"
                             bob.other_player_bob = True
-                            # self.bob_dict[(int(header["player_id"]), int(data["id"]))] = bob
                             self.grid.addBob(bob)
                             
                         case NetworkCommandsTypes.DELETE_BOB:
-                            # self.grid.removeBob(bobID=int(data["id"]), player_id=int(header["player_id"]), x=int(data["last_position"][0]), y=int(data["last_position"][1]))
                             bobs = self.grid.getAllBobs()
                             for b in bobs:
                                 if b.player_id == int(header["player_id"]) and b.id == int(data["id"]):
