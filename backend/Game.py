@@ -100,15 +100,18 @@ class Game:
         If the game is not paused, it launches a tick event every 1/maxTps seconds
         If a day has passed, it launches new day events
         """
+
         # Initialiser le temps du dernier tick
         last_tick_time = pygame.time.get_ticks()
         alpha = 0
         icon = pygame.image.load("assets/game-icon.png")
         pygame.display.set_icon(icon)
+
         
         if not self.noInterface:
             icon = pygame.image.load("assets/game-icon.png")
             pygame.display.set_icon(icon)
+        
 
         if self.grid.dayCount == 0:
             # Populate the grid with random bobs and Food
@@ -121,7 +124,9 @@ class Game:
         while self.running:
             # handle events
             self.events()
-
+            
+            if self.gui.displaySettings:
+                self.gui.createSettingsWindow()
 
             if not self.noInterface:            
                 # display fps in title
