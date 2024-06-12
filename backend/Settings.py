@@ -46,7 +46,7 @@ class Settings:
 
     #----------------------------------------------GAME SETTINS--------------------------------------------
     
-    dayLength = 100 # the number of ticks in a day
+    dayLength = 20 # the number of ticks in a day
 
     maxTps = 2 # the maximum number of ticks per second
 
