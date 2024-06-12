@@ -9,7 +9,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         grid = sys.argv[1]
     else:
-        grid = Grid(3, 0, 2)
+        grid = Grid(30, 0, 0)
 
     game = Game(grid, screenWidth=1080, screenHeight=750, dayLimit=0, noInterface=False)
 
