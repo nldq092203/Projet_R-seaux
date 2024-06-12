@@ -148,51 +148,23 @@ class Game:
                         self.grid.newDayEvents()
                     # Launch tick events
                     self.tickCount += 1
+                    bobsList = self.grid.getAllBobs()
+                    for b in bobsList:
+                    # Set the bob's action to idle if it is not dying
+                        if b.action != "decay":
+                            b.action = "idle"
 
-                    if self.tickCount % 2 == 1:
-                        bobsList = self.grid.getAllBobs()
-                        for b in bobsList:
-                # Set the bob's action to idle if it is not dying
-                            if b.action != "decay":
-                                b.action = "idle"
+                        b.age += 1
 
-                            b.age += 1
-                        # print("In first tick")
-                        # start_time = time.time()
-                        # self.receive_messages()
-                        if not self.joined:
-                            self.receive_save_message()
-                            time.sleep(0.0001)
-                        # end_time =time.time()
-                        # print("time to receive: ", end_time - start_time)
-                        # time.sleep(0.0001)
-                        # self.receive_messages()
-                        # time.sleep(0.0001)
-                        self.grid.newTickEvents()
-                        # else:
-                        if sys and self.grid.list_message:
-                            # start_time = time.time()
-                            sys.send_bob_and_food(list_message=self.grid.list_message)
-                            # end_time =time.time()
-                            # print("time to send: ", end_time - start_time)
-                            # sys.send_food(list_food_message=self.grid.list_message)
-                            self.grid.list_message = []
-                            time.sleep(0.0001)
-                    elif self.tickCount % 2 == 0:
-                        # print("In second tick")
-                        # if sys and self.grid.list_message:
-                            # start_time = time.time()
-                            # sys.send_bob_and_food(list_message=self.grid.list_message)
-                            # end_time =time.time()
-                            # print("time to send: ", end_time - start_time)
-                            # sys.send_food(list_food_message=self.grid.list_message)
-                            # self.grid.list_message = []
-                            # time.sleep(0.0001)
-                        self.receive_messages()
-                        time.sleep(0.0001)
+                    self.receive_messages()
+                    self.grid.newTickEvents()
+                    if sys:
+                        sys.send_bob_and_food(list_message=self.grid.list_message)
+                        # sys.send_food(list_food_message=self.grid.list_message)
+                        self.grid.list_message = []
+                    
 
-
-                    # # Compute the best bob, update the stats
+                    # Compute the best bob, update the stats
                     # self.currentBestBob = self.grid.getBestBob()
                     # if self.currentBestBob is not None:
                     #     self.bobCountHistory.append(len(self.grid.getAllBobs()))
@@ -200,14 +172,7 @@ class Game:
                     
                 # Calculate alpha, the percentage of the tick that has passed
                 alpha = (pygame.time.get_ticks() - last_tick_time) / (1000 / Settings.maxTps)
-            if self.render:
-                # if self.tickCount % 2 == 0:
-                self.map.render(alpha)
-                self.gui.render(self.map.screen, self.displayStats)
-                
-            if self.gui.displaySettings:
-                self.gui.createSettingsWindow()
-                
+
             if self.noInterface:
                 bobCount = len(self.grid.getAllBobs())
                 if bobCount == 0:
@@ -218,7 +183,9 @@ class Game:
                 self.renderInTerminal()
                 continue
 
-
+            if self.render:
+                self.map.render(alpha)
+                self.gui.render(self.map.screen, self.displayStats)
 
 
             pygame.display.update()
@@ -342,94 +309,87 @@ class Game:
 
                     if self.onlineModeCoords is None:
                         continue
-                    if self.tickCount % 2 == 1:
-                        if event.buttons[0] == 1:
-                            if self.onlineModeType == "bob":
-                                print("Spawn bob")
-                                Bob.id_bob_origin += 1
-                                bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
-                                bob.action = "idle"
-                                # bob.sprite.applyColor()
-                                self.grid.addBob(bob)
-                                self.grid.list_message = sys.send_to_list_bob_message(
-                                            list_bob_message=self.grid.list_message,
-                                            action_type=NetworkCommandsTypes.SPAWN_BOB,
-                                            last_position= [0, 0],
-                                            position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
-                                            mass=Settings.spawnMass,
-                                            velocity=Settings.spawnVelocity,
-                                            energy=Settings.spawnEnergy,
-                                            id=bob.id)
-                                # sys.send_bob_and_food(self.grid.list_message)
-                                # self.grid.list_message = []
-                                
-                                
-                            elif self.onlineModeType == "food":
-                                food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
-                                self.grid.addEdible(food)
-                                self.grid.list_message = sys.send_to_list_food_message(
-                                    list_food_message=self.grid.list_message,
-                                    position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
-                                    action_type=NetworkCommandsTypes.SPAWN_FOOD,
-                                    energy=Settings.spawnedFoodEnergy,
-                                )
-                                # sys.send_bob_and_food(self.grid.list_message)
-                                # self.grid.list_message = []
-                                
+                    if event.buttons[0] == 1:
+                        if self.onlineModeType == "bob":
+                            print("Spawn bob")
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
+                            # bob.action = "idle"
+                            # bob.sprite.applyColor()
+                            self.grid.addBob(bob)
+                            self.grid.list_message = sys.send_to_list_bob_message(
+                                        list_bob_message=self.grid.list_message,
+                                        action_type=NetworkCommandsTypes.SPAWN_BOB,
+                                        last_position= [0, 0],
+                                        position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                        mass=Settings.spawnMass,
+                                        velocity=Settings.spawnVelocity,
+                                        energy=Settings.spawnEnergy,
+                                        id=bob.id)
+                            # sys.send_bob_and_food(self.grid.list_message)
+                            # self.grid.list_message = []
+                            
+                            
+                        elif self.onlineModeType == "food":
+                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            self.grid.addEdible(food)
+                            self.grid.list_message = sys.send_to_list_food_message(
+                                list_food_message=self.grid.list_message,
+                                position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                action_type=NetworkCommandsTypes.SPAWN_FOOD,
+                                energy=Settings.spawnedFoodEnergy,
+                            )
+                            # sys.send_bob_and_food(self.grid.list_message)
+                            # self.grid.list_message = []
+                            
 
-                        
-                        if event.buttons[2] == 1:
-                            if self.onlineModeType == "bob":
-                                self.grid.removeAllBobsAt(*self.onlineModeCoords)
-                            elif self.onlineModeType == "food":
-                                self.grid.removeFoodAt(*self.onlineModeCoords)
+                    
+                    if event.buttons[2] == 1:
+                        if self.onlineModeType == "bob":
+                            self.grid.removeAllBobsAt(*self.onlineModeCoords)
+                        elif self.onlineModeType == "food":
+                            self.grid.removeFoodAt(*self.onlineModeCoords)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if self.onlineModeCoords is None:
                         continue
-                    if self.tickCount % 2 == 1:
-                        if event.button == 1:
-                            if self.onlineModeType == "bob":
-                                print("Spawn bob")
-                                Bob.id_bob_origin += 1
-                                bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
-                                bob.action = "idle"
-                                self.grid.addBob(bob)
-                                self.grid.list_message = sys.send_to_list_bob_message(
-                                            list_bob_message=self.grid.list_message,
-                                            action_type=NetworkCommandsTypes.SPAWN_BOB,
-                                            last_position= [0, 0],
-                                            position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
-                                            mass=Settings.spawnMass,
-                                            velocity=Settings.spawnVelocity,
-                                            energy=Settings.spawnEnergy,
-                                            id=bob.id)
-                                # sys.send_bob_and_food(self.grid.list_message)
-                                # self.grid.list_message = []
+                    if event.button == 1:
+                        if self.onlineModeType == "bob":
+                            print("Spawn bob")
+                            Bob.id_bob_origin += 1
+                            bob = Bob(self.onlineModeCoords[0], self.onlineModeCoords[1], id_bob=Bob.id_bob_origin, player_id=int(SystemAgent.get_instance().player_id))
+                            # bob.action = "idle"
+                            self.grid.addBob(bob)
+                            self.grid.list_message = sys.send_to_list_bob_message(
+                                        list_bob_message=self.grid.list_message,
+                                        action_type=NetworkCommandsTypes.SPAWN_BOB,
+                                        last_position= [0, 0],
+                                        position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                        mass=Settings.spawnMass,
+                                        velocity=Settings.spawnVelocity,
+                                        energy=Settings.spawnEnergy,
+                                        id=bob.id)
 
-                            elif self.onlineModeType == "food":
-                                food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
-                                self.grid.addEdible(food)
-                                self.grid.list_message = sys.send_to_list_food_message(
-                                    list_food_message=self.grid.list_message,
-                                    position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
-                                    action_type=NetworkCommandsTypes.SPAWN_FOOD,
-                                    energy=Settings.spawnedFoodEnergy,
-                                )
-                                # sys.send_bob_and_food(self.grid.list_message)
-                                # self.grid.list_message = []
+                        elif self.onlineModeType == "food":
+                            food = Food(self.onlineModeCoords[0], self.onlineModeCoords[1])
+                            self.grid.addEdible(food)
+                            self.grid.list_message = sys.send_to_list_food_message(
+                                list_food_message=self.grid.list_message,
+                                position=[self.onlineModeCoords[0], self.onlineModeCoords[1]],
+                                action_type=NetworkCommandsTypes.SPAWN_FOOD,
+                                energy=Settings.spawnedFoodEnergy,
+                            )
 
-                            print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
-                        if event.button == 3:
+                        print(f'Adding {self.onlineModeType} at {self.onlineModeCoords}')
+                    if event.button == 3:
 
-                            if self.onlineModeType == "bob":
-                                self.grid.removeAllBobsAt(*self.onlineModeCoords)
-                            elif self.onlineModeType == "food":
-                                self.grid.removeFoodAt(*self.onlineModeCoords)
-                                # sys.send_food(position=[self.onlineModeCoords[0], self.onlineModeCoords[1]], energy=Settings.spawnedFoodEnergy)
+                        if self.onlineModeType == "bob":
+                            self.grid.removeAllBobsAt(*self.onlineModeCoords)
+                        elif self.onlineModeType == "food":
+                            self.grid.removeFoodAt(*self.onlineModeCoords)
 
-                            print(f'Removing {self.onlineModeType} at {self.onlineModeCoords}')
+                        print(f'Removing {self.onlineModeType} at {self.onlineModeCoords}')
 
             
             # if editing mode is enabled, check for clicks on the map and edit the grid accordingly
