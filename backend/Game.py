@@ -155,11 +155,11 @@ class Game:
                         b.age += 1
 
                     self.receive_messages()
-                    time.sleep(0.001)
+                    time.sleep(0.0001)
                     self.grid.newTickEvents()
-                    if sys:
+                    if sys and self.grid.list_message:
                         sys.send_bob_and_food(list_message=self.grid.list_message)
-                        time.sleep(0.001)
+                        time.sleep(0.0001)
                         # sys.send_food(list_food_message=self.grid.list_message)
                         self.grid.list_message = []
                     
