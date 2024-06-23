@@ -314,30 +314,6 @@ class SystemAgent:
 
     def get_player_id(self) -> int:
         return self.player_id
-    #
-    #
-    # def send_walker_direction_update(self, new_direction, walker_id):
-    #     pass
-    #
-    # def recieve_walker_direction_update(self, datas):
-    #     pass
-    #
-    #
-    #
-    # def send_spawn_walker(self, pos, walker_type, walker_id):
-    #     pass
-    #
-    # def recieve_spawn_walker(self, datas):
-    #     pass
-    #
-    #
-    #
-    # def send_delete_walker(self, walker_id):
-    #     pass
-    #
-    # def recieve_delete_walker(self, datas):
-    #     pass
-
 
 # def main():
 #     system_agent = SystemAgent.get_instance()

@@ -24,7 +24,7 @@ bool id_exist(client_game *client_to_check,uint16_t id){
     return FALSE;
 }
 
-void cgl_set_all_client(fd_set *fd_listen, int *max_fd) {
+void client_set_all_client(fd_set *fd_listen, int *max_fd) {
     client_game *client = list_client;
     while (client != NULL){
         if (client->socket_client > *max_fd){
@@ -47,7 +47,7 @@ client_game *last_client(){
     return last;
 }
 
-int cgl_append(client_game* new_client){
+int client_append(client_game* new_client){
     if (new_client == NULL) {
         return -1;
     }
@@ -64,7 +64,7 @@ int cgl_append(client_game* new_client){
     return 0;
 }
 
-int clg_remove(client_game* client_to_delete){
+int client_remove(client_game* client_to_delete){
     if (client_to_delete == NULL){
         return -1;
     }

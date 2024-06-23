@@ -68,15 +68,15 @@ int throw_new_packet(const uint8_t type, int socket){
 
 int has_payload(const game_packet *packet){
     switch (packet->type) {
-        case GPP_GAME_STATUS:
+        case PACKET_GAME_STATUS:
             return 1;
-        case GPP_ALTER_GAME:
+        case PACKET_ALTER_GAME:
             return 1;
-        case GPP_DELEGATE_ASK:
+        case PACKET_DELEGATE_ASK:
             return 1;
-        case GPP_RESP_IP_LIST:
+        case PACKET_RESP_IP_LIST:
             return 1;
-        case GPP_ASK_GAME_STATUS:
+        case PACKET_ASK_GAME_STATUS:
             return 1;
         default:
             return 0;
@@ -123,17 +123,17 @@ void flush_socket(int socket){
 
 int is_valid(game_packet *packet){
     return (
-            (GPP_CONNECT_NEW == packet->type
-            || GPP_CONNECT_REQ == packet->type
-            || GPP_CONNECT_OK == packet->type
-            || GPP_ASK_GAME_STATUS == packet->type
-            || GPP_GAME_STATUS == packet->type
-            || GPP_ALTER_GAME == packet->type
-            || GPP_DELEGATE_ASK == packet->type
-            || GPP_DELEGATE_OK == packet->type
-            || GPP_ASK_IP_LIST == packet->type
-            || GPP_RESP_IP_LIST == packet->type
-            || GPP_BAD_IDENT == packet->type)
+            (PACKET_CONNECT_NEW == packet->type
+            || PACKET_CONNECT_REQ == packet->type
+            || PACKET_CONNECT_OK == packet->type
+            || PACKET_ASK_GAME_STATUS == packet->type
+            || PACKET_GAME_STATUS == packet->type
+            || PACKET_ALTER_GAME == packet->type
+            || PACKET_DELEGATE_ASK == packet->type
+            || PACKET_DELEGATE_OK == packet->type
+            || PACKET_ASK_IP_LIST == packet->type
+            || PACKET_RESP_IP_LIST == packet->type
+            || PACKET_BAD_IDENT == packet->type)
             && packet->reserved == 255
     );
 }

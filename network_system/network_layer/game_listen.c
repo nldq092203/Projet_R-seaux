@@ -17,11 +17,11 @@ client_game* accept_new_client(int socket_listen){
     }
     new_client->as_initial = TRUE;
 
-    if (cgl_append(new_client) < 0){
+    if (client_append(new_client) < 0){
         return NULL;
     }
 
-    if (throw_new_packet(GPP_CONNECT_START,new_client->socket_client) == -1){
+    if (throw_new_packet(PACKET_CONNECT_START,new_client->socket_client) == -1){
         printf("error send accept");
     }
     return new_client;
@@ -38,7 +38,7 @@ client_game* add_client(int socket_client){
     new_client->socket_client = socket_client;
     new_client->as_initial = TRUE;
     
-    if (cgl_append(new_client) < 0){
+    if (client_append(new_client) < 0){
         return NULL;
     }
     return new_client;
@@ -46,7 +46,7 @@ client_game* add_client(int socket_client){
 
 int new_connection(client_game *client, const game_packet *packet){
     if (id_exist(client, packet->player_id)){
-        if (throw_new_packet(GPP_BAD_IDENT,client->socket_client) < 0){
+        if (throw_new_packet(PACKET_BAD_IDENT,client->socket_client) < 0){
             return -1;
         }
         return 0;
@@ -56,7 +56,7 @@ int new_connection(client_game *client, const game_packet *packet){
 
 int req_connection(client_game *client, const game_packet *packet){
     client->player_id = packet->player_id;
-    if (throw_new_packet(GPP_CONNECT_OK,client->socket_client) < 0){
+    if (throw_new_packet(PACKET_CONNECT_OK,client->socket_client) < 0){
         return -1;
     }
     return 0;
@@ -68,7 +68,7 @@ int get_ip_list(client_game *client){
     game_ip *ips = get_all_ips(&number_ip, client);
     int size_payload = (int) number_ip * (int) sizeof(uint32_t);
 
-    init_game_packet(ip_list_packet, GPP_RESP_IP_LIST, size_payload);
+    init_game_packet(ip_list_packet, PACKET_RESP_IP_LIST, size_payload);
     ip_list_packet->payload = (char *) ips;
 
     if (send_game_packet(ip_list_packet,client->socket_client) <= 0){
@@ -106,7 +106,7 @@ int send_all_client(Object_packet *object){
     if (object == NULL){
         return -1;
     }
-    game_packet *packet = encapsulate_object_packets(object,1,GPP_ALTER_GAME);
+    game_packet *packet = encapsulate_object_packets(object,1,PACKET_ALTER_GAME);
     client_game *client_to_send = first_client();
     while (client_to_send != NULL){
         if (send_game_packet(packet, client_to_send->socket_client) == -1){
@@ -153,7 +153,7 @@ int send_ask_save(Object_packet *save_object){
         return -1;
     }
     
-    game_packet *save_packet = encapsulate_object_packets(save_object,1,GPP_ASK_GAME_STATUS);
+    game_packet *save_packet = encapsulate_object_packets(save_object,1,PACKET_ASK_GAME_STATUS);
     if (save_packet == NULL){
         printf("Packet null");
         return -1;
@@ -188,37 +188,37 @@ int send_save(client_game *client,game_packet *packet, const int system_socket){
         printf("error receive save data\n");
         return -1;
     }
-    game_packet *save_data = encapsulate_object_packets(save_obj,1,GPP_GAME_STATUS);
+    game_packet *save_data = encapsulate_object_packets(save_obj,1,PACKET_GAME_STATUS);
     return send_game_packet(save_data,client->socket_client);
 }
 
 int type_check(client_game *client, game_packet *packet, int system_socket) {
     switch (packet->type) {
-        case GPP_CONNECT_NEW:
+        case PACKET_CONNECT_NEW:
             return new_connection(client,packet);
-        case GPP_CONNECT_REQ:
+        case PACKET_CONNECT_REQ:
             return req_connection(client,packet);
-        case GPP_CONNECT_OK:
+        case PACKET_CONNECT_OK:
             client->player_id = packet->player_id;
             return 0;
-        case GPP_ASK_GAME_STATUS:
+        case PACKET_ASK_GAME_STATUS:
             return send_save(client,packet,system_socket);
-        case GPP_GAME_STATUS:
+        case PACKET_GAME_STATUS:
             return send_to_python(packet,system_socket);
-        case GPP_ALTER_GAME:
+        case PACKET_ALTER_GAME:
             return send_to_python(packet,system_socket);
-        case GPP_DELEGATE_ASK:
+        case PACKET_DELEGATE_ASK:
             //TODO: Notify python to take own of this data
             return 0;
-        case GPP_DELEGATE_OK:
+        case PACKET_DELEGATE_OK:
             //TODO: Python take data
             return 0;
-        case GPP_ASK_IP_LIST:
+        case PACKET_ASK_IP_LIST:
             return get_ip_list(client);
-        case GPP_RESP_IP_LIST:
+        case PACKET_RESP_IP_LIST:
             show_list_ip(packet);
             return connect_to_all_ip(packet);
-        case GPP_BAD_IDENT:
+        case PACKET_BAD_IDENT:
             printf("Error bad indent\n");
             return -1;
         default:
@@ -230,29 +230,29 @@ int type_check(client_game *client, game_packet *packet, int system_socket) {
 int type_object_check(Object_packet *packet) {
     switch (packet->command) {
 
-        case GOP_CONNECT:
+        case OBJET_CONNECT:
             printf("Unexpected connect");
             return -1;
-        case GOP_DISCONNECT:
+        case OBJET_DISCONNECT:
             //TODO: Disconnect
             return 0;
-        case GOP_GAME_SAVE:
+        case OBJET_GAME_SAVE:
             printf("Unexpected Game save");
             return -1;
-        case GOP_ASK_SAVE:
+        case OBJET_ASK_SAVE:
             printf("try send ask\n");
             return send_ask_save(packet);
-        case GOP_SPAWN_FOOD:
+        case OBJET_SPAWN_FOOD:
             return send_all_client(packet);
-        case GOP_DELETE_FOOD:
+        case OBJET_DELETE_FOOD:
              return send_all_client(packet);
-        // case GOP_RISK:
+        // case OBJET_RISK:
         //     return send_all_client(packet);
-        case GOP_UPDATE_BOB:
+        case OBJET_UPDATE_BOB:
             return send_all_client(packet);
-        case GOP_SPAWN_BOB:
+        case OBJET_SPAWN_BOB:
             return send_all_client(packet);
-        case GOP_DELETE_BOB:
+        case OBJET_DELETE_BOB:
             return send_all_client(packet);
         case DELEGATE:
             //TODO: delegate object
@@ -274,7 +274,7 @@ int check_all_client(fd_set *fds, int socket_system) {
             if (receive_game_packet(recv_packet,client->socket_client) == 0){
                 printf("Client %i disconnect\n",client->player_id);
                 close(client->socket_client);
-                clg_remove(client);
+                client_remove(client);
                 client = client->next;
                 continue;
             }
@@ -299,7 +299,7 @@ int game_listen(int socket_listen, int socket_system) {
         FD_SET(socket_listen, &fd_listen_sock);
         FD_SET(socket_system, &fd_listen_sock);
 
-        cgl_set_all_client(&fd_listen_sock, &max);
+        client_set_all_client(&fd_listen_sock, &max);
         if (max < socket_system){
             max = socket_system;
         }
@@ -391,24 +391,24 @@ int connection_existant_game(game_ip ip_address, bool is_new_player){
             return 1;
         }
         print_game_packet(connection);
-        if (connection->type == GPP_CONNECT_START){
+        if (connection->type == PACKET_CONNECT_START){
             if (is_new_player) {
                 new_player_id();
-                init_game_packet(connection, GPP_CONNECT_NEW, 0);
+                init_game_packet(connection, PACKET_CONNECT_NEW, 0);
             } else{
-                init_game_packet(connection, GPP_CONNECT_REQ, 0);
+                init_game_packet(connection, PACKET_CONNECT_REQ, 0);
             }
             if (send_game_packet(connection, new_socket) < 1) {
                 printf("send game packet protocol failed\n");
                 return -1;
             }
             // Need to reloop
-            connection->type = GPP_BAD_IDENT;
+            connection->type = PACKET_BAD_IDENT;
         }
 
-    }while (connection->type == GPP_BAD_IDENT);
+    }while (connection->type == PACKET_BAD_IDENT);
 
-    if (connection->type != GPP_CONNECT_OK){
+    if (connection->type != PACKET_CONNECT_OK){
         printf("Error bad connection type\n");
         close(new_socket);
         return -1;
@@ -422,7 +422,7 @@ int connection_existant_game(game_ip ip_address, bool is_new_player){
 
     // Ask for ip
     if (is_new_player) {
-        init_game_packet(connection, GPP_ASK_IP_LIST, 0);
+        init_game_packet(connection, PACKET_ASK_IP_LIST, 0);
         if (send_game_packet(connection, new_client->socket_client) < 1) {
             printf("send game packet protocol failed\n");
             return -1;
@@ -443,7 +443,7 @@ int init_system_socket(){
         return -1;
     }
 
-    if (throw_new_object(GOP_CONNECT, socket_system) == -1){
+    if (throw_new_object(OBJET_CONNECT, socket_system) == -1){
         return -1;
     }
     return socket_system;
@@ -530,7 +530,7 @@ int main(int argc, char const *argv[])
     print_object_packet(obj1);
     print_object_packet(obj1 + 1);
 
-    game_packet *gp1 = encapsulate_object_packets(obj1, 2, GPP_ALTER_GAME);
+    game_packet *gp1 = encapsulate_object_packets(obj1, 2, PACKET_ALTER_GAME);
     print_game_packet(gp1);
 
     int nb = 0;

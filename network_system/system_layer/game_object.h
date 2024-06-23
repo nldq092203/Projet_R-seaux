@@ -1,5 +1,5 @@
-#ifndef GOP_H
-#define GOP_H
+#ifndef OBJET_H
+#define OBJET_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,6 +19,7 @@ struct Object_packet {
     uint32_t id_object;
     char *data;
 };
+
 typedef struct Object_packet Object_packet;
 
 Object_packet* new_object_packet();
@@ -30,4 +31,4 @@ int send_object_packet(Object_packet *send_packet, int system_socket);
 int receive_object_packet(Object_packet *recv_packet, int system_socket);
 uint32_t get_object_size();
 
-#endif // GOP_H
+#endif 
